@@ -1,0 +1,6 @@
+[submodule "bomberman_assets"]
+	path = bomberman_assets
+	url = https://github.com/Kid-Seven-7/bomberman_assets.git
+[submodule "SFML"]
+	path = SFML
+	url = https://github.com/Kid-Seven-7/SFML.git
