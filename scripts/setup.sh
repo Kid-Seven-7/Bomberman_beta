@@ -33,6 +33,19 @@ else
 	echo "${GREEN}glm found${NC}"
 fi
 
+#assimp installation
+printf ${CYAN}'%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -${NC}
+echo "${BLUE}checking for assimp...${NC}"
+printf ${CYAN}'%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -${NC}
+if [ ! -d $HOME/.brew/Cellar/assimp ];
+then
+	echo ${RED}assimp not found${NC}
+	echo ${ORANGE}installing assimp...${NC}
+  brew install assimp;	source ~/.zshrc
+else
+	echo "${GREEN}assimp found${NC}"
+fi
+
 printf ${CYAN}'%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -${NC}
 echo "${BLUE}checking for submodules...${NC}"
 printf ${CYAN}'%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -${NC}
@@ -43,18 +56,22 @@ then
 	git submodule update --init --recursive
 else
 	echo ${GREEN}submodules found${NC}
+	echo ${ORANGE}updating submodules...${NC}
+	git submodule foreach git pull origin master
 fi
 
 #unzip assets
 printf ${CYAN}'%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -${NC}
 echo "${BLUE}unzipping assets...${NC}"
 printf ${CYAN}'%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -${NC}
-if [ -z "$(ls -A Assets)" ];
+if [ -z "$(ls -A bomberman_assets)" ];
 then
-	echo ${RED}Assets not found${NC}
+	echo ${RED}bomberman_assets not found${NC}
 else
-	echo ${GREEN}Assets found${NC}
-
+	echo ${GREEN}bomberman_assets found${NC}
+	cd bomberman_assets
+	sh unzip.sh
+	cd ..
 fi
 
 #SFML Frameworks check
