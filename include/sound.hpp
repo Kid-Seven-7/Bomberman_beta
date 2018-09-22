@@ -7,8 +7,10 @@
 /___/      /____/
 */
 
-# ifndef 			SOUND_HPP
-# define 			SOUND_HPP
+# ifndef 			__SOUND_HPP__
+# define 			__SOUND_HPP__
+
+# include 		<SFML/Audio.hpp>
 
 //Color out puts
 # define 			RED "\033[0;31m"
@@ -25,18 +27,6 @@
 # define 			DEATH 13
 # define 			ONEUP 14
 # define 			GHOST 15
-// # define 			LOOP1 16
-// # define 			LOOP2 17
-// # define 			LOOP3 18
-// # define 			LOOP4 19
-// # define 			LOOP5 20
-// # define 			LOOP6 21
-// # define 			LOOP7 22
-// # define 			LOOP8 23
-// # define 			LOOP9 24
-
-// # include "bomberman.hpp"
-# include 		<SFML/Audio.hpp>
 
 class Sound{
 	private:
@@ -68,10 +58,10 @@ class Sound{
 		void 			prevLoop();
 		void 			playloop();
 		void 			playFX(int sound);
+		void 			setVolumeLevel(std::string type, float level);
 		void 			LoadSound(sf::Music &buffer, std::string filepath);
 		int 			getLoopValue() const;
-		void 			setVolumeLevel(std::string type, float level);
 		float 		getVolumeLevel(std::string type);
 };
 
-#endif
+# endif
