@@ -87,18 +87,18 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 			vert = -10.0f;
 			if (keys.input() == RIGHT){
 				sound.playFX(SWIPE);
-				keyType += (keyType < 1)?1:0;
+				keyType += (keyType < 202)?1:0;
 			}
 			else if (keys.input() == LEFT){
 				sound.playFX(SWIPE);
-				keyType -= (keyType > -1)?1:0;
+				keyType -= (keyType > 200)?1:0;
 			}
 			else if (keys.input() == ENTER){
 				keys.setKeys(keyType);
 			}
-			*texture = (keyType == -1) ? setTexture("bomberman_assets/wallpapers/keyMappingNumpad.jpg") :
-				(keyType == 1) ? setTexture("bomberman_assets/wallpapers/keyMappingwasd.jpg") :
-				setTexture("bomberman_assets/wallpapers/keyMappingArrow.jpg") ;
+			*texture = (keyType == 202) ? setTexture("bomberman_assets/wallpapers/numpadkeys.jpg") :
+				(keyType == 201) ? setTexture("bomberman_assets/wallpapers/wasdkeys.jpg") :
+				setTexture("bomberman_assets/wallpapers/arrowkeys.jpg") ;
 		}
 		if (keys.input() == UP && menu != KEYMAPPING){
 			sound.playFX(SWIPE);
@@ -165,7 +165,7 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 						vert = 0.0f;
 					}
 					else if (vert == 0.35f){
-						*texture = setTexture("bomberman_assets/wallpapers/keyMappingArrow.jpg");
+						*texture = setTexture("bomberman_assets/wallpapers/arrowkeys.jpg");
 						menu = KEYMAPPING;
 					}
 					else if (vert == 0.0f){
