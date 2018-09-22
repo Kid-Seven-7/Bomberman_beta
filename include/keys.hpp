@@ -42,10 +42,6 @@
 class Keys{
 	private:
 		int 				_mode;
-		int 				_up;
-		int 				_down;
-		int 				_left;
-		int 				_right;
 		GLFWwindow* _window;
 
 	public:
@@ -54,6 +50,7 @@ class Keys{
 
 		void 				setKeys(int mode);
 		void 				setWindow(GLFWwindow *window);
+		int					getMode();
 		int 				input();
 };
 
