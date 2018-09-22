@@ -7,8 +7,8 @@
 /___/      /____/
 */
 
-# ifndef 			_BOMB_HPP_
-# define 			_BOMB_HPP_
+# ifndef 			__BOMB_HPP__
+# define 			__BOMB_HPP__
 
 # include 		<GL/glew.h>
 # include 		<GLFW/glfw3.h>
@@ -19,6 +19,7 @@
 
 # include 		"shader.hpp"
 # include 		"sound.hpp"
+# include 		"keys.hpp"
 
 //Color out puts
 # define 			RED "\033[0;31m"
@@ -49,18 +50,20 @@
 # define 			CREDITS 29
 
 //Key returns
-# define UP 100
-# define DOWN 101
-# define LEFT 102
-# define RIGHT 103
-# define ACTION 104
-// # define
-// # define
+# define 			UP 100
+# define 			DOWN 101
+# define 			LEFT 102
+# define 			RIGHT 103
+# define 			ACTION 104
+# define 			ENTER 105
+# define 			NEXT 106
+# define 			PREV 107
+# define 			EXIT 108
 
 //Voids
 void 					setVersion();
 void 					initCheck();
-void 					processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned int *texture);
+void 					processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned int *texture, Keys &keys);
 
 //char *s
 const char 		*vert();
@@ -71,6 +74,7 @@ const char 		*ifrag();
 //ints
 unsigned int 	setTexture(std::string file);
 
+//bools
 bool 					does_file_exist(std::string fileName);
 
-#endif
+# endif
