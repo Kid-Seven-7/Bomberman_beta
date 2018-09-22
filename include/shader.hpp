@@ -28,10 +28,10 @@
 class Shader{
 	public:
 		unsigned int 	ID;
-		Shader(const char* vertexPath, const char* fragmentPath);
+		Shader				(const char* vertexPath, const char* fragmentPath);
 		void 					use();
 
 	private:
 		void 					checkCompileErrors(GLuint shader, std::string type);
 };
-#endif
+# endif
