@@ -9,6 +9,16 @@
 
 # include "../include/bomberman.hpp"
 
+/*
+	Parameters:
+		void
+	Return:
+		void
+	Synopsis:
+		Checks if glew was successfuly initialized
+		if so the OpenGL Version is printed
+		if not an error message is printed
+*/
 void initCheck(){
 	system("clear");
 	int major, minor, revision;

@@ -17,6 +17,7 @@
 
 int main(){
 	Sound sound;
+	Keys keys;
 	// sound.playloop();
 
   // glfw: initialize and configure
@@ -31,6 +32,7 @@ int main(){
     return -1;
   }
   glfwMakeContextCurrent(window);
+	keys.setWindow(window);
 
 	//Checking if glew Initialized correctly
   initCheck();
@@ -119,7 +121,7 @@ int main(){
   // render loop
   while (!glfwWindowShouldClose(window)){
     // input
-    processInput(window, myShader, sound, &texture);
+    processInput(window, myShader, sound, &texture, keys);
 
     // render
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -154,6 +156,15 @@ int main(){
   return 0;
 }
 
+/*
+	Parameters:
+		std::string file- The path of the image to be loaded
+	Return:
+		unsigned int texture- An array storing the loaded texture
+	Synopsis:
+		Generates, binds and configure a texture and loads an array of said texture
+		into an unsigned int array
+*/
 unsigned int setTexture(std::string file){
 	// load and create a texture
 	unsigned int texture;
@@ -184,9 +195,4 @@ unsigned int setTexture(std::string file){
 	}
 	stbi_image_free(data);
 	return (texture);
-}
-
-bool does_file_exist(std::string fileName){
-    std::ifstream infile(fileName);
-    return infile.good();
 }

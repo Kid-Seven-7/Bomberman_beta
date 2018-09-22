@@ -12,12 +12,27 @@
 # include <unistd.h>
 
 //Foreward declerations
-void LoadSound(sf::Music &buffer, std::string filepath);
 void playSFX(sf::Music &buffer);
 void setSound(sf::Music &buffer, sf::Music &buffer1, sf::Music &buffer2);
 
+/*
+	Parameters:
+		void
+	Return:
+		void
+	Synopsis:
+		Sound deconstructor
+*/
 Sound::~Sound(){}
 
+/*
+	Parameters:
+		void
+	Return:
+		void
+	Synopsis:
+		Sound constructor
+*/
 Sound::Sound()
 :_loop(1)
 {
@@ -36,7 +51,14 @@ Sound::Sound()
 	LoadSound(this->_bomb, "bomberman_assets/sounds/blast.wav");
 }
 
-/* Plays a SFX based on the value passed in */
+/*
+	Parameters:
+		int sound- A MACRO defining which sound to play
+	Return:
+		void
+	Synopsis:
+		Plays a sound based on the value passed in
+*/
 void Sound::playFX(int sound){
 	switch (sound){
 		case GHOST:
@@ -51,18 +73,41 @@ void Sound::playFX(int sound){
 	}
 }
 
-/* returns the value of _loop (the loop currently playing) */
+/*
+	Parameters:
+		void
+	Return:
+		int- Active loop
+	Synopsis:
+		Returns the value of active loop
+*/
 int Sound::getLoopValue() const{
 return (this->_loop);
 }
 
-/* plays the next loop */
+/*
+	Parameters:
+		void
+	Return:
+		void
+	Synopsis:
+		Incrementes the value of the current loop
+		playing the next loop
+*/
 void Sound::nextLoop(){
 	this->_loop++;
 	playloop();
 }
 
-/* Plays the previous loop */
+/*
+	Parameters:
+		void
+	Return:
+		void
+	Synopsis:
+		Decrementes the value of the current loop
+		playing the previous loop
+*/
 void Sound::prevLoop(){
 	if(this->_loop > 1){
 		this->_loop--;
@@ -70,7 +115,14 @@ void Sound::prevLoop(){
 	}
 }
 
-/* Chooses which loop to play based on the value of _loop */
+/*
+	Parameters:
+		void
+	Return:
+		void
+	Synopsis:
+		Plays the current loop and pauses the niebouring loops
+*/
 void Sound::playloop(){
 	switch (this->_loop) {
 		case 1:
@@ -106,7 +158,16 @@ void Sound::playloop(){
 	}
 }
 
-/* Loads sound into the buffer */
+/*
+	Parameters:
+		sf::Music &buffer- Buffer to load sound into
+		std::string filepath- Path to the sound file to load
+	Return:
+		void
+	Synopsis:
+		Loads sound into buffer.
+		Prints error message on failure
+*/
 void Sound::LoadSound(sf::Music &buffer, std::string filepath){
 	if(!buffer.openFromFile(filepath))
 	std::cout
@@ -117,21 +178,15 @@ void Sound::LoadSound(sf::Music &buffer, std::string filepath){
 		<< '\n';
 }
 
-/* Ensures that a sound has been stopped before playing it */
-void playSFX(sf::Music &buffer){
-	buffer.stop();
-	buffer.play();
-}
-
-/* Plays the current loop ensuring that all other loops have been stopped */
-void setSound(sf::Music &buffer, sf::Music &buffer1, sf::Music &buffer2){
-	buffer.stop();
-	buffer1.stop();
-	buffer2.stop();
-	buffer.setLoop(true);
-	buffer.play();
-}
-
+/*
+	Parameters:
+		std::string type- Sound type
+		float level- Sound level
+	Return:
+		void
+	Synopsis:
+		Sets the volume level of various sounds
+*/
 void Sound::setVolumeLevel(std::string type, float level){
 	if (type == "LOOP"){
 		this->_loop1.setVolume(this->getVolumeLevel("LOOP") + level);
@@ -155,6 +210,15 @@ void Sound::setVolumeLevel(std::string type, float level){
 		return;
 }
 
+/*
+	Parameters:
+		std::string type- Sound type
+	Return:
+		float- Current sound level of the defined sound type,
+			or -1.0f on failure
+	Synopsis:
+		Returns the sound level of the defined sound type
+*/
 float Sound::getVolumeLevel(std::string type){
 	if (type == "LOOP")
 		return(this->_loop1.getVolume());
@@ -162,4 +226,35 @@ float Sound::getVolumeLevel(std::string type){
 		return(this->_bomb.getVolume());
 	else
 		return (-1.0f);
+}
+
+/*
+Parameters:
+	sf::Music &buffer- Sound buffer
+Return:
+	void
+Synopsis:
+	Plays the sound buffer passed in
+*/
+void playSFX(sf::Music &buffer){
+	buffer.stop();
+	buffer.play();
+}
+
+/*
+Parameters:
+	sf::Music &buffer- Current sound buffer
+	sf::Music &buffer1- Neibouring sound buffer
+	sf::Music &buffer2- Neibouring sound buffer
+Return:
+	void
+Synopsis:
+	Plays current sound buffer in a loop and stops the neibouring sound buffers
+*/
+void setSound(sf::Music &buffer, sf::Music &buffer1, sf::Music &buffer2){
+	buffer.stop();
+	buffer1.stop();
+	buffer2.stop();
+	buffer.setLoop(true);
+	buffer.play();
 }

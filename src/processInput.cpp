@@ -1,17 +1,22 @@
+/*
+       _
+      (_)___  ____ _____  ____ ___  ____ _
+     / / __ \/ __ `/ __ \/ __ `__ \/ __ `/
+    / / / / / /_/ / /_/ / / / / / / /_/ /
+ __/ /_/ /_/\__, /\____/_/ /_/ /_/\__,_/
+/___/      /____/
+*/
+
 # include "../include/bomberman.hpp"
 
-int up = 265;
-int down = 264;
-int left = 263;
-int right = 262;
-
-void mapKeys(int keyType){
-	up = (keyType == -1) ? 328 : (keyType == 1) ? 87 : 265;
-	down = (keyType == -1) ? 322 : (keyType == 1) ? 83 : 264;
-	left = (keyType == -1) ? 324 : (keyType == 1) ? 65 : 263;
-	right = (keyType == -1) ? 326 : (keyType == 1) ? 68 : 262;
-}
-
+/*
+	Parameters:
+		std::string filepath- Path to save file to be opened
+	Return:
+		void
+	Synopsis:
+		Determines if a save file exists or not
+*/
 void loadFile(std::string filepath){
 	if (does_file_exist(filepath))
 		std::cout << "file exists" << '\n';
@@ -19,6 +24,14 @@ void loadFile(std::string filepath){
 		std::cout << "no such file" << '\n';
 }
 
+/*
+	Parameters:
+		int slot- The selected slot number
+	Return:
+		void
+	Synopsis:
+		Creates a save file
+*/
 void saveFile(int slot){
 	if (slot == 1)
 		system("touch save/slot1.svf");
@@ -33,11 +46,37 @@ void saveFile(int slot){
 	std::cout << "saved file" << '\n';
 }
 
-void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned int *texture)
+/*
+	Parameters:
+		std::string fileName- The path to the file to validate
+	Return:
+		bool- true if file exists else false
+	Synopsis:
+		Validates if a file exists
+*/
+bool does_file_exist(std::string fileName){
+    std::ifstream infile(fileName);
+    return infile.good();
+}
+
+/*
+	Parameters:
+		GLFWwindow *window- GLFW window instance
+		Shader myShader- Shader class
+		Sound &sound- Reference to sound class
+		unsigned int *texture- pointer to texture array
+		Keys &keys- Reference to keys class
+	Return:
+		void
+	Synopsis:
+		A game menu
+*/
+void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned int *texture, Keys &keys)
 {
+	(void)keys;
 	static unsigned char i = 0;
 	static unsigned int menu = MAIN;
-	static int keyType = 0;
+	static int keyType = ARROW;
 	static float vert, hori = 0.0f;
 	int vertexPosLocation = glGetUniformLocation(myShader.ID, "newPosition");
 
@@ -46,36 +85,36 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 	if (++i % 4 == 0){
 		if (menu == KEYMAPPING){
 			vert = -10.0f;
-			if (glfwGetKey(window, right) == GLFW_PRESS){
+			if (keys.input() == RIGHT){
 				sound.playFX(SWIPE);
 				keyType += (keyType < 1)?1:0;
 			}
-			else if (glfwGetKey(window, left) == GLFW_PRESS){
+			else if (keys.input() == LEFT){
 				sound.playFX(SWIPE);
 				keyType -= (keyType > -1)?1:0;
 			}
-			else if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS){
-				mapKeys(keyType);
+			else if (keys.input() == ENTER){
+				keys.setKeys(keyType);
 			}
 			*texture = (keyType == -1) ? setTexture("bomberman_assets/wallpapers/keyMappingNumpad.jpg") :
 				(keyType == 1) ? setTexture("bomberman_assets/wallpapers/keyMappingwasd.jpg") :
 				setTexture("bomberman_assets/wallpapers/keyMappingArrow.jpg") ;
 		}
-		if ((glfwGetKey(window, up) == GLFW_PRESS) && menu != KEYMAPPING){
+		if (keys.input() == UP && menu != KEYMAPPING){
 			sound.playFX(SWIPE);
 			if (menu == VOLUME)
 				vert += (vert < 0.35f)?0.35f:0.0f;
 			else
 				vert += (vert < 0.7f)?0.35f:0.0f;
 		}
-		else if ((glfwGetKey(window, down) == GLFW_PRESS) && menu != KEYMAPPING){
+		else if (keys.input() == DOWN && menu != KEYMAPPING){
 			sound.playFX(SWIPE);
 			if (menu == VOLUME)
 				vert -= (vert > -0.35f)?0.35f:0.0f;
 			else
 				vert -= (vert > -0.7f)?0.35f:0.0f;
 		}
-		else if (glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS){
+		else if (keys.input() == ENTER){
 			// sound.playFX(BLAST);
 			switch (menu){
 				case MAIN:
@@ -134,13 +173,11 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 						menu = RESOLUTION;
 					}
 					else if (vert == -0.35f){
-						// std::cout << "Cheat codes" << '\n';
 						vert = -10.0f;
 						*texture = setTexture("bomberman_assets/wallpapers/cheat.jpg");
 						menu = CHEATS;
 					}
 					else if (vert == -0.7f){
-						// std::cout << "credits" << '\n';
 						vert = -10.0f;
 						*texture = setTexture("bomberman_assets/wallpapers/credits.jpg");
 						menu = CREDITS;
@@ -160,13 +197,13 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 					break;
 			}
 		}
-		else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		else if (keys.input() == ACTION)
 			sound.playFX(GHOST);
-		else if (glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
+		else if (keys.input() == NEXT)
 			sound.nextLoop();
-		else if (glfwGetKey(window, GLFW_KEY_B) == GLFW_PRESS)
+		else if (keys.input() == PREV)
 			sound.prevLoop();
-		else if (glfwGetKey(window, right) == GLFW_PRESS && menu == VOLUME){
+		else if (keys.input() == RIGHT && menu == VOLUME){
 			if(vert == 0.35f){
 				sound.setVolumeLevel("SFX", 10.0f);
 				sound.setVolumeLevel("LOOP", 10.0f);
@@ -175,7 +212,7 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 			else if(vert == -0.35f)
 				sound.setVolumeLevel("SFX", 10.0f);
 		}
-		else if (glfwGetKey(window, left) == GLFW_PRESS && menu == VOLUME){
+		else if (keys.input() == LEFT && menu == VOLUME){
 			if(vert == 0.35f){
 				sound.setVolumeLevel("SFX", -10.0f);
 				sound.setVolumeLevel("LOOP", -10.0f);
@@ -185,7 +222,7 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 				sound.setVolumeLevel("SFX", -10.0f);
 		}
 	}
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
+	if (keys.input() == EXIT){
 		vert = 0.0f;
 		if (menu == RESOLUTION || menu == VOLUME){
 			*texture = setTexture("bomberman_assets/wallpapers/settings.jpg");
