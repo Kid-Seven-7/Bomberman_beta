@@ -115,7 +115,7 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 				vert -= (vert > -0.7f)?0.35f:0.0f;
 		}
 		else if (keys.input() == ENTER){
-			// sound.playFX(BLAST);
+			sound.playFX(BB8_MISC);
 			switch (menu){
 				case MAIN:
 					if (vert == 0.35f){

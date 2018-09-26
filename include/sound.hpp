@@ -27,6 +27,15 @@
 # define 			DEATH 13
 # define 			ONEUP 14
 # define 			GHOST 15
+# define 			BASS 16
+# define 			BB8_DEATH 17
+# define 			BB8_MISC 18
+# define 			PRECIPICE 99
+// # define 			BASS
+// # define 			BASS
+// # define 			BASS
+// # define 			BASS
+// # define 			BASS
 
 class Sound{
 	private:
@@ -43,12 +52,23 @@ class Sound{
 		sf::Music _loop8;
 		sf::Music _loop9;
 
+		//OST
+		sf::Music _ost1;
+
 		//SFX
 		sf::Music _bomb;
 		sf::Music _swipe;
 		sf::Music _ghost;
 		sf::Music _oneup;
 		sf::Music _death;
+		sf::Music _bassdrop;
+		sf::Music _bb8_death;
+		sf::Music _bb8_sound;
+		sf::Music _bb8_sound1;
+		sf::Music _bb8_sound2;
+		sf::Music _bb8_sound3;
+		sf::Music _bb8_sound4;
+		sf::Music _bb8_sound5;
 
 	public:
 		Sound();
@@ -58,6 +78,7 @@ class Sound{
 		void 			prevLoop();
 		void 			playloop();
 		void 			playFX(int sound);
+		void 			playOST(int sound);
 		void 			setVolumeLevel(std::string type, float level);
 		void 			LoadSound(sf::Music &buffer, std::string filepath);
 		int 			getLoopValue() const;
