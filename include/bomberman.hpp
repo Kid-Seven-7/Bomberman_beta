@@ -63,6 +63,7 @@
 //Voids
 void 					setVersion();
 void 					initCheck();
+void 					displayStart(Sound &sound, Keys &keys, GLFWwindow* window);
 void 					processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned int *texture, Keys &keys);
 
 //char *s

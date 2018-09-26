@@ -6,4 +6,5 @@
 #  /___/      /____/
 
 find . -name ".DS*" -exec rm {} \;
+find . -name "*.svf" -exec rm {} \;
 make fclean

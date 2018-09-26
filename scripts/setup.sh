@@ -54,6 +54,7 @@ else
 	echo "${GREEN}assimp found${NC}"
 fi
 
+#update module installation
 printf ${CYAN}'%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -${NC}
 echo "${BLUE}checking for submodules...${NC}"
 printf ${CYAN}'%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -${NC}
@@ -79,6 +80,8 @@ else
 	echo ${GREEN}bomberman_assets found${NC}
 	cd bomberman_assets
 	sh unzip.sh
+	cd sounds2 && mv * ../sounds
+	rm sounds2
 	cd ..
 fi
 
