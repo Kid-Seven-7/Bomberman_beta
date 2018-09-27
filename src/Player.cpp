@@ -23,9 +23,9 @@ Player::Player()
     this->move_y = 1.3f;
 
     //Player head init
-    // this->player_head = Model("assets/bb8/bb8-head-to_scale.obj");
+    this->player_head = Model("bomberman_assets/player/bb8/bb8-head-to_scale.obj");
     //Player body init
-    // this->player_body = Model("assets/bb8/bb8-to_scale.obj");
+    this->player_body = Model("bomberman_assets/player/bb8/bb8-body-to_scale.obj");
 }
 
 Player::~Player() {}

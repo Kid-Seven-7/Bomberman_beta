@@ -87,7 +87,7 @@ void Sound::playFX(int sound){
 			break;
 		case BB8_MISC:
 			srand (time(NULL));
-			int randomNumber = (rand() % 6 + 1);
+			int randomNumber = (rand() % 12 + 1);
 			if (randomNumber == 1)
 				playSFX(this->_bb8_sound);
 			else if (randomNumber == 2)
