@@ -23,10 +23,9 @@ void initCheck(){
 	system("clear");
 	int major, minor, revision;
 	glfwGetVersion(&major, &minor, &revision);
-	if (glewInit() != GLEW_OK)
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 		std::cout
 			<< RED <<"Failed to Initialize glew:\n"
-			<< ORANGE << glewGetErrorString(glewInit())
 			<< NC << std::endl;
 	else
 		std::cout

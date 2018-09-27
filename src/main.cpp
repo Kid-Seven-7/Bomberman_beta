@@ -16,7 +16,7 @@ int main(){
 	Sound sound;
 	Keys keys;
 	// sound.playloop();
-	sound.playOST(PRECIPICE);
+	// sound.playOST(PRECIPICE);
 
   // glfw: initialize and configure
   glfwInit();

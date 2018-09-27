@@ -15,17 +15,29 @@ SRC = $(SRCPATH)main.cpp\
 			$(SRCPATH)sound.class.cpp\
 			$(SRCPATH)keys.class.cpp\
 			$(SRCPATH)shader.cpp\
-			$(SRCPATH)processInput.cpp
+			$(SRCPATH)CameraClass.cpp\
+			$(SRCPATH)GraphicsEngine.cpp\
+			$(SRCPATH)MapEngine.cpp\
+			$(SRCPATH)PhysicsEngine.cpp\
+			$(SRCPATH)Player.cpp\
+			$(SRCPATH)model.cpp\
+			$(SRCPATH)Model_Objects.cpp\
+			$(SRCPATH)mesh.cpp\
+			$(SRCPATH)gamePlay.cpp\
+			$(SRCPATH)processInput.cpp\
+			Image_Loader/loader.o
 
 COMP = clang++
 
 CPPSTD = -std=c++11
 
-CPPFLAGS = -Wall -Wextra -Werror
+CPPFLAGS = -Wall -Wextra -Werror -Wmacro-redefined
 
 LIB = -L ~/.brew/lib -framework Cocoa -framework OpenGL -framework IOKit -framework CoreFoundation -framework CoreVideo -DGLEW_STATIC
 
 INC = -I ~/.brew/include
+
+GLADINC = -I include bin/glad.o
 
 GLMINC = -I ~/.brew/Cellar/glm/0.9.9.0/include/
 
@@ -43,9 +55,10 @@ NC = \033[0m
 all:	$(NAME)
 
 $(NAME):
+	@$(MAKE) -C Image_Loader/
 	@sh scripts/setup.sh
 	@printf "$(GREEN)compiling source files\n$(NC)"
-	@$(COMP) -o $(NAME) $(SRC) $(CPPFLAGS) $(CPPSTD) $(INC) $(LIB) $(TEXTINC) $(GLMINC) $(SOUNDLIB) $(SOUNDFLAGS) -lglfw3 -lGLEW
+	@$(COMP) -o $(NAME) $(SRC) $(CPPFLAGS) $(CPPSTD) $(INC) $(LIB) $(TEXTINC) $(GLMINC) $(GLADINC) $(SOUNDLIB) $(SOUNDFLAGS) -lassimp -lglfw3 -lGLEW
 	clear
 	@printf "$(GREEN)please type the following in the terminal on first execution\n$(NC)"
 	@printf "$(RED)export DYLD_FRAMEWORK_PATH=\"$(PWD)/SFML/Frameworks\"\n$(NC)"
@@ -55,7 +68,7 @@ clean:
 	@rm -f $(SRCO)
 
 fclean: clean
-	@printf "$(ORANGE)removing exectutable\n$(NC)"
+	@printf "$(ORANGE)removing executable\n$(NC)"
 	@rm -f $(NAME)
 
 re: fclean all

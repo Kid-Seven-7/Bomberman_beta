@@ -8,9 +8,7 @@
 */
 
 # include "../include/bomberman.hpp"
-
-# define STB_IMAGE_IMPLEMENTATION
-# include "../include/stb_image.h"
+# include "../Image_Loader/image_loader.hpp"
 
 /*
 	Parameters:
@@ -63,11 +61,10 @@ bool does_file_exist(std::string fileName){
 }
 
 void displayStart(Sound &sound, Keys &keys, GLFWwindow* window){
-	stbi_set_flip_vertically_on_load(1);
-	
 	// build and compile our shader zprogram
-	Shader ourShader("src/textureVert.shader", "src/textureFrag.shader");
-  Shader myShader("src/vert.shader", "src/frag.shader");
+	Shader ourShader("Shaders/textureVert.shader", "Shaders/textureFrag.shader");
+  Shader myShader("Shaders/vert.shader", "Shaders/frag.shader");
+	unsigned int texture = setTexture(0, "bomberman_assets/wallpapers/menu.jpg");
 
   // set up vertex data (and buffer(s)) and configure vertex attributes
   float vertices[] = {
@@ -141,11 +138,11 @@ void displayStart(Sound &sound, Keys &keys, GLFWwindow* window){
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO1);
 
-	unsigned int texture = setTexture("bomberman_assets/wallpapers/menu.jpg");
-
+	glDisable(GL_DEPTH_TEST);
   // render loop
   while (!glfwWindowShouldClose(window)){
     // input
+
     processInput(window, myShader, sound, &texture, keys);
 
     // render
@@ -194,7 +191,6 @@ void displayStart(Sound &sound, Keys &keys, GLFWwindow* window){
 */
 void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned int *texture, Keys &keys)
 {
-	(void)keys;
 	static unsigned char i = 0;
 	static unsigned int menu = MAIN;
 	static int keyType = ARROW;
@@ -204,6 +200,13 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 	glUniform4f(vertexPosLocation, hori, vert, 0.2f, 1.0f);
 
 	if (++i % 4 == 0){
+		if (menu == MAIN && vert == 0.7f){
+			if (keys.input() == ENTER){
+				if (does_file_exist("gameState/mapstate.mss"))
+					std::cout << "save exists" << '\n';
+				gameplay(window, sound, keys);
+			}
+		}
 		if (menu == KEYMAPPING){
 			vert = -10.0f;
 			if (keys.input() == RIGHT){
@@ -217,9 +220,9 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 			else if (keys.input() == ENTER){
 				keys.setKeys(keyType);
 			}
-			*texture = (keyType == 202) ? setTexture("bomberman_assets/wallpapers/numpadkeys.jpg") :
-				(keyType == 201) ? setTexture("bomberman_assets/wallpapers/wasdkeys.jpg") :
-				setTexture("bomberman_assets/wallpapers/arrowkeys.jpg") ;
+			*texture = (keyType == 202) ? setTexture(texture, "bomberman_assets/wallpapers/numpadkeys.jpg") :
+				(keyType == 201) ? setTexture(texture, "bomberman_assets/wallpapers/wasdkeys.jpg") :
+				setTexture(texture, "bomberman_assets/wallpapers/arrowkeys.jpg") ;
 		}
 		if (keys.input() == UP && menu != KEYMAPPING){
 			sound.playFX(SWIPE);
@@ -236,22 +239,24 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 				vert -= (vert > -0.7f)?0.35f:0.0f;
 		}
 		else if (keys.input() == ENTER){
-			sound.playFX(BB8_MISC);
+			sound.playFX(BASS);
 			switch (menu){
 				case MAIN:
 					if (vert == 0.35f){
-						*texture = setTexture("bomberman_assets/wallpapers/save.jpg");
+						*texture = setTexture(texture, "bomberman_assets/wallpapers/save.jpg");
 						menu = SAVE;
 					}
 					else if (vert == 0.0f){
-						*texture = setTexture("bomberman_assets/wallpapers/save.jpg");
+						*texture = setTexture(texture, "bomberman_assets/wallpapers/save.jpg");
 						menu = LOAD;
 					}
 					else if (vert == -0.7f){
-						*texture = setTexture("bomberman_assets/wallpapers/settings.jpg");
+						*texture = setTexture(texture, "bomberman_assets/wallpapers/settings.jpg");
 						menu = SETTINGS;
 					}
 					else if (vert == -0.35f){
+						remove("gameState/mapstate.mss");
+						remove("gameState/playerCoords.pcs");
 						exit(0);
 					}
 					break;
@@ -281,26 +286,26 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 					break;
 				case SETTINGS:
 					if (vert == 0.7f){
-						*texture = setTexture("bomberman_assets/wallpapers/sound.jpg");
+						*texture = setTexture(texture, "bomberman_assets/wallpapers/sound.jpg");
 						menu = VOLUME;
 						vert = 0.0f;
 					}
 					else if (vert == 0.35f){
-						*texture = setTexture("bomberman_assets/wallpapers/arrowkeys.jpg");
+						*texture = setTexture(texture, "bomberman_assets/wallpapers/arrowkeys.jpg");
 						menu = KEYMAPPING;
 					}
 					else if (vert == 0.0f){
-						*texture = setTexture("bomberman_assets/wallpapers/reso.jpg");
+						*texture = setTexture(texture, "bomberman_assets/wallpapers/reso.jpg");
 						menu = RESOLUTION;
 					}
 					else if (vert == -0.35f){
 						vert = -10.0f;
-						*texture = setTexture("bomberman_assets/wallpapers/cheat.jpg");
+						*texture = setTexture(texture, "bomberman_assets/wallpapers/cheat.jpg");
 						menu = CHEATS;
 					}
 					else if (vert == -0.7f){
 						vert = -10.0f;
-						*texture = setTexture("bomberman_assets/wallpapers/credits.jpg");
+						*texture = setTexture(texture, "bomberman_assets/wallpapers/credits.jpg");
 						menu = CREDITS;
 					}
 					break;
@@ -346,11 +351,11 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 	if (keys.input() == EXIT){
 		vert = 0.0f;
 		if (menu == RESOLUTION || menu == VOLUME){
-			*texture = setTexture("bomberman_assets/wallpapers/settings.jpg");
+			*texture = setTexture(texture, "bomberman_assets/wallpapers/settings.jpg");
 			menu = SETTINGS;
 		}
 		else{
-			*texture = setTexture("bomberman_assets/wallpapers/menu.jpg");
+			*texture = setTexture(texture, "bomberman_assets/wallpapers/menu.jpg");
 			menu = MAIN;
 		}
 	}
@@ -365,8 +370,10 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 		Generates, binds and configure a texture and loads an array of said texture
 		into an unsigned int array
 */
-unsigned int setTexture(std::string file){
+unsigned int setTexture(unsigned int *old_texture, std::string file){
 	// load and create a texture
+	if (old_texture)
+		glDeleteTextures(1, old_texture);
 	unsigned int texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
@@ -382,17 +389,15 @@ unsigned int setTexture(std::string file){
 	// load image, create texture and generate mipmaps
 	int width, height, nrChannels;
 
-	// The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-	// unsigned char *data = menu.loadImage();
-	unsigned char *data = stbi_load(file.c_str(), &width, &height, &nrChannels, 0);
+	ImageLoader loader(file, width, height, nrChannels);
+
+	unsigned char *data = loader.getImageData();
+
 	if (data){
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
-	}else{
+	}else
 		std::cout << "Failed to load texture" << std::endl;
 
-		std::cout << stbi_failure_reason() << '\n';
-	}
-	stbi_image_free(data);
 	return (texture);
 }

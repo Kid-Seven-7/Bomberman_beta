@@ -254,6 +254,7 @@ void Sound::setVolumeLevel(std::string type, float level){
 		this->_loop7.setVolume(this->getVolumeLevel("LOOP") + level);
 		this->_loop8.setVolume(this->getVolumeLevel("LOOP") + level);
 		this->_loop9.setVolume(this->getVolumeLevel("LOOP") + level);
+		this->_ost1.setVolume(this->getVolumeLevel("LOOP") + level);
 	}
 	if (type == "SFX"){
 		this->_bomb.setVolume(this->getVolumeLevel("SFX") + level);
@@ -261,6 +262,14 @@ void Sound::setVolumeLevel(std::string type, float level){
 		this->_ghost.setVolume(this->getVolumeLevel("SFX") + level);
 		this->_oneup.setVolume(this->getVolumeLevel("SFX") + level);
 		this->_death.setVolume(this->getVolumeLevel("SFX") + level);
+		this->_bassdrop.setVolume(this->getVolumeLevel("SFX") + level);
+		this->_bb8_death.setVolume(this->getVolumeLevel("SFX") + level);
+		this->_bb8_sound.setVolume(this->getVolumeLevel("SFX") + level);
+		this->_bb8_sound1.setVolume(this->getVolumeLevel("SFX") + level);
+		this->_bb8_sound2.setVolume(this->getVolumeLevel("SFX") + level);
+		this->_bb8_sound3.setVolume(this->getVolumeLevel("SFX") + level);
+		this->_bb8_sound4.setVolume(this->getVolumeLevel("SFX") + level);
+		this->_bb8_sound5.setVolume(this->getVolumeLevel("SFX") + level);
 	}
 	else
 		return;
