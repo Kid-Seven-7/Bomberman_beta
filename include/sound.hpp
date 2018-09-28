@@ -31,11 +31,6 @@
 # define 			BB8_DEATH 17
 # define 			BB8_MISC 18
 # define 			PRECIPICE 99
-// # define 			BASS
-// # define 			BASS
-// # define 			BASS
-// # define 			BASS
-// # define 			BASS
 
 class Sound{
 	private:
@@ -51,9 +46,6 @@ class Sound{
 		sf::Music _loop7;
 		sf::Music _loop8;
 		sf::Music _loop9;
-
-		//OST
-		sf::Music _ost1;
 
 		//SFX
 		sf::Music _bomb;
@@ -78,7 +70,6 @@ class Sound{
 		void 			prevLoop();
 		void 			playloop();
 		void 			playFX(int sound);
-		void 			playOST(int sound);
 		void 			setVolumeLevel(std::string type, float level);
 		void 			LoadSound(sf::Music &buffer, std::string filepath);
 		int 			getLoopValue() const;
