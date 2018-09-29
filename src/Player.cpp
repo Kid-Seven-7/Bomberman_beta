@@ -19,8 +19,8 @@ Player::Player()
     this->body_r_y = 0.0f;
 
     //init body movement variables
-    this->move_x = 1.3f;
-    this->move_y = 1.3f;
+    this->move_x = 0.0f;
+    this->move_y = 0.0f;
 
     //Player head init
     this->player_head = Model("bomberman_assets/player/bb8/bb8-head-to_scale.obj");
@@ -36,7 +36,7 @@ void    Player::headModel(Shader shader)
     glm::mat4   player_head = glm::mat4(1.0f);
 
     //Player head movements
-    player_head = glm::translate(player_head, glm::vec3(-0.5f + this->move_x, -0.25f, -0.60f + this->move_y));
+    player_head = glm::translate(player_head, glm::vec3(-0.5f + this->move_x, -0.85f, -0.60f + this->move_y));
 
     //Resizing the head model down
     player_head = glm::scale(player_head, glm::vec3(0.7f, 0.7f, 0.7f));
@@ -105,3 +105,8 @@ void    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys)
 float   Player::getXcoord() { return (move_x); }
 
 float   Player::getYcoord() { return (move_y); }
+
+void    Player::setcoord(float Xpos, float Ypos){
+	this->move_x = Xpos;
+	this->move_y = Ypos;
+}

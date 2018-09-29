@@ -41,6 +41,7 @@ class Player
         void    playerMovements(GLFWwindow *window, Sound &sound, Keys &keys);
         float   getXcoord();
         float   getYcoord();
+				void    setcoord(float Xpos, float Ypos);
 
     private:
         //Player models

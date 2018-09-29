@@ -80,3 +80,23 @@ void    CameraClass::playerCamMovements(Keys &keys){
     else if (keys.input() == LEFT)
         this->cameraPos += glm::normalize(glm::cross(glm::vec3(0.0f, 1.0f, 6.0f), glm::vec3(0.0f, 1.0f, 0.0f))) * this->playerCamSpeed;
 }
+
+void 	CameraClass::saveinfo(){
+	std::ofstream file("gameState/camInfo.gsf");
+	file
+		<< "camSpeed"
+		<< this->camSpeed
+		<< "\nplayerCamSpeed"
+		<< this->playerCamSpeed
+		<< "\nrotate_cam_x"
+		<< this->rotate_cam_x
+		<< "\nrotate_cam_y"
+		<< this->rotate_cam_y
+		// << "\ncameraPos"
+		// << this->cameraPos
+		// << "\ncameraFront"
+		// << this->cameraFront
+		// << "\ncameraUp"
+		// << this->cameraUp
+		<< '\n';
+}

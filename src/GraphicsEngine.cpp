@@ -85,14 +85,19 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys){
     m_engine.convertMaps();
     std::vector<std::vector<std::vector<int>>> maps = m_engine.getObjectsMaps();
     unsigned int optimizeArray = 0;
-		int menu = 0;
+		// int menu = 0;
 
     while (!glfwWindowShouldClose(this->window)){
       //input process
       if (processInput(keys)){
-				menu++;
-				glBindVertexArray(0);
-				break;
+				// menu++;
+				// glBindVertexArray(0);
+				// break;
+				m_engine.dumpCurrentMap(this->currentMap);
+				std::ofstream file("gameState/playerCoords.pcs");
+				file << player.getXcoord() << ":" << player.getYcoord() << std::endl;
+				displayStart(sound, keys, window);
+				glEnable(GL_DEPTH_TEST);
 			}
 
       glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -153,12 +158,12 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys){
 
       this->callMovementFunctions(player, sound, keys);
     }
-		if (menu != 0){
-			m_engine.dumpCurrentMap(this->currentMap);
-			std::ofstream file("gameState/playerCoords.pcs");
-			file << player.getXcoord() << ":" << player.getYcoord() << std::endl;
-			displayStart(sound, keys, window);
-		}
+		// if (menu != 0){
+		// 	m_engine.dumpCurrentMap(this->currentMap);
+		// 	std::ofstream file("gameState/playerCoords.pcs");
+		// 	file << player.getXcoord() << ":" << player.getYcoord() << std::endl;
+		// 	displayStart(sound, keys, window);
+		// }
 
 }
 

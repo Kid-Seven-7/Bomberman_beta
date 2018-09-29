@@ -143,7 +143,8 @@ void displayStart(Sound &sound, Keys &keys, GLFWwindow* window){
   while (!glfwWindowShouldClose(window)){
     // input
 
-    processInput(window, myShader, sound, &texture, keys);
+    if (processInput(window, myShader, sound, &texture, keys))
+			return;
 
     // render
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -189,7 +190,7 @@ void displayStart(Sound &sound, Keys &keys, GLFWwindow* window){
 	Synopsis:
 		A game menu
 */
-void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned int *texture, Keys &keys)
+bool processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned int *texture, Keys &keys)
 {
 	static unsigned char i = 0;
 	static unsigned int menu = MAIN;
@@ -203,7 +204,7 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 		if (menu == MAIN && vert == 0.7f){
 			if (keys.input() == ENTER){
 				if (does_file_exist("gameState/mapstate.mss"))
-					std::cout << "save exists" << '\n';
+					return true;
 				gameplay(window, sound, keys);
 			}
 		}
@@ -228,6 +229,8 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 			sound.playFX(SWIPE);
 			if (menu == VOLUME)
 				vert += (vert < 0.35f)?0.35f:0.0f;
+			else if (menu == CHEATS)
+				vert = (vert == -0.35f)?0.35f:-0.35f;
 			else
 				vert += (vert < 0.7f)?0.35f:0.0f;
 		}
@@ -235,6 +238,8 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 			sound.playFX(SWIPE);
 			if (menu == VOLUME)
 				vert -= (vert > -0.35f)?0.35f:0.0f;
+			else if (menu == CHEATS)
+				vert = (vert == 0.35f)?-0.35f:0.35f;
 			else
 				vert -= (vert > -0.7f)?0.35f:0.0f;
 		}
@@ -299,8 +304,8 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 						menu = RESOLUTION;
 					}
 					else if (vert == -0.35f){
-						vert = -10.0f;
-						*texture = setTexture(texture, "bomberman_assets/wallpapers/cheat.jpg");
+						vert = 0.35f;
+						*texture = setTexture(texture, "bomberman_assets/wallpapers/screenMode.jpg");
 						menu = CHEATS;
 					}
 					else if (vert == -0.7f){
@@ -309,6 +314,43 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 						menu = CREDITS;
 					}
 					break;
+					case CHEATS:
+						if (vert == 0.35f){
+							glfwTerminate();
+
+							if (!glfwInit()){
+					        std::cout << "GLFW failed to start" << std::endl;
+					        exit(1);
+					    }
+
+							glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+					    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+					    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+					    #ifdef __APPLE__
+					        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // uncomment this statement to fix compilation on OS X
+					    #endif
+
+					    window = glfwCreateWindow(1280, 800, "Bomberman 42", NULL, NULL);
+
+					    if (!window){
+					        std::cout << "Failed to create window" << std::endl;
+					        glfwTerminate();
+					        exit(-1);
+					    }
+
+					    //Making the window the current context
+					    glfwMakeContextCurrent(window);
+							initCheck();
+					    // glfwSetFramebufferSizeCallback(window, framebuffer_size_callback); //For screen resolution
+							keys.setWindow(window);
+							menu = MAIN;
+							displayStart(sound, keys, window);
+						}
+						else if (vert == -0.35f){
+							const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+							glfwSetWindowMonitor(window, glfwGetPrimaryMonitor(), 0, 0, mode->width, mode->height, mode->refreshRate);
+						}
+						break;
 				case RESOLUTION:
 					if (vert == 0.7f)
 						glfwSetWindowSize(window, 1366, 768);
@@ -359,6 +401,7 @@ void processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 			menu = MAIN;
 		}
 	}
+	return false;
 }
 
 /*

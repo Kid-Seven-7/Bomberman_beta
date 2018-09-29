@@ -41,6 +41,19 @@ else
 	echo "${GREEN}glm found${NC}"
 fi
 
+#glew installation
+printf ${CYAN}'%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -${NC}
+echo "${BLUE}checking for glew...${NC}"
+printf ${CYAN}'%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -${NC}
+if [ ! -d $HOME/.brew/Cellar/glew ];
+then
+	echo ${RED}glew not found${NC}
+	echo ${ORANGE}installing glew...${NC}
+  brew install glew;	source ~/.zshrc
+else
+	echo "${GREEN}glew found${NC}"
+fi
+
 #assimp installation
 printf ${CYAN}'%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -${NC}
 echo "${BLUE}checking for assimp...${NC}"

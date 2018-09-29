@@ -37,9 +37,9 @@ Sound::Sound()
 :_loop(1)
 {
 	//Initiates all sounds used in the game
-	LoadSound(this->_loop1, "bomberman_assets/sounds/Here to Stay.wav");
+	LoadSound(this->_loop1, "bomberman_assets/sounds/Devil Eyes.wav");
 	LoadSound(this->_loop2, "bomberman_assets/sounds/On the Precipice of Defeat.wav");
-	LoadSound(this->_loop3, "bomberman_assets/sounds/loop3.wav");
+	LoadSound(this->_loop3, "bomberman_assets/sounds/Here to Stay.wav");
 	LoadSound(this->_loop4, "bomberman_assets/sounds/loop4.wav");
 	LoadSound(this->_loop5, "bomberman_assets/sounds/loop5.wav");
 	LoadSound(this->_loop6, "bomberman_assets/sounds/loop6.wav");
@@ -86,18 +86,18 @@ void Sound::playFX(int sound){
 			break;
 		case BB8_MISC:
 			srand (time(NULL));
-			int randomNumber = (rand() % 12 + 1);
+			int randomNumber = (rand() % 18 + 1);
 			if (randomNumber == 1)
 				playSFX(this->_bb8_sound);
-			else if (randomNumber == 2)
-				playSFX(this->_bb8_sound1);
-			else if (randomNumber == 3)
-				playSFX(this->_bb8_sound2);
 			else if (randomNumber == 4)
+				playSFX(this->_bb8_sound1);
+			else if (randomNumber == 7)
+				playSFX(this->_bb8_sound2);
+			else if (randomNumber == 10)
 				playSFX(this->_bb8_sound3);
-			else if (randomNumber == 5)
+			else if (randomNumber == 13)
 				playSFX(this->_bb8_sound4);
-			else if (randomNumber == 6)
+			else if (randomNumber == 16)
 				playSFX(this->_bb8_sound5);
 			break;
 	}
