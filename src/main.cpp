@@ -15,14 +15,15 @@
 int main(){
 	Sound sound;
 	Keys keys;
-	sound.playloop();
+	// sound.playloop();
+	// sound.playOST(PRECIPICE);
 
   // glfw: initialize and configure
   glfwInit();
   setVersion();
 
   // glfw window creation
-  GLFWwindow* window = glfwCreateWindow(1280, 800, "Bomberman", NULL, NULL);
+  GLFWwindow* window = glfwCreateWindow(1280, 800, "LearnOpenGL", NULL, NULL);
   if (!window){
     std::cout << "Failed to create GLFW window" << std::endl;
     glfwTerminate();

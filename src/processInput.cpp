@@ -10,33 +10,33 @@
 # include "../include/bomberman.hpp"
 # include "../Image_Loader/image_loader.hpp"
 
-bool saveGameState(std::string path){
-	std::cout << "in save func" << '\n';
+void noSaveFile(unsigned int *texture, unsigned int *menu, float *vert){
+	*vert = 10.0f;
+	*texture = setTexture(texture, "bomberman_assets/wallpapers/nosave.jpg");
+	*menu = NO_SAVE_FILE;
+}
 
+bool saveGameState(std::string path){
 	if (does_file_exist("gameState/playerCoords.txt") &&
 			does_file_exist("gameState/camInfo.txt") &&
 			does_file_exist("gameState/mapstate.txt")){
-		std::ofstream output(path);
 
+		std::ofstream output(path);
 		std::ifstream player("gameState/playerCoords.txt");
-		// std::cout << player.rdbuf() << '\n';
-		output << player.rdbuf() << '\n';
 		std::ifstream map("gameState/camInfo.txt");
-		// std::cout << map.rdbuf() << '\n';
-		output << map.rdbuf() << '\n';
 		std::ifstream cam("gameState/mapstate.txt");
-		// std::cout << cam.rdbuf() << '\n';
+
+		output << player.rdbuf() << '\n';
+		output << map.rdbuf() << '\n';
 		output << cam.rdbuf() << '\n';
 
 		if (does_file_exist(path))
-		return true;
+			return true;
 		else
 		std::cout << "failed to save" << '\n';
 	}else{
 		std::cout << "save files missing" << '\n';
 	}
-
-
 
 	return false;
 }
@@ -64,20 +64,25 @@ void loadFile(std::string filepath){
 	Synopsis:
 		Creates a save file
 */
-void saveFile(int slot){
-	if (slot == 1)
-		saveGameState("save/slot1.txt");
-	if (slot == 2)
-		saveGameState("save/slot2.txt");
-	if (slot == 3)
-		saveGameState("save/slot3.txt");
-	if (slot == 4)
-		saveGameState("save/slot4.txt");
-	if (slot == 5)
-		saveGameState("save/slot5.txt");
-
-	// if (saveGameState(int slot))
-		// std::cout << "saved file" << '\n';
+int saveFile(int slot){
+	int error = 0;
+	if (slot == 1){
+		if (!saveGameState("save/slot1.txt"))
+			error = 1;
+	}else if (slot == 2){
+		if (!saveGameState("save/slot2.txt"))
+			error = 1;
+	}else if (slot == 3){
+		if (!saveGameState("save/slot3.txt"))
+			error = 1;
+	}else if (slot == 4){
+		if (!saveGameState("save/slot4.txt"))
+			error = 1;
+	}else if (slot == 5){
+		if (!saveGameState("save/slot5.txt"))
+			error = 1;
+	}
+	return (error);
 }
 
 /*
@@ -293,23 +298,36 @@ bool processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 						menu = SETTINGS;
 					}
 					else if (vert == -0.35f){
-						remove("gameState/mapstate.txt");
-						remove("gameState/playerCoords.txt");
-						remove("gameState/camInfo.txt");
+						if (does_file_exist("gameState/mapstate.txt"))
+							remove("gameState/mapstate.txt");
+						if (does_file_exist("gameState/playerCoords.txt"))
+							remove("gameState/playerCoords.txt");
+						if (does_file_exist("gameState/camInfo.txt"))
+							remove("gameState/camInfo.txt");
 						exit(0);
 					}
 					break;
 				case SAVE:
-					if(vert == 0.7f)
-						saveFile(1);
-					else if(vert == 0.35f)
-						saveFile(2);
-					else if(vert == 0.0f)
-						saveFile(3);
-					else if(vert == -0.35f)
-						saveFile(4);
-					else if(vert == -0.7f)
-						saveFile(5);
+					if(vert == 0.7f){
+						if (saveFile(1))
+							noSaveFile(texture, &menu, & vert);
+					}
+					else if(vert == 0.35f){
+						if (saveFile(2))
+							noSaveFile(texture, &menu, & vert);
+					}
+					else if(vert == 0.0f){
+						if (saveFile(3))
+							noSaveFile(texture, &menu, & vert);
+					}
+					else if(vert == -0.35f){
+						if (saveFile(4))
+							noSaveFile(texture, &menu, & vert);
+					}
+					else if(vert == -0.7f){
+						if (saveFile(5))
+							noSaveFile(texture, &menu, & vert);
+					}
 					break;
 				case LOAD:
 					if(vert == 0.7f)

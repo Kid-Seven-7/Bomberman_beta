@@ -37,9 +37,10 @@ Sound::Sound()
 :_loop(1)
 {
 	//Initiates all sounds used in the game
-	LoadSound(this->_loop1, "bomberman_assets/sounds/Devil Eyes.wav");
-	LoadSound(this->_loop2, "bomberman_assets/sounds/On the Precipice of Defeat.wav");
-	LoadSound(this->_loop3, "bomberman_assets/sounds/Here to Stay.wav");
+	LoadSound(this->_ost1, "bomberman_assets/sounds/On the Precipice of Defeat.wav");
+	LoadSound(this->_loop1, "bomberman_assets/sounds/loop1.wav");
+	LoadSound(this->_loop2, "bomberman_assets/sounds/loop2.wav");
+	LoadSound(this->_loop3, "bomberman_assets/sounds/loop3.wav");
 	LoadSound(this->_loop4, "bomberman_assets/sounds/loop4.wav");
 	LoadSound(this->_loop5, "bomberman_assets/sounds/loop5.wav");
 	LoadSound(this->_loop6, "bomberman_assets/sounds/loop6.wav");
@@ -86,20 +87,45 @@ void Sound::playFX(int sound){
 			break;
 		case BB8_MISC:
 			srand (time(NULL));
-			int randomNumber = (rand() % 18 + 1);
+			int randomNumber = (rand() % 6 + 1);
 			if (randomNumber == 1)
 				playSFX(this->_bb8_sound);
-			else if (randomNumber == 4)
+			else if (randomNumber == 2)
 				playSFX(this->_bb8_sound1);
-			else if (randomNumber == 7)
+			else if (randomNumber == 3)
 				playSFX(this->_bb8_sound2);
-			else if (randomNumber == 10)
+			else if (randomNumber == 4)
 				playSFX(this->_bb8_sound3);
-			else if (randomNumber == 13)
+			else if (randomNumber == 5)
 				playSFX(this->_bb8_sound4);
-			else if (randomNumber == 16)
+			else if (randomNumber == 6)
 				playSFX(this->_bb8_sound5);
 			break;
+	}
+}
+
+/*
+	Parameters:
+		int sound- A MACRO defining which sound to play
+	Return:
+		void
+	Synopsis:
+		Plays a sound based on the value passed in
+*/
+void Sound::playOST(int sound){
+	switch (sound){
+		case PRECIPICE:
+			playSFX(this->_ost1);
+			break;
+		// case SWIPE:
+		// 	playSFX(this->_swipe);
+		// 	break;
+		// case BLAST:
+		// 	playSFX(this->_bomb);
+		// 	break;
+		// case BASS:
+		// 	playSFX(this->_bassdrop);
+		// 	break;
 	}
 }
 
@@ -228,6 +254,7 @@ void Sound::setVolumeLevel(std::string type, float level){
 		this->_loop7.setVolume(this->getVolumeLevel("LOOP") + level);
 		this->_loop8.setVolume(this->getVolumeLevel("LOOP") + level);
 		this->_loop9.setVolume(this->getVolumeLevel("LOOP") + level);
+		this->_ost1.setVolume(this->getVolumeLevel("LOOP") + level);
 	}
 	if (type == "SFX"){
 		this->_bomb.setVolume(this->getVolumeLevel("SFX") + level);

@@ -112,21 +112,3 @@ void 	CameraClass::saveinfo(){
 		<< cameraUp.z
 		<< '\n';
 }
-
-void 		CameraClass::setcamPos(float x, float y, float z){
-	cameraPos.x = x;
-	cameraPos.y = y;
-	cameraPos.z = z;
-}
-
-void 		CameraClass::setcamFront(float x, float y, float z){
-	cameraFront.x = x;
-	cameraFront.y = y;
-	cameraFront.z = z;
-}
-
-void 		CameraClass::setcamUp(float x, float y, float z){
-	cameraUp.x = x;
-	cameraUp.y = y;
-	cameraUp.z = z;
-}

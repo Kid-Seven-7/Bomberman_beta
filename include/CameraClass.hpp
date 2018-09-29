@@ -32,11 +32,8 @@ class CameraClass
         void    setCam(Shader shader);
         void    camMovements(Keys &keys);
         void    camRotation(GLFWwindow *window);
-				void    playerCamMovements(Keys &keys);
-        void    saveinfo();
-				void 		setcamPos(float x, float y, float z);
-				void 		setcamFront(float x, float y, float z);
-				void 		setcamUp(float x, float y, float z);
+        void    playerCamMovements(Keys &keys);
+				void    saveinfo();
 
     private:
         //Camera Speed

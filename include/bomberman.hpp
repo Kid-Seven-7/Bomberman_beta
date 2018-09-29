@@ -13,8 +13,6 @@
 # include 		<glad/glad.h>
 # include 		<GLFW/glfw3.h>
 # include 		<iostream>
-# include 		<fstream>
-# include 		<sstream>
 # include 		<exception>
 # include 		<vector>
 # include 		<map>
@@ -50,6 +48,7 @@
 # define 			KEYMAPPING 27
 # define 			CHEATS 28
 # define 			CREDITS 29
+# define 			NO_SAVE_FILE 30
 
 //Key returns
 # define 			UP 100
