@@ -164,62 +164,62 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
       int   old_p_x = 0;
       int   old_p_y = 0;
 
-      std::cout << "Player X coord: " << player.getXcoord() << std::endl;
-      std::cout << "Player Y coord: " << player.getYcoord() << std::endl;
+      // std::cout << "Player X coord: " << player.getXcoord() << std::endl;
+      // std::cout << "Player Y coord: " << player.getYcoord() << std::endl;
 
-    std::cout << "State Result X: " << (curXplayerPos >= nextXPos) << std::endl;
-    std::cout << "State Result Y: " << (curYplayerPos >= nextYPos) << std::endl;
-    std::cout << "Static X Var: " << nextXPos << std::endl;
-    std::cout << "Static Y Var: " << nextYPos << std::endl;
+	    // std::cout << "State Result X: " << (curXplayerPos >= nextXPos) << std::endl;
+	    // std::cout << "State Result Y: " << (curYplayerPos >= nextYPos) << std::endl;
+	    // std::cout << "Static X Var: " << nextXPos << std::endl;
+	    // std::cout << "Static Y Var: " << nextYPos << std::endl;
 
-    if (newPlayerPos.size())
-    {
-        //New Player Position
-        p_pos_x = newPlayerPos[0];
-        p_pos_y = newPlayerPos[1];
+	    if (newPlayerPos.size())
+	    {
+	        //New Player Position
+	        p_pos_x = newPlayerPos[0];
+	        p_pos_y = newPlayerPos[1];
 
-        //Old Player Position
-        old_p_x = OldPlayerPos[0];
-        old_p_y = OldPlayerPos[1];
-    //   std::cout << "MainControl: p_pos_x: " << p_pos_x << std::endl;
-    //   std::cout << "MainControl: p_pos_y: " << p_pos_y << std::endl;
+	        //Old Player Position
+	        old_p_x = OldPlayerPos[0];
+	        old_p_y = OldPlayerPos[1];
+	    //   std::cout << "MainControl: p_pos_x: " << p_pos_x << std::endl;
+	    //   std::cout << "MainControl: p_pos_y: " << p_pos_y << std::endl;
 
-    //   std::cout << "MainControl: old_p_pos_x: " << old_p_x << std::endl;
-    //   std::cout << "MainControl: old_p_pos_x: " << old_p_y << std::endl;
+	    //   std::cout << "MainControl: old_p_pos_x: " << old_p_x << std::endl;
+	    //   std::cout << "MainControl: old_p_pos_x: " << old_p_y << std::endl;
 
-    if (curXplayerPos >= nextXPos) // || (curYplayerPos >= nextXPos)
-    {
-        prevXpos = curXplayerPos - 1.4f;
-        nextXPos += 1.4f;
-        maps[currentMap][old_p_y][old_p_x] = 0;
-        maps[currentMap][p_pos_y][p_pos_x] = 3;
-    }
-    else if (curYplayerPos >= nextYPos)
-    {
-        prevYpos = curYplayerPos - 1.3f;
-        nextYPos += 1.3f;
-        maps[currentMap][old_p_y][old_p_x] = 0;
-        maps[currentMap][p_pos_y][p_pos_x] = 3;
-    }
-    else if (curXplayerPos <= prevXpos)
-    {
-        nextXPos = curXplayerPos + 1.4f;
-        prevXpos -= 1.4f;
-        maps[currentMap][old_p_y][old_p_x] = 0;
-        maps[currentMap][p_pos_y][p_pos_x] = 3;
-    }
-    else if (curYplayerPos <= prevYpos)
-    {
-        nextYPos = curYplayerPos + 1.3f;
-        prevYpos -= 1.3f;
-        maps[currentMap][old_p_y][old_p_x] = 0;
-        maps[currentMap][p_pos_y][p_pos_x] = 3;
-    }
-    //   exit(0);
-    }
-    //   maps[this->currentMap]
-    //   maps[this->currentMap] = player.getMapUpdate();
-    // system("clear");
+	    if (curXplayerPos >= nextXPos) // || (curYplayerPos >= nextXPos)
+	    {
+	        prevXpos = curXplayerPos - 1.4f;
+	        nextXPos += 1.4f;
+	        maps[currentMap][old_p_y][old_p_x] = 0;
+	        maps[currentMap][p_pos_y][p_pos_x] = 3;
+	    }
+	    else if (curYplayerPos >= nextYPos)
+	    {
+	        prevYpos = curYplayerPos - 1.3f;
+	        nextYPos += 1.3f;
+	        maps[currentMap][old_p_y][old_p_x] = 0;
+	        maps[currentMap][p_pos_y][p_pos_x] = 3;
+	    }
+	    else if (curXplayerPos <= prevXpos)
+	    {
+	        nextXPos = curXplayerPos + 1.4f;
+	        prevXpos -= 1.4f;
+	        maps[currentMap][old_p_y][old_p_x] = 0;
+	        maps[currentMap][p_pos_y][p_pos_x] = 3;
+	    }
+	    else if (curYplayerPos <= prevYpos)
+	    {
+	        nextYPos = curYplayerPos + 1.3f;
+	        prevYpos -= 1.3f;
+	        maps[currentMap][old_p_y][old_p_x] = 0;
+	        maps[currentMap][p_pos_y][p_pos_x] = 3;
+	    }
+	    //   exit(0);
+	    }
+	    //   maps[this->currentMap]
+	    //   maps[this->currentMap] = player.getMapUpdate();
+	    // system("clear");
     }
     nextXPos = 2.6f;
     nextYPos = 2.6f;
