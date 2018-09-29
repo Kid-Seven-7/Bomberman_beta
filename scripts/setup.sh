@@ -41,6 +41,19 @@ else
 	echo "${GREEN}glm found${NC}"
 fi
 
+#glfw installation
+printf ${CYAN}'%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -${NC}
+echo "${BLUE}checking for glfw...${NC}"
+printf ${CYAN}'%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -${NC}
+if [ ! -d $HOME/.brew/Cellar/glfw ];
+then
+	echo ${RED}glfw not found${NC}
+	echo ${ORANGE}installing glfw...${NC}
+  brew install glfw;	source ~/.zshrc
+else
+	echo "${GREEN}glew found${NC}"
+fi
+
 #glew installation
 printf ${CYAN}'%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -${NC}
 echo "${BLUE}checking for glew...${NC}"

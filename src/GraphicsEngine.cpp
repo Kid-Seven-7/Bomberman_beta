@@ -94,8 +94,9 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys){
 				// glBindVertexArray(0);
 				// break;
 				m_engine.dumpCurrentMap(this->currentMap);
-				std::ofstream file("gameState/playerCoords.pcs");
-				file << player.getXcoord() << ":" << player.getYcoord() << std::endl;
+				std::ofstream file("gameState/playerCoords.txt");
+				file << "Player data\n" << player.getXcoord() << ":" << player.getYcoord() << std::endl;
+				cam.saveinfo();
 				displayStart(sound, keys, window);
 				glEnable(GL_DEPTH_TEST);
 			}

@@ -10,6 +10,37 @@
 # include "../include/bomberman.hpp"
 # include "../Image_Loader/image_loader.hpp"
 
+bool saveGameState(std::string path){
+	std::cout << "in save func" << '\n';
+
+	if (does_file_exist("gameState/playerCoords.txt") &&
+			does_file_exist("gameState/camInfo.txt") &&
+			does_file_exist("gameState/mapstate.txt")){
+		std::ofstream output(path);
+
+		std::ifstream player("gameState/playerCoords.txt");
+		// std::cout << player.rdbuf() << '\n';
+		output << player.rdbuf() << '\n';
+		std::ifstream map("gameState/camInfo.txt");
+		// std::cout << map.rdbuf() << '\n';
+		output << map.rdbuf() << '\n';
+		std::ifstream cam("gameState/mapstate.txt");
+		// std::cout << cam.rdbuf() << '\n';
+		output << cam.rdbuf() << '\n';
+
+		if (does_file_exist(path))
+		return true;
+		else
+		std::cout << "failed to save" << '\n';
+	}else{
+		std::cout << "save files missing" << '\n';
+	}
+
+
+
+	return false;
+}
+
 /*
 	Parameters:
 		std::string filepath- Path to save file to be opened
@@ -35,16 +66,18 @@ void loadFile(std::string filepath){
 */
 void saveFile(int slot){
 	if (slot == 1)
-		system("touch save/slot1.svf");
+		saveGameState("save/slot1.txt");
 	if (slot == 2)
-		system("touch save/slot2.svf");
+		saveGameState("save/slot2.txt");
 	if (slot == 3)
-		system("touch save/slot3.svf");
+		saveGameState("save/slot3.txt");
 	if (slot == 4)
-		system("touch save/slot4.svf");
+		saveGameState("save/slot4.txt");
 	if (slot == 5)
-		system("touch save/slot5.svf");
-	std::cout << "saved file" << '\n';
+		saveGameState("save/slot5.txt");
+
+	// if (saveGameState(int slot))
+		// std::cout << "saved file" << '\n';
 }
 
 /*
@@ -203,7 +236,7 @@ bool processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 	if (++i % 4 == 0){
 		if (menu == MAIN && vert == 0.7f){
 			if (keys.input() == ENTER){
-				if (does_file_exist("gameState/mapstate.mss"))
+				if (does_file_exist("gameState/mapstate.txt"))
 					return true;
 				gameplay(window, sound, keys);
 			}
@@ -260,8 +293,9 @@ bool processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 						menu = SETTINGS;
 					}
 					else if (vert == -0.35f){
-						remove("gameState/mapstate.mss");
-						remove("gameState/playerCoords.pcs");
+						remove("gameState/mapstate.txt");
+						remove("gameState/playerCoords.txt");
+						remove("gameState/camInfo.txt");
 						exit(0);
 					}
 					break;

@@ -82,21 +82,51 @@ void    CameraClass::playerCamMovements(Keys &keys){
 }
 
 void 	CameraClass::saveinfo(){
-	std::ofstream file("gameState/camInfo.gsf");
+	std::ofstream file("gameState/camInfo.txt");
 	file
-		<< "camSpeed"
+		<< "camSpeed\n"
 		<< this->camSpeed
-		<< "\nplayerCamSpeed"
+		<< "\nplayerCamSpeed\n"
 		<< this->playerCamSpeed
-		<< "\nrotate_cam_x"
+		<< "\nrotate_cam_x\n"
 		<< this->rotate_cam_x
-		<< "\nrotate_cam_y"
+		<< "\nrotate_cam_y\n"
 		<< this->rotate_cam_y
-		// << "\ncameraPos"
-		// << this->cameraPos
-		// << "\ncameraFront"
-		// << this->cameraFront
-		// << "\ncameraUp"
-		// << this->cameraUp
+		<< "\ncameraPos\n"
+		<< cameraPos.x
+		<< ":"
+		<< cameraPos.y
+		<< ":"
+		<< cameraPos.z
+		<< "\ncameraFront\n"
+		<< cameraFront.x
+		<< ":"
+		<< cameraFront.y
+		<< ":"
+		<< cameraFront.z
+		<< "\ncameraUp\n"
+		<< cameraUp.x
+		<< ":"
+		<< cameraUp.y
+		<< ":"
+		<< cameraUp.z
 		<< '\n';
+}
+
+void 		CameraClass::setcamPos(float x, float y, float z){
+	cameraPos.x = x;
+	cameraPos.y = y;
+	cameraPos.z = z;
+}
+
+void 		CameraClass::setcamFront(float x, float y, float z){
+	cameraFront.x = x;
+	cameraFront.y = y;
+	cameraFront.z = z;
+}
+
+void 		CameraClass::setcamUp(float x, float y, float z){
+	cameraUp.x = x;
+	cameraUp.y = y;
+	cameraUp.z = z;
 }

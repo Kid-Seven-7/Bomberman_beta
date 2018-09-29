@@ -47,8 +47,9 @@ int    MapEngine::getMapPaths(std::string mapsDir){
 }
 
 void    MapEngine::dumpCurrentMap(int mapIndex){
-	std::ofstream file("gameState/mapstate.mss");
+	std::ofstream file("gameState/mapstate.txt");
 	file
+		<< "Map data\n"
 		<< mapIndex
 		<< ":"
 		<< this->maps_objects[mapIndex].size()

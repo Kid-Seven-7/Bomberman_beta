@@ -34,6 +34,9 @@ class CameraClass
         void    camRotation(GLFWwindow *window);
 				void    playerCamMovements(Keys &keys);
         void    saveinfo();
+				void 		setcamPos(float x, float y, float z);
+				void 		setcamFront(float x, float y, float z);
+				void 		setcamUp(float x, float y, float z);
 
     private:
         //Camera Speed
