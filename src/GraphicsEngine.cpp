@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@42.FR>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/30 10:51:57 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/09/30 14:16:51 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
 {
     Player  player;
     Model_Objects   model_object;
+    BombClass   bomb;
 
     //Physics Engine
     PhysicsEngine p_engine;
@@ -142,7 +143,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             }
             if (maps[this->currentMap][j][i] == BOMB)
             {
-
+                bomb.putBomb(ourShader, this->pos_x, this->pos_y);
             }
             player.bodyModel(this->ourShader);
             player.headModel(this->ourShader);

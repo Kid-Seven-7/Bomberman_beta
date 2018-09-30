@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@42.FR>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:28:24 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/30 10:54:14 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/09/30 14:16:07 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "HeaderHandler.hpp"
 # include "bomberman.hpp"
+# include "BombClass.hpp"
 
 //Global Variables
 #define WIDTH 1200
