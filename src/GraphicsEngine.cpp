@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@42.FR>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/29 16:32:13 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/09/30 10:51:57 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,138 +94,77 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
 
     while (!glfwWindowShouldClose(this->window))
     {
-      //input process
-      if (processInput(keys)){
-				m_engine.dumpCurrentMap(this->currentMap);
-				std::ofstream file("gameState/playerCoords.txt");
-				file << "Player data\n" << player.getXcoord() << ":" << player.getYcoord() << std::endl;
-				cam.saveinfo();
-				displayStart(sound, keys, window);
-				glEnable(GL_DEPTH_TEST);
-			}
-
-      glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-      //Start of rendering...
-      this->modelProjectionConfig();
-      model_object.universe_func(ourShader);
-      model_object.Engine(ourShader, 3.95f, -28.5f);
-      model_object.Engine(ourShader, 4.15f, 35.5f);
-      model_object.Engine(ourShader, 37.5f, 4.15f);
-      model_object.Engine(ourShader, -27.5f, 4.15f);
-      model_object.base_func(ourShader);
-
-      for (unsigned int j = 0; j < maps[this->currentMap].size(); j++)
-      {
-        for (unsigned int i = 0; i < maps[this->currentMap][j].size(); i++)
+        //input process
+        if (processInput(keys))
         {
-          if (maps[this->currentMap][j][i] == 1)
-          {
-              std::cout << maps[this->currentMap][j][i] << " ";
-              model_object.hard_wall_func(this->ourShader, this->pos_x, this->pos_y);
-          }
-          if (maps[this->currentMap][j][i] == 2)
-          {
-              std::cout << maps[this->currentMap][j][i] << " ";
-              model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
-          }
-          if (maps[this->currentMap][j][i] == 0)
-          {
-              std::cout << maps[this->currentMap][j][i] << " ";
-              //TODO
-          }if (maps[this->currentMap][j][i] == 3)
-          {
-              std::cout << maps[this->currentMap][j][i] << " ";
-              //TODO
-          }
-          player.bodyModel(this->ourShader);
-          player.headModel(this->ourShader);
-          this->pos_x += 1.4f;
+			m_engine.dumpCurrentMap(this->currentMap);
+			std::ofstream file("gameState/playerCoords.txt");
+			file << "Player data\n" << player.getXcoord() << ":" << player.getYcoord() << std::endl;
+			cam.saveinfo();
+			displayStart(sound, keys, window);
+			glEnable(GL_DEPTH_TEST);
+		}
 
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        //Start of rendering...
+        this->modelProjectionConfig();
+        model_object.universe_func(ourShader);
+        model_object.Engine(ourShader, 3.95f, -28.5f);
+        model_object.Engine(ourShader, 4.15f, 35.5f);
+        model_object.Engine(ourShader, 37.5f, 4.15f);
+        model_object.Engine(ourShader, -27.5f, 4.15f);
+        model_object.base_func(ourShader);
+
+        for (unsigned int j = 0; j < maps[this->currentMap].size(); j++)
+        {
+            for (unsigned int i = 0; i < maps[this->currentMap][j].size(); i++)
+            {
+            if (maps[this->currentMap][j][i] == HARD_WALL)
+            {
+                std::cout << maps[this->currentMap][j][i] << " ";
+                model_object.hard_wall_func(this->ourShader, this->pos_x, this->pos_y);
+            }
+            if (maps[this->currentMap][j][i] == SOFT_WALL)
+            {
+                std::cout << maps[this->currentMap][j][i] << " ";
+                model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
+            }
+            if (maps[this->currentMap][j][i] == FLOOR)
+            {
+                std::cout << maps[this->currentMap][j][i] << " ";
+                //TODO
+            }if (maps[this->currentMap][j][i] == PLAYER_OBJ)
+            {
+                std::cout << maps[this->currentMap][j][i] << " ";
+                //TODO
+            }
+            if (maps[this->currentMap][j][i] == BOMB)
+            {
+
+            }
+            player.bodyModel(this->ourShader);
+            player.headModel(this->ourShader);
+            this->pos_x += 1.4f;
+
+            }
+            std::cout << std::endl;
+            this->pos_y += 1.3f;
+            this->pos_x = 0.0f;
         }
-        std::cout << std::endl;
-        this->pos_y += 1.3f;
-        this->pos_x = 0.0f;
-      }
-      this->pos_y = 0.0f;
+        this->pos_y = 0.0f;
 
-      glfwSwapBuffers(this->window);
-      glfwPollEvents();
+        glfwSwapBuffers(this->window);
+        glfwPollEvents();
 
-      this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
-      std::vector<int>  newPlayerPos = player.getNewPlayerPos();
-      std::vector<int>  OldPlayerPos = player.getPrevPlayer();
-      float curXplayerPos = player.getXcoord();
-      float curYplayerPos = player.getYcoord();
-
-      int   p_pos_x = 0;
-      int   p_pos_y = 0;
-      int   old_p_x = 0;
-      int   old_p_y = 0;
-
-      // std::cout << "Player X coord: " << player.getXcoord() << std::endl;
-      // std::cout << "Player Y coord: " << player.getYcoord() << std::endl;
-
-	    // std::cout << "State Result X: " << (curXplayerPos >= nextXPos) << std::endl;
-	    // std::cout << "State Result Y: " << (curYplayerPos >= nextYPos) << std::endl;
-	    // std::cout << "Static X Var: " << nextXPos << std::endl;
-	    // std::cout << "Static Y Var: " << nextYPos << std::endl;
-
-	    if (newPlayerPos.size())
-	    {
-	        //New Player Position
-	        p_pos_x = newPlayerPos[0];
-	        p_pos_y = newPlayerPos[1];
-
-	        //Old Player Position
-	        old_p_x = OldPlayerPos[0];
-	        old_p_y = OldPlayerPos[1];
-	    //   std::cout << "MainControl: p_pos_x: " << p_pos_x << std::endl;
-	    //   std::cout << "MainControl: p_pos_y: " << p_pos_y << std::endl;
-
-	    //   std::cout << "MainControl: old_p_pos_x: " << old_p_x << std::endl;
-	    //   std::cout << "MainControl: old_p_pos_x: " << old_p_y << std::endl;
-
-	    if (curXplayerPos >= nextXPos) // || (curYplayerPos >= nextXPos)
-	    {
-	        prevXpos = curXplayerPos - 1.4f;
-	        nextXPos += 1.4f;
-	        maps[currentMap][old_p_y][old_p_x] = 0;
-	        maps[currentMap][p_pos_y][p_pos_x] = 3;
-	    }
-	    else if (curYplayerPos >= nextYPos)
-	    {
-	        prevYpos = curYplayerPos - 1.3f;
-	        nextYPos += 1.3f;
-	        maps[currentMap][old_p_y][old_p_x] = 0;
-	        maps[currentMap][p_pos_y][p_pos_x] = 3;
-	    }
-	    else if (curXplayerPos <= prevXpos)
-	    {
-	        nextXPos = curXplayerPos + 1.4f;
-	        prevXpos -= 1.4f;
-	        maps[currentMap][old_p_y][old_p_x] = 0;
-	        maps[currentMap][p_pos_y][p_pos_x] = 3;
-	    }
-	    else if (curYplayerPos <= prevYpos)
-	    {
-	        nextYPos = curYplayerPos + 1.3f;
-	        prevYpos -= 1.3f;
-	        maps[currentMap][old_p_y][old_p_x] = 0;
-	        maps[currentMap][p_pos_y][p_pos_x] = 3;
-	    }
-	    //   exit(0);
-	    }
-	    //   maps[this->currentMap]
-	    //   maps[this->currentMap] = player.getMapUpdate();
-	    // system("clear");
+        this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
+        this->updateMap(player, maps[this->currentMap]);
     }
     nextXPos = 2.6f;
     nextYPos = 2.6f;
     prevXpos = -2.6f;
     prevYpos = -2.6f;
-    // this->dumpArray();
 }
 
 void    GraphicsEngine::modelProjectionConfig()
@@ -265,28 +204,65 @@ void    GraphicsEngine::callMovementFunctions(Player &player, Sound &sound, Keys
         cam.playerCamMovements(keys);
 }
 
-void    GraphicsEngine::dumpArray()
-{
-  MapEngine m_engine;
-
-  std::vector<std::vector<std::vector<int> > > maps = m_engine.getObjectsMaps();
-
-  std::cout << "Array of Objects:" << std::endl;
-  for (unsigned int i = 0; i < maps[this->currentMap].size(); i++)
-  {
-    for (unsigned int j = 0; maps[this->currentMap][i].size(); j++)
-    {
-      std::cout << maps[this->currentMap][i][j] << " ";
-    }
-    std::cout << std::endl;
-  }
-}
-
 std::vector<std::vector<int>>  GraphicsEngine::getCurrentObjectsMap()
 {
 	MapEngine m_engine;
 	std::vector<std::vector<std::vector<int>>> maps = m_engine.getObjectsMaps();
   return (maps[this->currentMap]);
+}
+
+void    GraphicsEngine::updateMap(Player player, std::vector<std::vector<int> > & map)
+{
+    std::vector<int>  newPlayerPos = player.getNewPlayerPos();
+    std::vector<int>  OldPlayerPos = player.getPrevPlayer();
+    float curXplayerPos = player.getXcoord();
+    float curYplayerPos = player.getYcoord();
+
+    int   p_pos_x = 0;
+    int   p_pos_y = 0;
+    int   old_p_x = 0;
+    int   old_p_y = 0;
+
+    if (newPlayerPos.size())
+    {
+        //New Player Position
+        p_pos_x = newPlayerPos[0];
+        p_pos_y = newPlayerPos[1];
+
+        //Old Player Position
+        old_p_x = OldPlayerPos[0];
+        old_p_y = OldPlayerPos[1];
+
+        if (curXplayerPos >= nextXPos) 
+        {
+            prevXpos = curXplayerPos - 1.4f;
+            nextXPos += 1.4f;
+            map[old_p_y][old_p_x] = FLOOR;
+            map[p_pos_y][p_pos_x] = PLAYER_OBJ;
+        }
+        else if (curYplayerPos >= nextYPos)
+        {
+            prevYpos = curYplayerPos - 1.3f;
+            nextYPos += 1.3f;
+            map[old_p_y][old_p_x] = FLOOR;
+            map[p_pos_y][p_pos_x] = PLAYER_OBJ;
+        }
+        else if (curXplayerPos <= prevXpos)
+        {
+            nextXPos = curXplayerPos + 1.4f;
+            prevXpos -= 1.4f;
+            map[old_p_y][old_p_x] = FLOOR;
+            map[p_pos_y][p_pos_x] = PLAYER_OBJ;
+        }
+        else if (curYplayerPos <= prevYpos)
+        {
+            nextYPos = curYplayerPos + 1.3f;
+            prevYpos -= 1.3f;
+            map[old_p_y][old_p_x] = FLOOR;
+            map[p_pos_y][p_pos_x] = PLAYER_OBJ;
+        }
+        //   exit(0);
+    }
 }
 
 bool processInput(Keys &keys)
