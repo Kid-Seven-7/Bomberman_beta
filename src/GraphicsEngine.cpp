@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@42.FR>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/30 10:35:10 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/09/30 10:51:57 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,24 +121,28 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
         {
             for (unsigned int i = 0; i < maps[this->currentMap][j].size(); i++)
             {
-            if (maps[this->currentMap][j][i] == 1)
+            if (maps[this->currentMap][j][i] == HARD_WALL)
             {
                 std::cout << maps[this->currentMap][j][i] << " ";
                 model_object.hard_wall_func(this->ourShader, this->pos_x, this->pos_y);
             }
-            if (maps[this->currentMap][j][i] == 2)
+            if (maps[this->currentMap][j][i] == SOFT_WALL)
             {
                 std::cout << maps[this->currentMap][j][i] << " ";
                 model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
             }
-            if (maps[this->currentMap][j][i] == 0)
+            if (maps[this->currentMap][j][i] == FLOOR)
             {
                 std::cout << maps[this->currentMap][j][i] << " ";
                 //TODO
-            }if (maps[this->currentMap][j][i] == 3)
+            }if (maps[this->currentMap][j][i] == PLAYER_OBJ)
             {
                 std::cout << maps[this->currentMap][j][i] << " ";
                 //TODO
+            }
+            if (maps[this->currentMap][j][i] == BOMB)
+            {
+
             }
             player.bodyModel(this->ourShader);
             player.headModel(this->ourShader);
@@ -200,23 +204,6 @@ void    GraphicsEngine::callMovementFunctions(Player &player, Sound &sound, Keys
         cam.playerCamMovements(keys);
 }
 
-void    GraphicsEngine::dumpArray()
-{
-  MapEngine m_engine;
-
-  std::vector<std::vector<std::vector<int> > > maps = m_engine.getObjectsMaps();
-
-  std::cout << "Array of Objects:" << std::endl;
-  for (unsigned int i = 0; i < maps[this->currentMap].size(); i++)
-  {
-    for (unsigned int j = 0; maps[this->currentMap][i].size(); j++)
-    {
-      std::cout << maps[this->currentMap][i][j] << " ";
-    }
-    std::cout << std::endl;
-  }
-}
-
 std::vector<std::vector<int>>  GraphicsEngine::getCurrentObjectsMap()
 {
 	MapEngine m_engine;
@@ -250,29 +237,29 @@ void    GraphicsEngine::updateMap(Player player, std::vector<std::vector<int> > 
         {
             prevXpos = curXplayerPos - 1.4f;
             nextXPos += 1.4f;
-            map[old_p_y][old_p_x] = 0;
-            map[p_pos_y][p_pos_x] = 3;
+            map[old_p_y][old_p_x] = FLOOR;
+            map[p_pos_y][p_pos_x] = PLAYER_OBJ;
         }
         else if (curYplayerPos >= nextYPos)
         {
             prevYpos = curYplayerPos - 1.3f;
             nextYPos += 1.3f;
-            map[old_p_y][old_p_x] = 0;
-            map[p_pos_y][p_pos_x] = 3;
+            map[old_p_y][old_p_x] = FLOOR;
+            map[p_pos_y][p_pos_x] = PLAYER_OBJ;
         }
         else if (curXplayerPos <= prevXpos)
         {
             nextXPos = curXplayerPos + 1.4f;
             prevXpos -= 1.4f;
-            map[old_p_y][old_p_x] = 0;
-            map[p_pos_y][p_pos_x] = 3;
+            map[old_p_y][old_p_x] = FLOOR;
+            map[p_pos_y][p_pos_x] = PLAYER_OBJ;
         }
         else if (curYplayerPos <= prevYpos)
         {
             nextYPos = curYplayerPos + 1.3f;
             prevYpos -= 1.3f;
-            map[old_p_y][old_p_x] = 0;
-            map[p_pos_y][p_pos_x] = 3;
+            map[old_p_y][old_p_x] = FLOOR;
+            map[p_pos_y][p_pos_x] = PLAYER_OBJ;
         }
         //   exit(0);
     }

@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@42.FR>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:28:24 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/30 10:28:19 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/09/30 10:54:14 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,21 @@
 
 void    framebuffer_size_callback(GLFWwindow *window, int width, int height);
 bool    processInput(Keys &keys);
+
+//Collision detection variables
 static  float   nextXPos = 2.6f;
 static  float   nextYPos = 2.6f;
 static  float   prevXpos = -2.6f;
 static  float   prevYpos = -2.6f;
+
+//Graphics Objects
+# define    FLOOR   0
+# define    HARD_WALL   1
+# define    SOFT_WALL   2
+# define    PLAYER_OBJ  3
+# define    BOMB    4
+# define    ENEMY   5
+# define    DOOR    6
 
 class GraphicsEngine
 {
@@ -54,7 +65,6 @@ class GraphicsEngine
 
         //Current Map
         int     currentMap;
-        void    dumpArray();
 };
 
 # endif

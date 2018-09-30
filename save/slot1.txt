@@ -1,5 +1,5 @@
 Player data
-11.6:5.3
+6.8:11.7
 
 camSpeed
 0.5
@@ -10,7 +10,7 @@ rotate_cam_x
 rotate_cam_y
 0
 cameraPos
-8.24:0:21.2
+4.4:0:26.32
 cameraFront
 0:0:-1
 cameraUp
