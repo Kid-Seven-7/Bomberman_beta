@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@42.FR>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/30 10:33:09 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/09/30 10:35:10 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,14 +236,6 @@ void    GraphicsEngine::updateMap(Player player, std::vector<std::vector<int> > 
     int   old_p_x = 0;
     int   old_p_y = 0;
 
-    // std::cout << "Player X coord: " << player.getXcoord() << std::endl;
-    // std::cout << "Player Y coord: " << player.getYcoord() << std::endl;
-
-    // std::cout << "State Result X: " << (curXplayerPos >= nextXPos) << std::endl;
-    // std::cout << "State Result Y: " << (curYplayerPos >= nextYPos) << std::endl;
-    // std::cout << "Static X Var: " << nextXPos << std::endl;
-    // std::cout << "Static Y Var: " << nextYPos << std::endl;
-
     if (newPlayerPos.size())
     {
         //New Player Position
@@ -253,13 +245,8 @@ void    GraphicsEngine::updateMap(Player player, std::vector<std::vector<int> > 
         //Old Player Position
         old_p_x = OldPlayerPos[0];
         old_p_y = OldPlayerPos[1];
-        //   std::cout << "MainControl: p_pos_x: " << p_pos_x << std::endl;
-        //   std::cout << "MainControl: p_pos_y: " << p_pos_y << std::endl;
 
-        //   std::cout << "MainControl: old_p_pos_x: " << old_p_x << std::endl;
-        //   std::cout << "MainControl: old_p_pos_x: " << old_p_y << std::endl;
-
-        if (curXplayerPos >= nextXPos) // || (curYplayerPos >= nextXPos)
+        if (curXplayerPos >= nextXPos) 
         {
             prevXpos = curXplayerPos - 1.4f;
             nextXPos += 1.4f;
