@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@42.FR>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:28:24 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/29 16:23:03 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/09/30 10:28:19 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ class GraphicsEngine
         void    callMovementFunctions(Player &player, Sound &sound, Keys &keys, std::vector<std::vector<int> > mapOfObjects);
         void    shaderConfig();
         void    modelProjectionConfig();
+        void    updateMap(Player player, std::vector<std::vector<int> > & map);
         std::vector<std::vector<int>>  getCurrentObjectsMap();
 
     private:
