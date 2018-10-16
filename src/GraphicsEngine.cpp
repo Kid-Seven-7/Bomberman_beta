@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/16 16:21:08 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/16 17:46:36 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     while (!glfwWindowShouldClose(this->window))
     {
         //input process
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         if (processInput(keys))
         {
 			m_engine.dumpCurrentMap(this->currentMap);
