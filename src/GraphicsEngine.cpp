@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/16 17:56:15 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/16 18:04:10 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ GraphicsEngine::GraphicsEngine()
     glEnable(GL_DEPTH_TEST);
 
     //Initializing current map
-    this->currentMap = 1;
+    this->currentMap = 2;
 
     //Default player direction
      this->player_direction = -1;
@@ -42,7 +42,7 @@ GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
 	glEnable(GL_DEPTH_TEST);
 
 	//Initializing current map
-	this->currentMap = 1;
+	this->currentMap = 2;
 
     //Default player direction
      this->player_direction = -1;
