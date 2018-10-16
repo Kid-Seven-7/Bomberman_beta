@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/16 15:19:00 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/16 16:21:08 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,9 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 // std::cout << maps[this->currentMap][j][i] << " ";
                 //FIX BOMB CLASS!!!
                 //CALL ARRAY CHECK BEFORE PLACING BOMB
-                bomb.putBomb(ourShader, this->pos_x, this->pos_y);
+                bomb.putBomb(ourShader, this->pos_x, this->pos_y, 1);
+                if (bomb_counter >= 75)
+                    bomb.putBomb(ourShader, this->pos_x, this->pos_y, 2);
             }
             player.bodyModel(this->ourShader);
             player.headModel(this->ourShader);
@@ -168,6 +170,10 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
         this->pos_y = 0.0f;
         if (start_counter)
             bomb_counter++;
+        if (bomb_counter == 75)
+        {
+            this->update_bomb_range(maps[this->currentMap]);
+        }
         if (bomb_counter >= 150)
         {
             bomb_counter = 0;
@@ -184,7 +190,6 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 start_counter = true;
         }
         this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
-        std::cout << "Player Direction: " << this->player_direction << std::endl;
         this->updateMap(player, maps[this->currentMap]);
     }
     nextXPos = 2.6f;
@@ -363,7 +368,7 @@ bool    GraphicsEngine::array_check(std::vector<std::vector<int> > & map)
 
 void    GraphicsEngine::remove_bomb(std::vector<std::vector<int> > & map)
 {
-    int bomb_found = 0;
+    // int bomb_found = 0;
 
     for (unsigned int i = 0; i < map.size(); i++)
     {
@@ -373,6 +378,65 @@ void    GraphicsEngine::remove_bomb(std::vector<std::vector<int> > & map)
             if (map[i][j] == 4)
             {
                 map[i][j] = 0;
+                // bomb_found = 1;
+            }
+        }
+    }
+}
+
+int    GraphicsEngine::update_bomb_range(std::vector<std::vector<int> > & map)
+{
+    // 3 = PLAYER FOUND IN THE BOMB RANGE
+    // 2 = ENEMY FOUND IN THE BOMB RANGE
+    // 1 = NOTHING FOUND IN THE BOMB RANGE
+
+    int bomb_found = 0;
+
+    for (unsigned int i = 0; i < map.size(); i++)
+    {
+        for (unsigned int j = 0; j < map[i].size(); j++)
+        {
+            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
+            if (map[i][j] == 4)
+            {
+                //INCREASING BOMB RANGE
+                if (map[i][j + 1] == 0 || map[i][j + 1] == 3 || map[i][j + 1] == 5 || map[i][j + 1] == 2) //Updating right
+                {
+                    if (map[i][j + 1] == 0 || map[i][j + 1] == 2)
+                        map[i][j + 1] = 4;
+                    if (map[i][j + 1] == 3)
+                        return (3);
+                    if (map[i][j + 1] == 5)
+                        return (2);
+                }
+                if (map[i][j - 1] == 0 || map[i][j - 1] == 3 || map[i][j - 1] == 5 || map[i][j - 1] == 2) // Updating left
+                {
+                    if (map[i][j - 1] == 0 || map[i][j - 1] == 2)
+                        map[i][j - 1] = 4;
+                    if (map[i][j - 1] == 3)
+                        return (3);
+                    if (map[i][j - 1] == 5)
+                        return (2);
+                }
+                if (map[i + 1][j] == 0 || map[i + 1][j] == 3 || map[i + 1][j] == 5 || map[i + 1][j] == 2) //Updating down
+                {
+                    if (map[i + 1][j] == 0 || map[i + 1][j] == 2)
+                        map[i + 1][j] = 4;
+                    if (map[i + 1][j] == 3)
+                        return (3);
+                    if (map[i + 1][j] == 5)
+                        return (2);
+                }
+                if (map[i - 1][j] == 0 || map[i - 1][j] == 3 || map[i - 1][j] == 5 || map[i - 1][j] == 2) //Updating up
+                {
+                    if (map[i - 1][j] == 0 || map[i - 1][j] == 2)
+                        map[i - 1][j] = 4;
+                    if (map[i - 1][j] == 3)
+                        return (3);
+                    if (map[i - 1][j] == 5)
+                        return (2);
+                }
+
                 bomb_found = 1;
                 break;
             }
@@ -380,6 +444,7 @@ void    GraphicsEngine::remove_bomb(std::vector<std::vector<int> > & map)
         if (bomb_found == 1)
         break;
     }
+    return (-1);
 }
 
 bool processInput(Keys &keys)

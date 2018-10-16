@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:28:24 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/16 15:07:19 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/16 15:39:14 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ class GraphicsEngine
         //Array check for Bomb placement
         bool    array_check(std::vector<std::vector<int> > & map);
         void    remove_bomb(std::vector<std::vector<int> > & map);
+        int    update_bomb_range(std::vector<std::vector<int> > & map);
 };
 
 # endif
