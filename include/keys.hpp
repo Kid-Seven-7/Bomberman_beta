@@ -33,6 +33,7 @@
 # define 				NEXT 106
 # define 				PREV 107
 # define 				EXIT 108
+# define 				SPACE 32
 
 //KEYMODE
 # define 				ARROW 200

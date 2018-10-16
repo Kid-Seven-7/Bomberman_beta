@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Player.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amatshiy <amatshiy@42.FR>                  +#+  +:+       +#+        */
+/*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 13:23:06 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/29 15:22:45 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/16 12:27:04 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # define 			DOWN 101
 # define 			LEFT 102
 # define 			RIGHT 103
-# define 			ACTION 104
+// # define 			ACTION 104
 # define 			ENTER 105
 # define 			NEXT 106
 # define 			PREV 107
@@ -44,7 +44,7 @@ class Player
         //Body rotation and movement
         void    bodyModel(Shader shader);
         void    headModel(Shader shader);
-        int    playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std::vector<std::vector<int> >  mapOfObjects);
+        int     playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std::vector<std::vector<int> >  mapOfObjects, int& player_direction);
         float   getXcoord();
         float   getYcoord();
         std::vector<std::vector<int> > getMapUpdate();

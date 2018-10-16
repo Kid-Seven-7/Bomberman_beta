@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   GraphicsEngine.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amatshiy <amatshiy@42.FR>                  +#+  +:+       +#+        */
+/*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:28:24 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/30 14:16:07 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/16 15:07:19 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "HeaderHandler.hpp"
 # include "bomberman.hpp"
 # include "BombClass.hpp"
+# include <cmath>
 
 //Global Variables
 #define WIDTH 1200
@@ -53,7 +54,7 @@ class GraphicsEngine
         void    shaderConfig();
         void    modelProjectionConfig();
         void    updateMap(Player player, std::vector<std::vector<int> > & map);
-        std::vector<std::vector<int>>  getCurrentObjectsMap();
+        std::vector<std::vector<int> >  getCurrentObjectsMap();
 
     private:
         GLFWwindow  *window;
@@ -66,6 +67,13 @@ class GraphicsEngine
 
         //Current Map
         int     currentMap;
+
+        //Current Player Direction
+        int player_direction;
+
+        //Array check for Bomb placement
+        bool    array_check(std::vector<std::vector<int> > & map);
+        void    remove_bomb(std::vector<std::vector<int> > & map);
 };
 
 # endif

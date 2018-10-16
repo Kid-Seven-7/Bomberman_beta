@@ -81,6 +81,8 @@ int Keys::input(){
 		return (PREV);
 	if (glfwGetKey(this->_window, GLFW_KEY_ENTER) == GLFW_PRESS)
 		return (ENTER);
+	if (glfwGetKey(this->_window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		return (SPACE);
 
 	if (this->_mode == WASD){
 		if (glfwGetKey(this->_window, GLFW_KEY_W) == GLFW_PRESS)

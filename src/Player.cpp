@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Player.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amatshiy <amatshiy@42.FR>                  +#+  +:+       +#+        */
+/*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 13:30:40 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/29 16:33:47 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/16 15:07:45 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void    Player::bodyModel(Shader shader)
 }
 
 //To control the player's movements
-int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std::vector<std::vector<int> >  mapOfObjects)
+int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std::vector<std::vector<int> >  mapOfObjects, int& player_direction)
 {
 	(void)window;
   (void)sound;
@@ -85,6 +85,7 @@ int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std
         // std::cout << "Return is: " << !(this->checkNexPos(MOVE_UP, mapOfObjects) == -1) << std::endl;
         this->move_y -= 0.1f;
         this->body_r_y += 0.2f;
+        player_direction = MOVE_UP;
         return (1);
       }
       else
@@ -97,6 +98,7 @@ int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std
       {
         move_y += 0.1f;
         this->body_r_y -= 0.2f;
+        player_direction = MOVE_DOWN;
         return (1);
       }
       else
@@ -111,6 +113,7 @@ int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std
         // std::cout << "Return is: " << !(this->checkNexPos(MOVE_RIGHT, mapOfObjects) == -1) << std::endl;
         this->move_x += 0.1f;
         this->body_r_x += 0.2f;
+        player_direction = MOVE_RIGHT;
         return (1);
       }
       else
@@ -123,6 +126,7 @@ int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std
       {
         this->move_x -= 0.1f;
         this->body_r_x -= 0.2f;
+        player_direction = MOVE_LEFT;
         return (1);
       }
       else
@@ -176,7 +180,8 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
 
 
     if ((mapOfObjects[y_player_pos - 1][x_player_pos] != 1) &&
-      (mapOfObjects[y_player_pos - 1][x_player_pos] != 2))
+      (mapOfObjects[y_player_pos - 1][x_player_pos] != 2) &&
+      (mapOfObjects[y_player_pos - 1][x_player_pos] != 4))
     {
       // std::cout << "Next Pos: " << mapOfObjects[y_player_pos - 1][x_player_pos] << std::endl;
       //Storing new player position
@@ -195,7 +200,8 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
 
 
     if ((mapOfObjects[y_player_pos + 1][x_player_pos] != 1) &&
-      (mapOfObjects[y_player_pos + 1][x_player_pos] != 2))
+      (mapOfObjects[y_player_pos + 1][x_player_pos] != 2) &&
+      (mapOfObjects[y_player_pos - 1][x_player_pos] != 4))
     {
       // std::cout << "Next Pos: " << mapOfObjects[y_player_pos - 1][x_player_pos] << std::endl;
       //Storing new player position
@@ -216,7 +222,8 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
     // std::cout << "X_POS_RIGHT: " << this->playerPos[0] << std::endl;
     // std::cout << "Y_POS_RIGHT: " << this->playerPos[1] << std::endl;
     if ((mapOfObjects[y_player_pos][x_player_pos - 1] != 1) &&
-      (mapOfObjects[y_player_pos][x_player_pos - 1] != 2))
+      (mapOfObjects[y_player_pos][x_player_pos - 1] != 2) &&
+      (mapOfObjects[y_player_pos - 1][x_player_pos] != 4))
     {
       // std::cout << "Next Pos: " << mapOfObjects[y_player_pos][x_player_pos + 1] << std::endl;
       //Storing new player position
@@ -237,7 +244,8 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
     // std::cout << "X_POS_RIGHT: " << this->playerPos[0] << std::endl;
     // std::cout << "Y_POS_RIGHT: " << this->playerPos[1] << std::endl;
     if ((mapOfObjects[y_player_pos][x_player_pos + 1] != 1) &&
-      (mapOfObjects[y_player_pos][x_player_pos + 1] != 2))
+      (mapOfObjects[y_player_pos][x_player_pos + 1] != 2) &&
+      (mapOfObjects[y_player_pos - 1][x_player_pos] != 4))
     {
       // std::cout << "Next Pos: " << mapOfObjects[y_player_pos][x_player_pos + 1] << std::endl;
       //Storing new player position

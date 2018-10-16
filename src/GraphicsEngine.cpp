@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   GraphicsEngine.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amatshiy <amatshiy@42.FR>                  +#+  +:+       +#+        */
+/*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/30 14:16:51 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/16 15:19:00 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@ GraphicsEngine::GraphicsEngine()
 
     //Initializing current map
     this->currentMap = 0;
+
+    //Default player direction
+     this->player_direction = -1;
 }
 
 GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
@@ -40,6 +43,9 @@ GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
 
 	//Initializing current map
 	this->currentMap = 0;
+
+    //Default player direction
+     this->player_direction = -1;
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -83,9 +89,11 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     Player  player;
     Model_Objects   model_object;
     BombClass   bomb;
+    int bomb_counter = 0;
+    bool    start_counter = false;
 
     //Physics Engine
-    PhysicsEngine p_engine;
+    // PhysicsEngine p_engine; // remove this ENGINE BEFORE SUBMISSION
 
     //MapEngine Testing
     MapEngine m_engine;
@@ -124,25 +132,28 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             {
             if (maps[this->currentMap][j][i] == HARD_WALL)
             {
-                std::cout << maps[this->currentMap][j][i] << " ";
+                // std::cout << maps[this->currentMap][j][i] << " ";
                 model_object.hard_wall_func(this->ourShader, this->pos_x, this->pos_y);
             }
             if (maps[this->currentMap][j][i] == SOFT_WALL)
             {
-                std::cout << maps[this->currentMap][j][i] << " ";
+                // std::cout << maps[this->currentMap][j][i] << " ";
                 model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
             }
             if (maps[this->currentMap][j][i] == FLOOR)
             {
-                std::cout << maps[this->currentMap][j][i] << " ";
+                // std::cout << maps[this->currentMap][j][i] << " ";
                 //TODO
             }if (maps[this->currentMap][j][i] == PLAYER_OBJ)
             {
-                std::cout << maps[this->currentMap][j][i] << " ";
+                // std::cout << maps[this->currentMap][j][i] << " ";
                 //TODO
             }
             if (maps[this->currentMap][j][i] == BOMB)
             {
+                // std::cout << maps[this->currentMap][j][i] << " ";
+                //FIX BOMB CLASS!!!
+                //CALL ARRAY CHECK BEFORE PLACING BOMB
                 bomb.putBomb(ourShader, this->pos_x, this->pos_y);
             }
             player.bodyModel(this->ourShader);
@@ -155,11 +166,25 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             this->pos_x = 0.0f;
         }
         this->pos_y = 0.0f;
+        if (start_counter)
+            bomb_counter++;
+        if (bomb_counter >= 150)
+        {
+            bomb_counter = 0;
+            start_counter = false;
+            this->remove_bomb(maps[this->currentMap]);
+        }
 
         glfwSwapBuffers(this->window);
         glfwPollEvents();
 
+        if (keys.input() == SPACE)
+        {
+            if (!(start_counter) && (this->array_check(maps[this->currentMap])))
+                start_counter = true;
+        }
         this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
+        std::cout << "Player Direction: " << this->player_direction << std::endl;
         this->updateMap(player, maps[this->currentMap]);
     }
     nextXPos = 2.6f;
@@ -201,7 +226,7 @@ void    GraphicsEngine::callMovementFunctions(Player &player, Sound &sound, Keys
     cam.camRotation(this->window);
 
     //Player movement control function
-    if (player.playerMovements(this->window, sound, keys, mapOfObjects) == 1)
+    if (player.playerMovements(this->window, sound, keys, mapOfObjects, this->player_direction) == 1)
         cam.playerCamMovements(keys);
 }
 
@@ -266,12 +291,102 @@ void    GraphicsEngine::updateMap(Player player, std::vector<std::vector<int> > 
     }
 }
 
+bool    GraphicsEngine::array_check(std::vector<std::vector<int> > & map)
+{
+    int player_found = 0;
+
+    // I = Y axis
+    // J = X axis
+
+    for (unsigned int i = 0; i < map.size(); i++)
+    {
+        for (unsigned int j = 0; j < map[i].size(); j++)
+        {
+            if (map[i][j] == 3)
+            {
+                //Check the direction the player is facing
+                //is BOMB placeable there
+                //update map where nextpos = 0 put 4
+                if (this->player_direction == 4) //RIGHT DIRECTION
+                {
+                    if (map[i][j + 1] == 0)
+                    {
+                        //placeBomb by updating map 0 becomes 4
+                        map[i][j + 1] = BOMB;
+                        return (true);
+                    }
+                    player_found = 1;
+                    break;
+                }
+                else if (this->player_direction == 3) //LEFT DIRECTION
+                {
+                    if (map[i][j - 1] == 0)
+                    {
+                        //placeBomb by updating map 0 becomes 4
+                        map[i][j - 1] = BOMB;
+                        return (true);
+                    }
+                    player_found = 1;
+                    break;
+                }
+                else if (this->player_direction == 2) //DOWN DIRECTION
+                {
+                    if (map[i + 1][j] == 0)
+                    {
+                        //placeBomb by updating map 0 becomes 4
+                        map[i + 1][j] = BOMB;
+                        return (true);                    
+                    }
+                    player_found = 1;
+                    break;
+                }
+                else if (this->player_direction == 1) //UP DIRECTION
+                {
+                    if (map[i - 1][j] == 0)
+                    {
+                        //placeBomb by updating map 0 becomes 4
+                        map[i - 1][j] = BOMB;
+                        return (true);
+                    }
+                    player_found = 1;
+                    break;
+                }
+                player_found = 1;
+                break;
+            }
+        }
+        if (player_found == 1)
+            break;
+    }
+    return (false);
+}
+
+void    GraphicsEngine::remove_bomb(std::vector<std::vector<int> > & map)
+{
+    int bomb_found = 0;
+
+    for (unsigned int i = 0; i < map.size(); i++)
+    {
+        for (unsigned int j = 0; j < map[i].size(); j++)
+        {
+            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
+            if (map[i][j] == 4)
+            {
+                map[i][j] = 0;
+                bomb_found = 1;
+                break;
+            }
+        }
+        if (bomb_found == 1)
+        break;
+    }
+}
+
 bool processInput(Keys &keys)
 {
     if (keys.input() ==  EXIT)
         return true;
-		return false;
-
+	return false;
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
