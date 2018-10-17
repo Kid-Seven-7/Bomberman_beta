@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/16 18:04:10 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/17 10:28:17 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ GraphicsEngine::GraphicsEngine()
     glEnable(GL_DEPTH_TEST);
 
     //Initializing current map
-    this->currentMap = 2;
+    this->currentMap = 0;
 
     //Default player direction
      this->player_direction = -1;
@@ -42,7 +42,7 @@ GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
 	glEnable(GL_DEPTH_TEST);
 
 	//Initializing current map
-	this->currentMap = 2;
+	this->currentMap = 0;
 
     //Default player direction
      this->player_direction = -1;
@@ -131,39 +131,46 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
         {
             for (unsigned int i = 0; i < maps[this->currentMap][j].size(); i++)
             {
-            if (maps[this->currentMap][j][i] == HARD_WALL)
-            {
-                // std::cout << maps[this->currentMap][j][i] << " ";
-                model_object.hard_wall_func(this->ourShader, this->pos_x, this->pos_y);
+                if (maps[this->currentMap][j][i] == HARD_WALL)
+                {
+                    // std::cout << this->pos_x << " " << this->pos_y << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
+                    model_object.hard_wall_func(this->ourShader, this->pos_x, this->pos_y);
+                }
+                if (maps[this->currentMap][j][i] == SOFT_WALL)
+                {
+                    // std::cout << this->pos_x << " " << this->pos_y << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
+                    model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
+                }
+                if (maps[this->currentMap][j][i] == FLOOR)
+                {
+                    // std::cout << this->pos_x << " " << this->pos_y << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
+                    //TODO
+                }
+                if (maps[this->currentMap][j][i] == PLAYER_OBJ)
+                {
+                    // std::cout << this->pos_x << " " << this->pos_y << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
+                    //TODO
+                }
+                if (maps[this->currentMap][j][i] == BOMB)
+                {
+                    // std::cout << this->pos_x << " " << this->pos_y << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
+                    //FIX BOMB CLASS!!!
+                    //CALL ARRAY CHECK BEFORE PLACING BOMB
+                    bomb.putBomb(ourShader, this->pos_x, this->pos_y, 1);
+                    if (bomb_counter >= 75)
+                        bomb.putBomb(ourShader, this->pos_x, this->pos_y, 2);
+                }
+                player.bodyModel(this->ourShader);
+                player.headModel(this->ourShader);
+                this->pos_x += 1.4f;
             }
-            if (maps[this->currentMap][j][i] == SOFT_WALL)
-            {
-                // std::cout << maps[this->currentMap][j][i] << " ";
-                model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
-            }
-            if (maps[this->currentMap][j][i] == FLOOR)
-            {
-                // std::cout << maps[this->currentMap][j][i] << " ";
-                //TODO
-            }if (maps[this->currentMap][j][i] == PLAYER_OBJ)
-            {
-                // std::cout << maps[this->currentMap][j][i] << " ";
-                //TODO
-            }
-            if (maps[this->currentMap][j][i] == BOMB)
-            {
-                // std::cout << maps[this->currentMap][j][i] << " ";
-                //FIX BOMB CLASS!!!
-                //CALL ARRAY CHECK BEFORE PLACING BOMB
-                bomb.putBomb(ourShader, this->pos_x, this->pos_y, 1);
-                if (bomb_counter >= 75)
-                    bomb.putBomb(ourShader, this->pos_x, this->pos_y, 2);
-            }
-            player.bodyModel(this->ourShader);
-            player.headModel(this->ourShader);
-            this->pos_x += 1.4f;
-
-            }
+            // std::cout << "Player X: " << player.getXcoord() << std::endl;
+            // std::cout << "Player Y: " << player.getYcoord() << std::endl;
             std::cout << std::endl;
             this->pos_y += 1.3f;
             this->pos_x = 0.0f;
@@ -318,47 +325,67 @@ bool    GraphicsEngine::array_check(std::vector<std::vector<int> > & map)
                     if (map[i][j + 1] == 0)
                     {
                         //placeBomb by updating map 0 becomes 4
-                        map[i][j + 1] = BOMB;
-                        return (true);
+                        if (map[i][j - 1] != FLOOR)
+                            return (false);
+                        else
+                        {
+                            map[i][j + 1] = BOMB;
+                            return (true);
+                        }
                     }
                     player_found = 1;
                     break;
                 }
                 else if (this->player_direction == 3) //LEFT DIRECTION
                 {
-                    if (map[i][j - 1] == 0)
+                    if (map[i][j - 1] == FLOOR)
                     {
                         //placeBomb by updating map 0 becomes 4
-                        map[i][j - 1] = BOMB;
-                        return (true);
+                        if (map[i][j + 1] != FLOOR)
+                            return (false);
+                        else
+                        {
+                            map[i][j - 1] = BOMB;
+                            return (true);
+                        }
                     }
                     player_found = 1;
                     break;
                 }
                 else if (this->player_direction == 2) //DOWN DIRECTION
                 {
-                    if (map[i + 1][j] == 0)
+                    if (map[i + 1][j] == FLOOR)
                     {
                         //placeBomb by updating map 0 becomes 4
-                        map[i + 1][j] = BOMB;
-                        return (true);                    
+                        if (map[i - 1][j] != FLOOR)
+                            return (false);
+                        else
+                        {
+                            map[i + 1][j] = BOMB;
+                            return (true);
+                        }                    
                     }
                     player_found = 1;
                     break;
                 }
                 else if (this->player_direction == 1) //UP DIRECTION
                 {
-                    if (map[i - 1][j] == 0)
+                    if (map[i - 1][j] == FLOOR)
                     {
                         //placeBomb by updating map 0 becomes 4
-                        map[i - 1][j] = BOMB;
-                        return (true);
+                        if (map[i + 1][j] != FLOOR)
+                            return (false);
+                        else
+                        {
+                            map[i - 1][j] = BOMB;
+                            return (true);
+                        }
                     }
                     player_found = 1;
                     break;
                 }
-                player_found = 1;
-                break;
+                // player_found = 1;
+                // break;
             }
         }
         if (player_found == 1)
