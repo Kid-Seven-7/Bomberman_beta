@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/17 12:18:23 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/17 12:23:32 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -431,9 +431,9 @@ void    GraphicsEngine::remove_bomb(std::vector<std::vector<int> > & map)
         for (unsigned int j = 0; j < map[i].size(); j++)
         {
             // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
-            if (map[i][j] == 4)
+            if (map[i][j] == BOMB)
             {
-                map[i][j] = 0;
+                map[i][j] = FLOOR;
                 // bomb_found = 1;
             }
         }
@@ -451,7 +451,7 @@ void    GraphicsEngine::remove_life(std::vector<std::vector<int> > & map)
             // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
             if (map[i][j] == 8)
             {
-                map[i][j] = 0;
+                map[i][j] = FLOOR;
                 player_life_found = 1;
                 break;
             }
@@ -470,10 +470,10 @@ void    GraphicsEngine::reset_player_location(std::vector<std::vector<int> > & m
         for (unsigned int j = 0; j < map[i].size(); j++)
         {
             // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
-            if (map[i][j] == 3)
+            if (map[i][j] == PLAYER_OBJ)
             {
-                map[i][j] = 0;
-                map[1][1] = 3;
+                map[i][j] = FLOOR;
+                map[1][1] = PLAYER_OBJ;
                 player_found = 1;
                 break;
             }
