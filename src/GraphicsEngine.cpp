@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/17 10:28:17 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/17 12:18:23 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ GraphicsEngine::GraphicsEngine()
 
     //Default player direction
      this->player_direction = -1;
+     this->lives = 2;
+     this->cam = CameraClass();
 }
 
 GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
@@ -46,6 +48,8 @@ GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
 
     //Default player direction
      this->player_direction = -1;
+     this->lives = 2;
+     this->cam = CameraClass();
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -155,6 +159,14 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     std::cout << maps[this->currentMap][j][i] << " ";
                     //TODO
                 }
+                if (maps[this->currentMap][j][i] == 8)
+                {
+                    // std::cout << this->pos_x << " " << this->pos_y << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
+                    model_object.player_life_func(this->ourShader, this->pos_x, this->pos_y);
+                    model_object.headModel(this->ourShader, this->pos_x, this->pos_y);
+                    //TODO
+                }
                 if (maps[this->currentMap][j][i] == BOMB)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
@@ -180,7 +192,16 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             bomb_counter++;
         if (bomb_counter == 75)
         {
-            this->update_bomb_range(maps[this->currentMap]);
+            if (this->update_bomb_range(maps[this->currentMap]) == 3)
+            {
+                if (this->lives >= 1)
+                {
+                    this->remove_life(maps[this->currentMap]);
+                    player.setPcoords(0.0f, 0.0f);
+                    this->reset_player_location(maps[this->currentMap]);
+                    this->reset_camera();
+                }
+            }
         }
         if (bomb_counter >= 150)
         {
@@ -234,13 +255,20 @@ void    GraphicsEngine::modelProjectionConfig()
 void    GraphicsEngine::callMovementFunctions(Player &player, Sound &sound, Keys &keys, std::vector<std::vector<int> >  mapOfObjects)
 {
     //camera movement functions
-    cam.setCam(this->ourShader);
-    cam.camMovements(keys);
-    cam.camRotation(this->window);
+    this->cam.setCam(this->ourShader);
+    this->cam.camMovements(keys);
+    this->cam.camRotation(this->window);
 
     //Player movement control function
     if (player.playerMovements(this->window, sound, keys, mapOfObjects, this->player_direction) == 1)
-        cam.playerCamMovements(keys);
+        this->cam.playerCamMovements(keys);
+}
+
+void    GraphicsEngine::reset_camera()
+{
+    this->cam.cameraPos = glm::vec3(0.0f, 0.0f, 18.0f);
+    this->cam.cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    this->cam.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 }
 
 std::vector<std::vector<int>>  GraphicsEngine::getCurrentObjectsMap()
@@ -411,6 +439,50 @@ void    GraphicsEngine::remove_bomb(std::vector<std::vector<int> > & map)
         }
     }
 }
+
+void    GraphicsEngine::remove_life(std::vector<std::vector<int> > & map)
+{
+    int player_life_found = 0;
+
+    for (unsigned int i = 0; i < map.size(); i++)
+    {
+        for (unsigned int j = 0; j < map[i].size(); j++)
+        {
+            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
+            if (map[i][j] == 8)
+            {
+                map[i][j] = 0;
+                player_life_found = 1;
+                break;
+            }
+        }
+        if (player_life_found == 1)
+            break;
+    }
+}
+
+void    GraphicsEngine::reset_player_location(std::vector<std::vector<int> > & map)
+{
+    int player_found = 0;
+
+    for (unsigned int i = 0; i < map.size(); i++)
+    {
+        for (unsigned int j = 0; j < map[i].size(); j++)
+        {
+            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
+            if (map[i][j] == 3)
+            {
+                map[i][j] = 0;
+                map[1][1] = 3;
+                player_found = 1;
+                break;
+            }
+        }
+        if (player_found == 1)
+            break;
+    }
+}
+
 
 int    GraphicsEngine::update_bomb_range(std::vector<std::vector<int> > & map)
 {

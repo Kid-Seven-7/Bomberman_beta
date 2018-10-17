@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 09:28:57 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/24 12:09:08 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/17 12:13:17 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,12 @@ class CameraClass
         void    camMovements(Keys &keys);
         void    camRotation(GLFWwindow *window);
         void    playerCamMovements(Keys &keys);
-				void    saveinfo();
+		void    saveinfo();
+
+        //Camera Configs
+        glm::vec3   cameraPos;
+        glm::vec3   cameraFront;
+        glm::vec3   cameraUp;
 
     private:
         //Camera Speed
@@ -43,11 +48,6 @@ class CameraClass
         //Camera Movement variables
         float       rotate_cam_x;
         float       rotate_cam_y;
-
-        //Camera Configs
-        glm::vec3   cameraPos;
-        glm::vec3   cameraFront;
-        glm::vec3   cameraUp;
 };
 
 # endif

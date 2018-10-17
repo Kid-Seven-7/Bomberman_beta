@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:28:24 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/16 15:39:14 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/17 12:16:32 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,17 @@ class GraphicsEngine
 
         //Current Player Direction
         int player_direction;
+
+        //Player lives
+        int lives;
+
+        //Remove player life from banch
+        void    remove_life(std::vector<std::vector<int> > & map);
+        void    reset_player_location(std::vector<std::vector<int> > & map);
+
+        //Reset camera position
+        void    reset_camera();
+
 
         //Array check for Bomb placement
         bool    array_check(std::vector<std::vector<int> > & map);

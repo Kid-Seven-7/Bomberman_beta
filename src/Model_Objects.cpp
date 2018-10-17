@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Model_Objects.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amatshiy <amatshiy@42.FR>                  +#+  +:+       +#+        */
+/*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 14:49:07 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/26 10:33:28 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/17 11:39:27 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ Model_Objects::Model_Objects()
     this->universe_model = Model("bomberman_assets/universe/mulan-universe.obj");
     this->engine_model = Model("bomberman_assets/timeship/timeship.obj");
     this->base_model = Model("bomberman_assets/timeship/BASE.obj");
+    this->player_life = Model("bomberman_assets/player/bb8/bb8-body-to_scale1.obj");
+    this->player_head = Model("bomberman_assets/player/bb8/bb8-head-to_scale.obj");
 }
 
 Model_Objects::~Model_Objects() {}
@@ -52,6 +54,36 @@ void    Model_Objects::hard_wall_func(Shader shader, float pos_x, float pos_y)
     //Drawing the soft wall model
     shader.setMat4("model", hard_wall_model);
     this->hard_wall.Draw(shader);
+}
+
+void    Model_Objects::player_life_func(Shader shader, float pos_x, float pos_y)
+{
+    glm::mat4   player_life_model = glm::mat4(1.0f);
+
+    //Softwalls positions
+    player_life_model = glm::translate(player_life_model, glm::vec3(-1.9 + pos_x, -1.1, -1.9 + pos_y));
+
+    //Resising the soft wall model
+    player_life_model = glm::scale(player_life_model, glm::vec3(0.7f, 0.7f, 0.7f));
+
+    //Drawing the soft wall model
+    shader.setMat4("model", player_life_model);
+    this->player_life.Draw(shader);
+}
+
+void    Model_Objects::headModel(Shader shader, float pos_x, float pos_y)
+{
+    glm::mat4   player_head = glm::mat4(1.0f);
+
+    //Player head movements
+    player_head = glm::translate(player_head, glm::vec3(-1.9 + pos_x, -1.1, -1.9 + pos_y));
+
+    //Resizing the head model down
+    player_head = glm::scale(player_head, glm::vec3(0.7f, 0.7f, 0.7f));
+
+    //Drawing the head model
+    shader.setMat4("model", player_head);
+    this->player_head.Draw(shader);
 }
 
 void    Model_Objects::universe_func(Shader shader)
