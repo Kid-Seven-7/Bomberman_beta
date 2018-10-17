@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 13:23:06 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/16 12:27:04 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/17 09:12:23 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ class Player
         //Player movements
         float   move_x;
         float   move_y;
+        bool    bounce;
 
         //Checking if movement is possible
         std::vector<int>    playerPos;

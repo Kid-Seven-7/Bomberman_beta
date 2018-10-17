@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 13:30:40 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/16 15:07:45 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/17 10:18:56 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ Player::Player()
     this->player_head = Model("bomberman_assets/player/bb8/bb8-head-to_scale.obj");
     //Player body init
     this->player_body = Model("bomberman_assets/player/bb8/bb8-body-to_scale1.obj");
+    this->bounce = false;
 }
 
 Player::~Player() 
@@ -89,7 +90,9 @@ int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std
         return (1);
       }
       else
+      {
         this->body_r_y += 0.2f;
+      }
     }
     else if (keys.input() == DOWN)
     {
@@ -117,7 +120,9 @@ int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std
         return (1);
       }
       else
+      {
         this->body_r_x += 0.2f;
+      }
     }
     else if (keys.input() == LEFT)
     {
@@ -201,7 +206,7 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
 
     if ((mapOfObjects[y_player_pos + 1][x_player_pos] != 1) &&
       (mapOfObjects[y_player_pos + 1][x_player_pos] != 2) &&
-      (mapOfObjects[y_player_pos - 1][x_player_pos] != 4))
+      (mapOfObjects[y_player_pos + 1][x_player_pos] != 4))
     {
       // std::cout << "Next Pos: " << mapOfObjects[y_player_pos - 1][x_player_pos] << std::endl;
       //Storing new player position
@@ -223,7 +228,7 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
     // std::cout << "Y_POS_RIGHT: " << this->playerPos[1] << std::endl;
     if ((mapOfObjects[y_player_pos][x_player_pos - 1] != 1) &&
       (mapOfObjects[y_player_pos][x_player_pos - 1] != 2) &&
-      (mapOfObjects[y_player_pos - 1][x_player_pos] != 4))
+      (mapOfObjects[y_player_pos][x_player_pos - 1] != 4))
     {
       // std::cout << "Next Pos: " << mapOfObjects[y_player_pos][x_player_pos + 1] << std::endl;
       //Storing new player position
@@ -245,7 +250,7 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
     // std::cout << "Y_POS_RIGHT: " << this->playerPos[1] << std::endl;
     if ((mapOfObjects[y_player_pos][x_player_pos + 1] != 1) &&
       (mapOfObjects[y_player_pos][x_player_pos + 1] != 2) &&
-      (mapOfObjects[y_player_pos - 1][x_player_pos] != 4))
+      (mapOfObjects[y_player_pos][x_player_pos + 1] != 4))
     {
       // std::cout << "Next Pos: " << mapOfObjects[y_player_pos][x_player_pos + 1] << std::endl;
       //Storing new player position
@@ -256,6 +261,7 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
       return (1);
     }
   }
+  this->bounce = true;
   return (-1);
 }
 
