@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/17 12:23:32 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/17 14:12:32 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,6 +220,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
         }
         this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
         this->updateMap(player, maps[this->currentMap]);
+        m_engine.updateCurrentMap(currentMap, maps[this->currentMap]);
     }
     nextXPos = 2.6f;
     nextYPos = 2.6f;

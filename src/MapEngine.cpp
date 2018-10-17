@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MapEngine.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amatshiy <amatshiy@42.FR>                  +#+  +:+       +#+        */
+/*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 16:54:37 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/25 08:37:26 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/17 14:10:38 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,12 @@ void    MapEngine::dumpCurrentMap(int mapIndex){
   }
 }
 
-void    MapEngine::convertMaps(){
+void    MapEngine::convertMaps()
+{
 	std::ifstream   mapFile;
 	std::stringstream   mapData;
 	std::string mapLine;
-	std::vector<std::vector<int>> convertedMap;
+	std::vector<std::vector<int> > convertedMap;
 	std::vector<int> convertedMapLine;
 	int width = 0; //width of the map
 	int height = 0; //length of the map
@@ -98,7 +99,7 @@ void    MapEngine::convertMaps(){
 	}
 }
 
-std::vector<std::vector<std::vector<int>>> MapEngine::getObjectsMaps(){
+std::vector<std::vector<std::vector<int> > > MapEngine::getObjectsMaps(){
 	return this->maps_objects;
 }
 
@@ -136,4 +137,11 @@ int     MapEngine::getMapHeight(std::stringstream &mapData){
 
 void    MapEngine::createMapFromFile(std::string mapPath){
 	(void)mapPath;
+}
+
+void	MapEngine::updateCurrentMap(int	currentMap, std::vector<std::vector<int> > map)
+{
+	//Updating current map of objects
+	this->maps_objects[currentMap].clear();
+	this->maps_objects[currentMap] = map;
 }
