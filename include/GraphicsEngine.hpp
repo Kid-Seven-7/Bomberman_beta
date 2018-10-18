@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:28:24 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/17 14:10:51 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/18 08:24:34 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,9 @@ class GraphicsEngine
         //Player lives
         int lives;
 
+        //Enemy vector from map
+        std::vector<int>    enemyNumbers;
+
         //Remove player life from banch
         void    remove_life(std::vector<std::vector<int> > & map);
         void    reset_player_location(std::vector<std::vector<int> > & map);
@@ -85,6 +88,7 @@ class GraphicsEngine
         //Array check for Bomb placement
         bool    array_check(std::vector<std::vector<int> > & map);
         void    remove_bomb(std::vector<std::vector<int> > & map);
+        bool    createEnemyArray(std::vector<std::vector<int> >  map);
         int    update_bomb_range(std::vector<std::vector<int> > & map);
 };
 

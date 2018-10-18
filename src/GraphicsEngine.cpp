@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/18 08:04:20 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/18 08:40:38 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,13 +90,13 @@ void    GraphicsEngine::gladConfg()
 
 void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
 {
-    Player  player;
+    Player          player;
     Model_Objects   model_object;
-    BombClass   bomb;
-    int bomb_counter = 0;
-    int pause_counter = 60;
-    bool    start_counter = false;
-    bool    reset_player = false;
+    BombClass       bomb;
+    int             bomb_counter = 0;
+    int             pause_counter = 60;
+    bool            start_counter = false;
+    bool            reset_player = false;
 
     //Physics Engine
     // PhysicsEngine p_engine; // remove this ENGINE BEFORE SUBMISSION
@@ -107,10 +107,14 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     m_engine.convertMaps();
     std::vector<std::vector<std::vector<int>>> maps = m_engine.getObjectsMaps();
 
+    if (this->createEnemyArray(maps[this->currentMap]))
+    {
+        //create enemies
+        system("say enemies");
+    }
     while (!glfwWindowShouldClose(this->window))
     {
         //input process
-        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         if (processInput(keys))
         {
 			m_engine.dumpCurrentMap(this->currentMap);
@@ -437,6 +441,29 @@ bool    GraphicsEngine::array_check(std::vector<std::vector<int> > & map)
         if (player_found == 1)
             break;
     }
+    return (false);
+}
+
+bool    GraphicsEngine::createEnemyArray(std::vector<std::vector<int> >  map)
+{
+    int e_number = 9;
+
+    for (unsigned int i = 0; i < map.size(); i++)
+    {
+        for (unsigned int j = 0; j < map[i].size(); j++)
+        {
+            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
+            if (map[i][j] >= e_number)
+            {
+                this->enemyNumbers.push_back(e_number);
+                e_number++;
+                // bomb_found = 1;
+            }
+        }
+    }
+
+    if (this->enemyNumbers.size() > 1)
+        return (true);
     return (false);
 }
 
