@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/18 08:40:38 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/18 15:25:27 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,13 +105,19 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     MapEngine m_engine;
     m_engine.getMapPaths("./maps");
     m_engine.convertMaps();
+
+
     std::vector<std::vector<std::vector<int>>> maps = m_engine.getObjectsMaps();
+
+
 
     if (this->createEnemyArray(maps[this->currentMap]))
     {
         //create enemies
         system("say enemies");
+        std::cout << "Number of Enemies: " << this->enemyNumbers.size() << std::endl;
     }
+
     while (!glfwWindowShouldClose(this->window))
     {
         //input process
@@ -144,31 +150,31 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 if (maps[this->currentMap][j][i] == HARD_WALL)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    // std::cout << maps[this->currentMap][j][i] << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.hard_wall_func(this->ourShader, this->pos_x, this->pos_y);
                 }
                 if (maps[this->currentMap][j][i] == SOFT_WALL)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    // std::cout << maps[this->currentMap][j][i] << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
                 }
                 if (maps[this->currentMap][j][i] == FLOOR)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    // std::cout << maps[this->currentMap][j][i] << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
                     //TODO
                 }
                 if (maps[this->currentMap][j][i] == PLAYER_OBJ)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    // std::cout << maps[this->currentMap][j][i] << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
                     //TODO
                 }
                 if (maps[this->currentMap][j][i] == 8)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    // std::cout << maps[this->currentMap][j][i] << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.player_life_func(this->ourShader, this->pos_x, this->pos_y);
                     model_object.headModel(this->ourShader, this->pos_x, this->pos_y);
                     //TODO
@@ -176,12 +182,16 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 if (maps[this->currentMap][j][i] == BOMB)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    // std::cout << maps[this->currentMap][j][i] << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
                     //FIX BOMB CLASS!!!
                     //CALL ARRAY CHECK BEFORE PLACING BOMB
                     bomb.putBomb(ourShader, this->pos_x, this->pos_y, 1);
                     if (bomb_counter >= 75)
                         bomb.putBomb(ourShader, this->pos_x, this->pos_y, 2);
+                }
+                if (maps[this->currentMap][j][i] == 54)
+                {
+                    std::cout << maps[this->currentMap][j][i] << " ";
                 }
                 player.bodyModel(this->ourShader);
                 player.headModel(this->ourShader);
@@ -189,7 +199,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             }
             // std::cout << "Player X: " << player.getXcoord() << std::endl;
             // std::cout << "Player Y: " << player.getYcoord() << std::endl;
-            // std::cout << std::endl;
+            std::cout << std::endl;
             this->pos_y += 1.3f;
             this->pos_x = 0.0f;
         }
@@ -446,23 +456,24 @@ bool    GraphicsEngine::array_check(std::vector<std::vector<int> > & map)
 
 bool    GraphicsEngine::createEnemyArray(std::vector<std::vector<int> >  map)
 {
-    int e_number = 9;
+    int e_number = 53;
 
     for (unsigned int i = 0; i < map.size(); i++)
     {
         for (unsigned int j = 0; j < map[i].size(); j++)
         {
             // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
-            if (map[i][j] >= e_number)
+            if (map[i][j] == 54)
             {
+                std::cout << "Enemy: " << e_number << std::endl;
                 this->enemyNumbers.push_back(e_number);
-                e_number++;
-                // bomb_found = 1;
             }
+            e_number++;
+            // bomb_found = 1;
         }
     }
 
-    if (this->enemyNumbers.size() > 1)
+    if (this->enemyNumbers.size() >= 1)
         return (true);
     return (false);
 }
