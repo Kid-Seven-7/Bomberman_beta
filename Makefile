@@ -59,7 +59,7 @@ $(NAME):
 	@$(MAKE) -C Image_Loader/
 	@sh scripts/setup.sh
 	@printf "$(GREEN)compiling source files\n$(NC)"
-	@$(COMP) -o $(NAME) $(SRC) $(CPPFLAGS) $(CPPSTD) $(INC) $(LIB) $(TEXTINC) $(GLMINC) $(GLADINC) $(SOUNDLIB) $(SOUNDFLAGS) -lassimp -lglfw3 -lGLEW
+	@$(COMP) -o $(NAME) $(SRC) $(CPPFLAGS) $(CPPSTD) $(INC) $(LIB) $(TEXTINC) $(GLMINC) $(GLADINC) $(SOUNDLIB) $(SOUNDFLAGS) -lassimp -lglfw -lGLEW
 	clear
 	@printf "$(GREEN)please type the following in the terminal on first execution\n$(NC)"
 	@printf "$(RED)export DYLD_FRAMEWORK_PATH=\"$(PWD)/SFML/Frameworks\"\n$(NC)"
