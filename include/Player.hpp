@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 13:23:06 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/17 09:12:23 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/17 11:56:55 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ class Player
         std::vector<std::vector<int> > getMapUpdate();
         std::vector<int>    getPrevPlayer();
         std::vector<int>    getNewPlayerPos();
+        void    setPcoords(float pos_x, float pos_y);
 
 
     private:

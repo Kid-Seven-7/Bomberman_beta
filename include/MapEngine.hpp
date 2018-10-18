@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 16:39:50 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/23 12:08:36 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/17 14:10:49 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ class MapEngine
         void    convertMaps();
 				void 		dumpCurrentMap(int mapIndex);
         std::vector<std::vector<std::vector<int> > > getObjectsMaps();
+        void    updateCurrentMap(int currentMap, std::vector<std::vector<int> > map);
 
     private:
         std::vector<std::string> mapPaths;

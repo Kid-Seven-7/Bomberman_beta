@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/17 10:28:17 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/18 08:40:38 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ GraphicsEngine::GraphicsEngine()
 
     //Default player direction
      this->player_direction = -1;
+     this->lives = 2;
+     this->cam = CameraClass();
 }
 
 GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
@@ -46,6 +48,8 @@ GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
 
     //Default player direction
      this->player_direction = -1;
+     this->lives = 2;
+     this->cam = CameraClass();
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -86,11 +90,13 @@ void    GraphicsEngine::gladConfg()
 
 void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
 {
-    Player  player;
+    Player          player;
     Model_Objects   model_object;
-    BombClass   bomb;
-    int bomb_counter = 0;
-    bool    start_counter = false;
+    BombClass       bomb;
+    int             bomb_counter = 0;
+    int             pause_counter = 60;
+    bool            start_counter = false;
+    bool            reset_player = false;
 
     //Physics Engine
     // PhysicsEngine p_engine; // remove this ENGINE BEFORE SUBMISSION
@@ -101,10 +107,14 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     m_engine.convertMaps();
     std::vector<std::vector<std::vector<int>>> maps = m_engine.getObjectsMaps();
 
+    if (this->createEnemyArray(maps[this->currentMap]))
+    {
+        //create enemies
+        system("say enemies");
+    }
     while (!glfwWindowShouldClose(this->window))
     {
         //input process
-        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         if (processInput(keys))
         {
 			m_engine.dumpCurrentMap(this->currentMap);
@@ -134,31 +144,39 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 if (maps[this->currentMap][j][i] == HARD_WALL)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.hard_wall_func(this->ourShader, this->pos_x, this->pos_y);
                 }
                 if (maps[this->currentMap][j][i] == SOFT_WALL)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
                 }
                 if (maps[this->currentMap][j][i] == FLOOR)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     //TODO
                 }
                 if (maps[this->currentMap][j][i] == PLAYER_OBJ)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
+                    //TODO
+                }
+                if (maps[this->currentMap][j][i] == 8)
+                {
+                    // std::cout << this->pos_x << " " << this->pos_y << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
+                    model_object.player_life_func(this->ourShader, this->pos_x, this->pos_y);
+                    model_object.headModel(this->ourShader, this->pos_x, this->pos_y);
                     //TODO
                 }
                 if (maps[this->currentMap][j][i] == BOMB)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     //FIX BOMB CLASS!!!
                     //CALL ARRAY CHECK BEFORE PLACING BOMB
                     bomb.putBomb(ourShader, this->pos_x, this->pos_y, 1);
@@ -171,7 +189,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             }
             // std::cout << "Player X: " << player.getXcoord() << std::endl;
             // std::cout << "Player Y: " << player.getYcoord() << std::endl;
-            std::cout << std::endl;
+            // std::cout << std::endl;
             this->pos_y += 1.3f;
             this->pos_x = 0.0f;
         }
@@ -180,13 +198,36 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             bomb_counter++;
         if (bomb_counter == 75)
         {
-            this->update_bomb_range(maps[this->currentMap]);
+            if (this->update_bomb_range(maps[this->currentMap]) == 3)
+            {
+                if (this->lives >= 1)
+                {
+                    this->remove_life(maps[this->currentMap]);
+                    player.setPcoords(0.0f, 0.0f);
+                    this->reset_player_location(maps[this->currentMap]);
+                    this->reset_camera();
+                    reset_player = true;
+                }
+            }
         }
         if (bomb_counter >= 150)
         {
             bomb_counter = 0;
             start_counter = false;
             this->remove_bomb(maps[this->currentMap]);
+        }
+        if (reset_player)
+        {
+            if (pause_counter > 1)
+                pause_counter--;
+            else
+            {
+                pause_counter = 60;
+                reset_player = false;
+                bomb_counter = 0;
+                start_counter = false;
+                this->remove_bomb(maps[this->currentMap]);
+            }
         }
 
         glfwSwapBuffers(this->window);
@@ -197,8 +238,10 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             if (!(start_counter) && (this->array_check(maps[this->currentMap])))
                 start_counter = true;
         }
-        this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
+        if (pause_counter >= 60)
+            this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
         this->updateMap(player, maps[this->currentMap]);
+        m_engine.updateCurrentMap(currentMap, maps[this->currentMap]);
     }
     nextXPos = 2.6f;
     nextYPos = 2.6f;
@@ -234,13 +277,20 @@ void    GraphicsEngine::modelProjectionConfig()
 void    GraphicsEngine::callMovementFunctions(Player &player, Sound &sound, Keys &keys, std::vector<std::vector<int> >  mapOfObjects)
 {
     //camera movement functions
-    cam.setCam(this->ourShader);
-    cam.camMovements(keys);
-    cam.camRotation(this->window);
+    this->cam.setCam(this->ourShader);
+    this->cam.camMovements(keys);
+    this->cam.camRotation(this->window);
 
     //Player movement control function
     if (player.playerMovements(this->window, sound, keys, mapOfObjects, this->player_direction) == 1)
-        cam.playerCamMovements(keys);
+        this->cam.playerCamMovements(keys);
+}
+
+void    GraphicsEngine::reset_camera()
+{
+    this->cam.cameraPos = glm::vec3(0.0f, 0.0f, 18.0f);
+    this->cam.cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    this->cam.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 }
 
 std::vector<std::vector<int>>  GraphicsEngine::getCurrentObjectsMap()
@@ -394,6 +444,29 @@ bool    GraphicsEngine::array_check(std::vector<std::vector<int> > & map)
     return (false);
 }
 
+bool    GraphicsEngine::createEnemyArray(std::vector<std::vector<int> >  map)
+{
+    int e_number = 9;
+
+    for (unsigned int i = 0; i < map.size(); i++)
+    {
+        for (unsigned int j = 0; j < map[i].size(); j++)
+        {
+            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
+            if (map[i][j] >= e_number)
+            {
+                this->enemyNumbers.push_back(e_number);
+                e_number++;
+                // bomb_found = 1;
+            }
+        }
+    }
+
+    if (this->enemyNumbers.size() > 1)
+        return (true);
+    return (false);
+}
+
 void    GraphicsEngine::remove_bomb(std::vector<std::vector<int> > & map)
 {
     // int bomb_found = 0;
@@ -403,14 +476,58 @@ void    GraphicsEngine::remove_bomb(std::vector<std::vector<int> > & map)
         for (unsigned int j = 0; j < map[i].size(); j++)
         {
             // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
-            if (map[i][j] == 4)
+            if (map[i][j] == BOMB)
             {
-                map[i][j] = 0;
+                map[i][j] = FLOOR;
                 // bomb_found = 1;
             }
         }
     }
 }
+
+void    GraphicsEngine::remove_life(std::vector<std::vector<int> > & map)
+{
+    int player_life_found = 0;
+
+    for (unsigned int i = 0; i < map.size(); i++)
+    {
+        for (unsigned int j = 0; j < map[i].size(); j++)
+        {
+            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
+            if (map[i][j] == 8)
+            {
+                map[i][j] = FLOOR;
+                player_life_found = 1;
+                break;
+            }
+        }
+        if (player_life_found == 1)
+            break;
+    }
+}
+
+void    GraphicsEngine::reset_player_location(std::vector<std::vector<int> > & map)
+{
+    int player_found = 0;
+
+    for (unsigned int i = 0; i < map.size(); i++)
+    {
+        for (unsigned int j = 0; j < map[i].size(); j++)
+        {
+            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
+            if (map[i][j] == PLAYER_OBJ)
+            {
+                map[i][j] = FLOOR;
+                map[1][1] = PLAYER_OBJ;
+                player_found = 1;
+                break;
+            }
+        }
+        if (player_found == 1)
+            break;
+    }
+}
+
 
 int    GraphicsEngine::update_bomb_range(std::vector<std::vector<int> > & map)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Model_Objects.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amatshiy <amatshiy@42.FR>                  +#+  +:+       +#+        */
+/*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 14:49:16 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/09/25 18:34:33 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/17 11:34:15 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,11 @@ class Model_Objects
 
         void    soft_wall_func(Shader shader, float pos_x, float pos_y);
         void    hard_wall_func(Shader shader, float pos_x, float pos_y);
+        void    player_life_func(Shader shader, float pos_x, float pos_y);
         void    universe_func(Shader shader);
         void    base_func(Shader shader);
         void    Engine(Shader shader, float pos_x, float pos_y);
+        void    headModel(Shader shader, float pos_x, float pos_y);
 
 
     private:
@@ -35,6 +37,8 @@ class Model_Objects
         Model   universe_model;
         Model   engine_model;
         Model   base_model;
+        Model   player_life;
+        Model   player_head;
 };
 
 # endif
