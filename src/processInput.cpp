@@ -10,6 +10,32 @@
 # include "../include/bomberman.hpp"
 # include "../Image_Loader/image_loader.hpp"
 
+void readFile(std::string filepath){
+	std::string line, playerInfo, camInfo, mapInfo;
+	int index = 1;
+
+  std::ifstream saveFile(filepath);
+  if (saveFile.is_open()){
+    while (getline (saveFile,line)){
+			line += "\n";
+			if (index > 0 && index < 3)
+				playerInfo += line;
+			if (index > 3 && index < 18)
+				camInfo += line;
+			if (index > 18)
+				mapInfo += line;
+			index++;
+		}
+    saveFile.close();
+  }
+  else
+		std::cout << "Unable to open file";
+
+	std::cout << "playerInfo :\n" << playerInfo << '\n';
+	std::cout << "camInfo :\n" << camInfo << '\n';
+	std::cout << "mapInfo :\n" << mapInfo << '\n';
+}
+
 void noSaveFile(unsigned int *texture, unsigned int *menu, float *vert){
 	*vert = 10.0f;
 	*texture = setTexture(texture, "bomberman_assets/wallpapers/nosave.jpg");
@@ -49,11 +75,12 @@ bool saveGameState(std::string path){
 	Synopsis:
 		Determines if a save file exists or not
 */
-void loadFile(std::string filepath){
+void loadFile(std::string filepath, unsigned int *texture, unsigned int *menu, float *vert){
 	if (does_file_exist(filepath))
-		std::cout << "file exists" << '\n';
+		// std::cout << "file exists" << '\n';
+		readFile(filepath);
 	else
-		std::cout << "no such file" << '\n';
+		noSaveFile(texture, menu, vert);
 }
 
 /*
@@ -331,15 +358,15 @@ bool processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 					break;
 				case LOAD:
 					if(vert == 0.7f)
-						loadFile("save/slot1.svf");
+						loadFile("save/slot1.txt", texture, &menu, &vert);
 					else if(vert == 0.35f)
-						loadFile("save/slot2.svf");
+						loadFile("save/slot2.txt", texture, &menu, &vert);
 					else if(vert == 0.0f)
-						loadFile("save/slot3.svf");
+						loadFile("save/slot3.txt", texture, &menu, &vert);
 					else if(vert == -0.35f)
-						loadFile("save/slot4.svf");
+						loadFile("save/slot4.txt", texture, &menu, &vert);
 					else if(vert == -0.7f)
-						loadFile("save/slot5.svf");
+						loadFile("save/slot5.txt", texture, &menu, &vert);
 					break;
 				case SETTINGS:
 					if (vert == 0.7f){
