@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/17 14:12:32 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/18 08:04:20 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,9 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     Model_Objects   model_object;
     BombClass   bomb;
     int bomb_counter = 0;
+    int pause_counter = 60;
     bool    start_counter = false;
+    bool    reset_player = false;
 
     //Physics Engine
     // PhysicsEngine p_engine; // remove this ENGINE BEFORE SUBMISSION
@@ -138,31 +140,31 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 if (maps[this->currentMap][j][i] == HARD_WALL)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.hard_wall_func(this->ourShader, this->pos_x, this->pos_y);
                 }
                 if (maps[this->currentMap][j][i] == SOFT_WALL)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
                 }
                 if (maps[this->currentMap][j][i] == FLOOR)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     //TODO
                 }
                 if (maps[this->currentMap][j][i] == PLAYER_OBJ)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     //TODO
                 }
                 if (maps[this->currentMap][j][i] == 8)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.player_life_func(this->ourShader, this->pos_x, this->pos_y);
                     model_object.headModel(this->ourShader, this->pos_x, this->pos_y);
                     //TODO
@@ -170,7 +172,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 if (maps[this->currentMap][j][i] == BOMB)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     //FIX BOMB CLASS!!!
                     //CALL ARRAY CHECK BEFORE PLACING BOMB
                     bomb.putBomb(ourShader, this->pos_x, this->pos_y, 1);
@@ -183,7 +185,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             }
             // std::cout << "Player X: " << player.getXcoord() << std::endl;
             // std::cout << "Player Y: " << player.getYcoord() << std::endl;
-            std::cout << std::endl;
+            // std::cout << std::endl;
             this->pos_y += 1.3f;
             this->pos_x = 0.0f;
         }
@@ -200,6 +202,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     player.setPcoords(0.0f, 0.0f);
                     this->reset_player_location(maps[this->currentMap]);
                     this->reset_camera();
+                    reset_player = true;
                 }
             }
         }
@@ -208,6 +211,19 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             bomb_counter = 0;
             start_counter = false;
             this->remove_bomb(maps[this->currentMap]);
+        }
+        if (reset_player)
+        {
+            if (pause_counter > 1)
+                pause_counter--;
+            else
+            {
+                pause_counter = 60;
+                reset_player = false;
+                bomb_counter = 0;
+                start_counter = false;
+                this->remove_bomb(maps[this->currentMap]);
+            }
         }
 
         glfwSwapBuffers(this->window);
@@ -218,7 +234,8 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             if (!(start_counter) && (this->array_check(maps[this->currentMap])))
                 start_counter = true;
         }
-        this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
+        if (pause_counter >= 60)
+            this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
         this->updateMap(player, maps[this->currentMap]);
         m_engine.updateCurrentMap(currentMap, maps[this->currentMap]);
     }
