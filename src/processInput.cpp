@@ -75,12 +75,16 @@ bool saveGameState(std::string path){
 	Synopsis:
 		Determines if a save file exists or not
 */
-void loadFile(std::string filepath, unsigned int *texture, unsigned int *menu, float *vert){
+bool loadFile(std::string filepath, unsigned int *texture, unsigned int *menu, float *vert){
 	if (does_file_exist(filepath))
 		// std::cout << "file exists" << '\n';
-		readFile(filepath);
+		// readFile(filepath);
+		// gameplay(window, sound, keys, 0);
+		return (true);
 	else
 		noSaveFile(texture, menu, vert);
+
+	return(false);
 }
 
 /*
@@ -270,7 +274,7 @@ bool processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 			if (keys.input() == ENTER){
 				if (does_file_exist("gameState/mapstate.txt"))
 					return true;
-				gameplay(window, sound, keys);
+				gameplay(window, sound, keys, 0);
 			}
 		}
 		if (menu == KEYMAPPING){
@@ -357,16 +361,26 @@ bool processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned in
 					}
 					break;
 				case LOAD:
-					if(vert == 0.7f)
-						loadFile("save/slot1.txt", texture, &menu, &vert);
-					else if(vert == 0.35f)
-						loadFile("save/slot2.txt", texture, &menu, &vert);
-					else if(vert == 0.0f)
-						loadFile("save/slot3.txt", texture, &menu, &vert);
-					else if(vert == -0.35f)
-						loadFile("save/slot4.txt", texture, &menu, &vert);
-					else if(vert == -0.7f)
-						loadFile("save/slot5.txt", texture, &menu, &vert);
+					if(vert == 0.7f){
+						if (loadFile("save/slot1.txt", texture, &menu, &vert))
+							gameplay(window, sound, keys, 1);
+					}
+					else if(vert == 0.35f){
+						if (loadFile("save/slot2.txt", texture, &menu, &vert))
+							gameplay(window, sound, keys, 2);
+					}
+					else if(vert == 0.0f){
+						if (loadFile("save/slot3.txt", texture, &menu, &vert))
+							gameplay(window, sound, keys, 3);
+					}
+					else if(vert == -0.35f){
+						if (loadFile("save/slot4.txt", texture, &menu, &vert))
+							gameplay(window, sound, keys, 4);
+					}
+					else if(vert == -0.7f){
+						if (loadFile("save/slot5.txt", texture, &menu, &vert))
+							gameplay(window, sound, keys, 5);
+					}
 					break;
 				case SETTINGS:
 					if (vert == 0.7f){

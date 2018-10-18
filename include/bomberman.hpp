@@ -64,7 +64,7 @@
 //Voids
 void 					initCheck();
 void 					setVersion();
-void 					gameplay(GLFWwindow *window, Sound &sound, Keys &keys);
+void 					gameplay(GLFWwindow *window, Sound &sound, Keys &keys, int slots);
 void 					displayStart(Sound &sound, Keys &keys, GLFWwindow* window);
 bool 					processInput(GLFWwindow *window, Shader myShader, Sound &sound, unsigned int *texture, Keys &keys);
 

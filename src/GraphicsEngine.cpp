@@ -12,6 +12,49 @@
 
 # include "../include/GraphicsEngine.hpp"
 
+static void readFile(std::string filepath, int lineNo, std::string *store){
+  std::string line;
+	int index = 0;
+
+  line = "";
+  std::ifstream saveFile(filepath);
+  if (saveFile.is_open()){
+    while (getline (saveFile,line)){
+			line += "\n";
+			if (++index == lineNo)
+				store->append(line);
+		}
+    saveFile.close();
+  }
+  else
+		std::cout << "Unable to open file";
+}
+
+void setInfo(Player &player, int slot){
+  std::string playerInfo, filepath, x, y;
+
+  filepath = (slot == 1)?"save/slot1.txt":
+  (slot == 2)?"save/slot2.txt":
+  (slot == 3)?"save/slot3.txt":
+  (slot == 4)?"save/slot4.txt":"save/slot5.txt";
+
+  readFile(filepath, 2, &playerInfo);
+
+  for (size_t i = 0; i < playerInfo.length(); ++i){
+    static bool first = true;
+    if (playerInfo[i] == ':'){
+      first = false;
+      i++;
+    }
+    if (first)
+      x += inplayerInfofo[i];
+    else
+      y += playerInfo[i];
+  }
+
+  player.setPcoords(std::stod(x,NULL) - 1.3f, std::stod(y,NULL) - 1.3f);
+}
+
 GraphicsEngine::GraphicsEngine()
 {
     if (!glfwInit()){
@@ -88,8 +131,7 @@ void    GraphicsEngine::gladConfg()
     }
 }
 
-void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
-{
+void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int slot){
     Player          player;
     Model_Objects   model_object;
     BombClass       bomb;
@@ -106,6 +148,10 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     m_engine.getMapPaths("./maps");
     m_engine.convertMaps();
     std::vector<std::vector<std::vector<int>>> maps = m_engine.getObjectsMaps();
+
+    if (slot != 0){
+      setInfo(player, slot);
+    }
 
     if (this->createEnemyArray(maps[this->currentMap]))
     {
@@ -322,7 +368,7 @@ void    GraphicsEngine::updateMap(Player player, std::vector<std::vector<int> > 
         old_p_x = OldPlayerPos[0];
         old_p_y = OldPlayerPos[1];
 
-        if (curXplayerPos >= nextXPos) 
+        if (curXplayerPos >= nextXPos)
         {
             prevXpos = curXplayerPos - 1.4f;
             nextXPos += 1.4f;
@@ -413,7 +459,7 @@ bool    GraphicsEngine::array_check(std::vector<std::vector<int> > & map)
                         {
                             map[i + 1][j] = BOMB;
                             return (true);
-                        }                    
+                        }
                     }
                     player_found = 1;
                     break;
@@ -452,7 +498,7 @@ bool    GraphicsEngine::createEnemyArray(std::vector<std::vector<int> >  map)
     {
         for (unsigned int j = 0; j < map[i].size(); j++)
         {
-            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
+            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;
             if (map[i][j] >= e_number)
             {
                 this->enemyNumbers.push_back(e_number);
@@ -475,7 +521,7 @@ void    GraphicsEngine::remove_bomb(std::vector<std::vector<int> > & map)
     {
         for (unsigned int j = 0; j < map[i].size(); j++)
         {
-            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
+            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;
             if (map[i][j] == BOMB)
             {
                 map[i][j] = FLOOR;
@@ -493,7 +539,7 @@ void    GraphicsEngine::remove_life(std::vector<std::vector<int> > & map)
     {
         for (unsigned int j = 0; j < map[i].size(); j++)
         {
-            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
+            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;
             if (map[i][j] == 8)
             {
                 map[i][j] = FLOOR;
@@ -514,7 +560,7 @@ void    GraphicsEngine::reset_player_location(std::vector<std::vector<int> > & m
     {
         for (unsigned int j = 0; j < map[i].size(); j++)
         {
-            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
+            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;
             if (map[i][j] == PLAYER_OBJ)
             {
                 map[i][j] = FLOOR;
@@ -541,7 +587,7 @@ int    GraphicsEngine::update_bomb_range(std::vector<std::vector<int> > & map)
     {
         for (unsigned int j = 0; j < map[i].size(); j++)
         {
-            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
+            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;
             if (map[i][j] == 4)
             {
                 //INCREASING BOMB RANGE

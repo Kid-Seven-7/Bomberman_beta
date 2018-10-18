@@ -10,8 +10,8 @@
 # include "../include/HeaderHandler.hpp"
 # include "../include/bomberman.hpp"
 
-void gameplay(GLFWwindow *window, Sound &sound, Keys &keys){
+void gameplay(GLFWwindow *window, Sound &sound, Keys &keys, int slots){
 	GraphicsEngine *g_engine = new GraphicsEngine(window);
-	g_engine->MainControl(sound, keys);
+	g_engine->MainControl(sound, keys, slots);
 	delete  g_engine;
 }
