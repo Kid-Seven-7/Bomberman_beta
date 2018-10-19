@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/18 15:25:27 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/19 12:08:46 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,17 +106,19 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     m_engine.getMapPaths("./maps");
     m_engine.convertMaps();
 
-
+    
     std::vector<std::vector<std::vector<int>>> maps = m_engine.getObjectsMaps();
 
 
 
-    if (this->createEnemyArray(maps[this->currentMap]))
+    if (this->createEnemyArray(maps[this->currentMap], 3))
     {
         //create enemies
         system("say enemies");
         std::cout << "Number of Enemies: " << this->enemyNumbers.size() << std::endl;
+        std::cout << "Found Enemy: " << this->enemyNumbers[0] << std::endl;
     }
+    exit(0);
 
     while (!glfwWindowShouldClose(this->window))
     {
@@ -454,23 +456,26 @@ bool    GraphicsEngine::array_check(std::vector<std::vector<int> > & map)
     return (false);
 }
 
-bool    GraphicsEngine::createEnemyArray(std::vector<std::vector<int> >  map)
+bool    GraphicsEngine::createEnemyArray(std::vector<std::vector<int> >  map, unsigned int numCheck)
 {
     int e_number = 53;
 
-    for (unsigned int i = 0; i < map.size(); i++)
+    for (unsigned int check = 0; numCheck > check; check++)
     {
-        for (unsigned int j = 0; j < map[i].size(); j++)
+        for (unsigned int i = 0; i < map.size(); i++)
         {
-            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
-            if (map[i][j] == 54)
+            for (unsigned int j = 0; j < map[i].size(); j++)
             {
-                std::cout << "Enemy: " << e_number << std::endl;
-                this->enemyNumbers.push_back(e_number);
+                // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
+                if (map[i][j] == e_number)
+                {
+                    std::cout << "Enemy: " << e_number << std::endl;
+                    this->enemyNumbers.push_back(e_number);
+                }
+                // bomb_found = 1;
             }
-            e_number++;
-            // bomb_found = 1;
         }
+        e_number++;
     }
 
     if (this->enemyNumbers.size() >= 1)

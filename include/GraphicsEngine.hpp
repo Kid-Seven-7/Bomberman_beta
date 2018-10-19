@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:28:24 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/18 14:29:58 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/10/19 12:11:52 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,12 @@ static  float   prevYpos = -2.6f;
 # define    BOMB    4
 # define    ENEMY   5
 # define    DOOR    6
+
+// ENEMY DIRECTION GLOBALS
+# define    ENEMY_UP 1
+# define    ENEMY_DOWN 2
+# define    ENEMY_RIGHT 3
+# define    ENEMY_LEFT 4
 
 class GraphicsEngine
 {
@@ -88,8 +94,8 @@ class GraphicsEngine
         //Array check for Bomb placement
         bool    array_check(std::vector<std::vector<int> > & map);
         void    remove_bomb(std::vector<std::vector<int> > & map);
-        bool    createEnemyArray(std::vector<std::vector<int> >  map);
-        int    update_bomb_range(std::vector<std::vector<int> > & map);
+        bool    createEnemyArray(std::vector<std::vector<int> >  map, unsigned int numCheck = 1);
+        int     update_bomb_range(std::vector<std::vector<int> > & map);
 };
 
 # endif

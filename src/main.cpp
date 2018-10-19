@@ -12,30 +12,38 @@
 # include <cmath>
 # include <unistd.h>
 
-int main(){
-	Sound sound;
-	Keys keys;
-	// sound.playloop();
-	// sound.playOST(PRECIPICE);
+int main()
+{
+  try
+  {
+    Sound sound;
+    Keys keys;
+    // sound.playloop();
+    // sound.playOST(PRECIPICE);
 
-  // glfw: initialize and configure
-  glfwInit();
-  setVersion();
+    // glfw: initialize and configure
+    glfwInit();
+    setVersion();
 
-  // glfw window creation
-  GLFWwindow* window = glfwCreateWindow(1280, 800, "LearnOpenGL", NULL, NULL);
-  if (!window){
-    std::cout << "Failed to create GLFW window" << std::endl;
-    glfwTerminate();
-    return -1;
+    // glfw window creation
+    GLFWwindow* window = glfwCreateWindow(1280, 800, "LearnOpenGL", NULL, NULL);
+    if (!window){
+      std::cout << "Failed to create GLFW window" << std::endl;
+      glfwTerminate();
+      return -1;
+    }
+    glfwMakeContextCurrent(window);
+    keys.setWindow(window);
+
+    //Checking if glew Initialized correctly
+    initCheck();
+
+    displayStart(sound, keys, window);
   }
-  glfwMakeContextCurrent(window);
-	keys.setWindow(window);
-
-	//Checking if glew Initialized correctly
-  initCheck();
-
-	displayStart(sound, keys, window);
-
+  catch(std::exception &e)
+  {
+    e.what();
+    std::cout << "Status: Released all resources in memory" << std::endl;
+  }
   return 0;
 }
