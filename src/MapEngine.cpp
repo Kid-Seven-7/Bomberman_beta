@@ -58,7 +58,7 @@ void    MapEngine::dumpCurrentMap(int mapIndex){
 		<< '\n';
   for (size_t j = 0; j < this->maps_objects[mapIndex].size(); j++){
     for (size_t k = 0; k < this->maps_objects[mapIndex][j].size(); k++)
-      file << this->maps_objects[mapIndex][j][k] << " ";
+      file << this->maps_objects[mapIndex][j][k];
 		file << std::endl;
   }
 }

@@ -29,14 +29,14 @@ class MapEngine
         int     getMapPaths(std::string mapsDir);
         void    convertMaps();
 				void 		dumpCurrentMap(int mapIndex);
-        std::vector<std::vector<std::vector<int> > > getObjectsMaps();
-        void    updateCurrentMap(int currentMap, std::vector<std::vector<int> > map);
+        std::vector<std::vector<std::vector<int>>> getObjectsMaps();
+        void    updateCurrentMap(int currentMap, std::vector<std::vector<int>> map);
 
     private:
         std::vector<std::string> mapPaths;
-        std::vector<std::vector<std::vector<int> > >  maps_objects;
-        int     getMapWidth(std::stringstream & mapData);
-        int     getMapHeight(std::stringstream & mapData);
+        std::vector<std::vector<std::vector<int>>> maps_objects;
+        int     getMapWidth(std::stringstream &mapData);
+        int     getMapHeight(std::stringstream &mapData);
         void    createMapFromFile(std::string mapPath);
 };
 

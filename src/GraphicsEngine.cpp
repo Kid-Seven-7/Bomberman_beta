@@ -13,50 +13,70 @@
 # include "../include/GraphicsEngine.hpp"
 
 static void readFile(std::string filepath, int lineNo, std::string *store){
-  std::string line;
+  std::string line = "";
 	int index = 0;
 
-  line = "";
+  *store = "";
   std::ifstream saveFile(filepath);
   if (saveFile.is_open()){
     while (getline (saveFile,line)){
-			line += "\n";
 			if (++index == lineNo)
 				store->append(line);
 		}
     saveFile.close();
-  }
-  else
+  } else
 		std::cout << "Unable to open file";
 }
 
-void setInfo(Player &player, int slot){
-  std::string playerInfo, filepath, x, y;
+void GraphicsEngine::setInfo(std::vector<std::vector<int>> maps, Player &player, int slot){
+  std::string info, filepath;
+  float x, y, z;
 
-  filepath = (slot == 1)?"save/slot1.txt":
-  (slot == 2)?"save/slot2.txt":
-  (slot == 3)?"save/slot3.txt":
-  (slot == 4)?"save/slot4.txt":"save/slot5.txt";
+  (void)maps;
+  filepath = (slot == 1)?"save/slot1.txt": (slot == 2)?"save/slot2.txt":
+  (slot == 3)?"save/slot3.txt": (slot == 4)?"save/slot4.txt":"save/slot5.txt";
 
-  readFile(filepath, 2, &playerInfo);
+  readFile(filepath, 2, &info);
+  x = convertValue(info, 1) - 1.3f;
+  y = convertValue(info, 2) - 1.3f;
+  player.setPcoords(x, y);
 
-  for (size_t i = 0; i < playerInfo.length(); ++i){
-    static bool first = true;
-    if (playerInfo[i] == ':'){
-      first = false;
-      i++;
-    }
-    if (first)
-      x += inplayerInfofo[i];
-    else
-      y += playerInfo[i];
-  }
+  readFile(filepath, 13, &info);
+  x = convertValue(info, 1);
+  y = convertValue(info, 2);
+  z = convertValue(info, 3);
+  this->cam.cameraPos = glm::vec3(x, y, z);
 
-  player.setPcoords(std::stod(x,NULL) - 1.3f, std::stod(y,NULL) - 1.3f);
+  readFile(filepath, 15, &info);
+  x = convertValue(info, 1);
+  y = convertValue(info, 2);
+  z = convertValue(info, 3);
+  this->cam.cameraFront = glm::vec3(x, y, z);
+
+  readFile(filepath, 17, &info);
+  x = convertValue(info, 1);
+  y = convertValue(info, 2);
+  z = convertValue(info, 3);
+  this->cam.cameraUp = glm::vec3(x, y, z);
+
+  readFile(filepath, 5, &info);
+  x = convertValue(info, 1);
+  this->cam.setCamSpeed(x);
+
+  readFile(filepath, 7, &info);
+  x = convertValue(info, 1);
+  this->cam.setPCamSpeed(x);
+
+  readFile(filepath, 9, &info);
+  x = convertValue(info, 1);
+  this->cam.setCamRotX(x);
+
+  readFile(filepath, 11, &info);
+  x = convertValue(info, 1);
+  this->cam.setCamRotY(x);
 }
 
-GraphicsEngine::GraphicsEngine()
-{
+GraphicsEngine::GraphicsEngine(){
     if (!glfwInit()){
         std::cout << "GLFW failed to start" << std::endl;
         exit(1);
@@ -77,8 +97,7 @@ GraphicsEngine::GraphicsEngine()
      this->cam = CameraClass();
 }
 
-GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
-{
+GraphicsEngine::GraphicsEngine(GLFWwindow  *window){
 	this->window = window;
 	this->gladConfg();
 
@@ -95,13 +114,11 @@ GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
      this->cam = CameraClass();
 }
 
-GraphicsEngine::~GraphicsEngine()
-{
+GraphicsEngine::~GraphicsEngine(){
     glfwTerminate();
 }
 
-void    GraphicsEngine::glfwConfig()
-{
+void    GraphicsEngine::glfwConfig(){
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -122,10 +139,8 @@ void    GraphicsEngine::glfwConfig()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback); //For screen resolution
 }
 
-void    GraphicsEngine::gladConfg()
-{
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
+void    GraphicsEngine::gladConfg(){
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))    {
         std::cout << "Failed to initialize GLAD" << std::endl;
         exit(-1);
     }
@@ -149,17 +164,21 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int slot){
     m_engine.convertMaps();
     std::vector<std::vector<std::vector<int>>> maps = m_engine.getObjectsMaps();
 
+    std::string filepath = (slot == 1)?"save/slot1.txt": (slot == 2)?"save/slot2.txt":
+    (slot == 3)?"save/slot3.txt": (slot == 4)?"save/slot4.txt":"save/slot5.txt";
+
     if (slot != 0){
-      setInfo(player, slot);
+      std::string info;
+      readFile(filepath, 13, &info);
+      int x = convertValue(info, 1);
+      setInfo(maps[x], player, slot);
     }
 
-    if (this->createEnemyArray(maps[this->currentMap]))
-    {
+    if (this->createEnemyArray(maps[this->currentMap]))    {
         //create enemies
         system("say enemies");
     }
-    while (!glfwWindowShouldClose(this->window))
-    {
+    while (!glfwWindowShouldClose(this->window))    {
         //input process
         if (processInput(keys))
         {
@@ -183,44 +202,37 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int slot){
         model_object.Engine(ourShader, -27.5f, 4.15f);
         model_object.base_func(ourShader);
 
-        for (unsigned int j = 0; j < maps[this->currentMap].size(); j++)
-        {
-            for (unsigned int i = 0; i < maps[this->currentMap][j].size(); i++)
-            {
+        for (unsigned int j = 0; j < maps[this->currentMap].size(); j++){
+            for (unsigned int i = 0; i < maps[this->currentMap][j].size(); i++){
                 if (maps[this->currentMap][j][i] == HARD_WALL)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
                     // std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.hard_wall_func(this->ourShader, this->pos_x, this->pos_y);
                 }
-                if (maps[this->currentMap][j][i] == SOFT_WALL)
-                {
+                if (maps[this->currentMap][j][i] == SOFT_WALL){
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
                     // std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
                 }
-                if (maps[this->currentMap][j][i] == FLOOR)
-                {
+                if (maps[this->currentMap][j][i] == FLOOR){
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
                     // std::cout << maps[this->currentMap][j][i] << " ";
                     //TODO
                 }
-                if (maps[this->currentMap][j][i] == PLAYER_OBJ)
-                {
+                if (maps[this->currentMap][j][i] == PLAYER_OBJ){
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
                     // std::cout << maps[this->currentMap][j][i] << " ";
                     //TODO
                 }
-                if (maps[this->currentMap][j][i] == 8)
-                {
+                if (maps[this->currentMap][j][i] == 8){
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
                     // std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.player_life_func(this->ourShader, this->pos_x, this->pos_y);
                     model_object.headModel(this->ourShader, this->pos_x, this->pos_y);
                     //TODO
                 }
-                if (maps[this->currentMap][j][i] == BOMB)
-                {
+                if (maps[this->currentMap][j][i] == BOMB){
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
                     // std::cout << maps[this->currentMap][j][i] << " ";
                     //FIX BOMB CLASS!!!
@@ -242,12 +254,9 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int slot){
         this->pos_y = 0.0f;
         if (start_counter)
             bomb_counter++;
-        if (bomb_counter == 75)
-        {
-            if (this->update_bomb_range(maps[this->currentMap]) == 3)
-            {
-                if (this->lives >= 1)
-                {
+        if (bomb_counter == 75){
+            if (this->update_bomb_range(maps[this->currentMap]) == 3){
+                if (this->lives >= 1){
                     this->remove_life(maps[this->currentMap]);
                     player.setPcoords(0.0f, 0.0f);
                     this->reset_player_location(maps[this->currentMap]);
@@ -256,18 +265,15 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int slot){
                 }
             }
         }
-        if (bomb_counter >= 150)
-        {
+        if (bomb_counter >= 150){
             bomb_counter = 0;
             start_counter = false;
             this->remove_bomb(maps[this->currentMap]);
         }
-        if (reset_player)
-        {
+        if (reset_player){
             if (pause_counter > 1)
                 pause_counter--;
-            else
-            {
+            else{
                 pause_counter = 60;
                 reset_player = false;
                 bomb_counter = 0;
@@ -279,8 +285,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int slot){
         glfwSwapBuffers(this->window);
         glfwPollEvents();
 
-        if (keys.input() == SPACE)
-        {
+        if (keys.input() == SPACE){
             if (!(start_counter) && (this->array_check(maps[this->currentMap])))
                 start_counter = true;
         }
@@ -295,358 +300,303 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int slot){
     prevYpos = -2.6f;
 }
 
-void    GraphicsEngine::modelProjectionConfig()
-{
-    /*For projection*/
-    glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+void    GraphicsEngine::modelProjectionConfig(){
+  /*For projection*/
+  glm::mat4 projection = glm::mat4(1.0f);
+  projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
 
-    //getting uniform locations
-    unsigned modelLoc, projectionLoc;
+  //getting uniform locations
+  unsigned modelLoc, projectionLoc;
 
-    projectionLoc = glGetUniformLocation(this->ourShader.ID, "projection");
-    modelLoc = glGetUniformLocation(this->ourShader.ID, "model");
+  projectionLoc = glGetUniformLocation(this->ourShader.ID, "projection");
+  modelLoc = glGetUniformLocation(this->ourShader.ID, "model");
 
-    glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+  glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-    //my attempt at rotation
-    glm::mat4 trans = glm::mat4(1.0f);
+  //my attempt at rotation
+  glm::mat4 trans = glm::mat4(1.0f);
 
-    unsigned int transformLoc = glGetUniformLocation(this->ourShader.ID, "transform");
-    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+  unsigned int transformLoc = glGetUniformLocation(this->ourShader.ID, "transform");
+  glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
 
-    //activate shader
-    this->ourShader.use();
-    this->ourShader.setMat4("projection", projection);
+  //activate shader
+  this->ourShader.use();
+  this->ourShader.setMat4("projection", projection);
 }
 
-void    GraphicsEngine::callMovementFunctions(Player &player, Sound &sound, Keys &keys, std::vector<std::vector<int> >  mapOfObjects)
-{
-    //camera movement functions
-    this->cam.setCam(this->ourShader);
-    this->cam.camMovements(keys);
-    this->cam.camRotation(this->window);
+void    GraphicsEngine::callMovementFunctions(Player &player, Sound &sound, Keys &keys, std::vector<std::vector<int>> mapOfObjects){
+  //camera movement functions
+  this->cam.setCam(this->ourShader);
+  this->cam.camMovements(keys);
+  this->cam.camRotation(this->window);
 
-    //Player movement control function
-    if (player.playerMovements(this->window, sound, keys, mapOfObjects, this->player_direction) == 1)
-        this->cam.playerCamMovements(keys);
+  //Player movement control function
+  if (player.playerMovements(this->window, sound, keys, mapOfObjects, this->player_direction) == 1)
+    this->cam.playerCamMovements(keys);
 }
 
-void    GraphicsEngine::reset_camera()
-{
-    this->cam.cameraPos = glm::vec3(0.0f, 0.0f, 18.0f);
-    this->cam.cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-    this->cam.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+void    GraphicsEngine::reset_camera(){
+  this->cam.cameraPos = glm::vec3(0.0f, 0.0f, 18.0f);
+  this->cam.cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+  this->cam.cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 }
 
-std::vector<std::vector<int>>  GraphicsEngine::getCurrentObjectsMap()
-{
+std::vector<std::vector<int>>  GraphicsEngine::getCurrentObjectsMap(){
 	MapEngine m_engine;
 	std::vector<std::vector<std::vector<int>>> maps = m_engine.getObjectsMaps();
   return (maps[this->currentMap]);
 }
 
-void    GraphicsEngine::updateMap(Player player, std::vector<std::vector<int> > & map)
-{
-    std::vector<int>  newPlayerPos = player.getNewPlayerPos();
-    std::vector<int>  OldPlayerPos = player.getPrevPlayer();
-    float curXplayerPos = player.getXcoord();
-    float curYplayerPos = player.getYcoord();
+void    GraphicsEngine::updateMap(Player player, std::vector<std::vector<int>> &map){
+  std::vector<int>  newPlayerPos = player.getNewPlayerPos();
+  std::vector<int>  OldPlayerPos = player.getPrevPlayer();
+  float curXplayerPos = player.getXcoord();
+  float curYplayerPos = player.getYcoord();
 
-    int   p_pos_x = 0;
-    int   p_pos_y = 0;
-    int   old_p_x = 0;
-    int   old_p_y = 0;
+  int   p_pos_x = 0;
+  int   p_pos_y = 0;
+  int   old_p_x = 0;
+  int   old_p_y = 0;
 
-    if (newPlayerPos.size())
-    {
-        //New Player Position
-        p_pos_x = newPlayerPos[0];
-        p_pos_y = newPlayerPos[1];
+  if (newPlayerPos.size()){
+    //New Player Position
+    p_pos_x = newPlayerPos[0];
+    p_pos_y = newPlayerPos[1];
 
-        //Old Player Position
-        old_p_x = OldPlayerPos[0];
-        old_p_y = OldPlayerPos[1];
+    //Old Player Position
+    old_p_x = OldPlayerPos[0];
+    old_p_y = OldPlayerPos[1];
 
-        if (curXplayerPos >= nextXPos)
-        {
-            prevXpos = curXplayerPos - 1.4f;
-            nextXPos += 1.4f;
-            map[old_p_y][old_p_x] = FLOOR;
-            map[p_pos_y][p_pos_x] = PLAYER_OBJ;
-        }
-        else if (curYplayerPos >= nextYPos)
-        {
-            prevYpos = curYplayerPos - 1.3f;
-            nextYPos += 1.3f;
-            map[old_p_y][old_p_x] = FLOOR;
-            map[p_pos_y][p_pos_x] = PLAYER_OBJ;
-        }
-        else if (curXplayerPos <= prevXpos)
-        {
-            nextXPos = curXplayerPos + 1.4f;
-            prevXpos -= 1.4f;
-            map[old_p_y][old_p_x] = FLOOR;
-            map[p_pos_y][p_pos_x] = PLAYER_OBJ;
-        }
-        else if (curYplayerPos <= prevYpos)
-        {
-            nextYPos = curYplayerPos + 1.3f;
-            prevYpos -= 1.3f;
-            map[old_p_y][old_p_x] = FLOOR;
-            map[p_pos_y][p_pos_x] = PLAYER_OBJ;
-        }
-        //   exit(0);
+    if (curXplayerPos >= nextXPos){
+      prevXpos = curXplayerPos - 1.4f;
+      nextXPos += 1.4f;
+      map[old_p_y][old_p_x] = FLOOR;
+      map[p_pos_y][p_pos_x] = PLAYER_OBJ;
+    } else if (curYplayerPos >= nextYPos){
+      prevYpos = curYplayerPos - 1.3f;
+      nextYPos += 1.3f;
+      map[old_p_y][old_p_x] = FLOOR;
+      map[p_pos_y][p_pos_x] = PLAYER_OBJ;
+    } else if (curXplayerPos <= prevXpos){
+      nextXPos = curXplayerPos + 1.4f;
+      prevXpos -= 1.4f;
+      map[old_p_y][old_p_x] = FLOOR;
+      map[p_pos_y][p_pos_x] = PLAYER_OBJ;
+    } else if (curYplayerPos <= prevYpos){
+      nextYPos = curYplayerPos + 1.3f;
+      prevYpos -= 1.3f;
+      map[old_p_y][old_p_x] = FLOOR;
+      map[p_pos_y][p_pos_x] = PLAYER_OBJ;
     }
+    //   exit(0);
+  }
 }
 
-bool    GraphicsEngine::array_check(std::vector<std::vector<int> > & map)
-{
-    int player_found = 0;
+bool    GraphicsEngine::array_check(std::vector<std::vector<int>> &map){
+  int player_found = 0;
 
-    // I = Y axis
-    // J = X axis
+  // I = Y axis
+  // J = X axis
 
-    for (unsigned int i = 0; i < map.size(); i++)
-    {
-        for (unsigned int j = 0; j < map[i].size(); j++)
-        {
-            if (map[i][j] == 3)
-            {
-                //Check the direction the player is facing
-                //is BOMB placeable there
-                //update map where nextpos = 0 put 4
-                if (this->player_direction == 4) //RIGHT DIRECTION
-                {
-                    if (map[i][j + 1] == 0)
-                    {
-                        //placeBomb by updating map 0 becomes 4
-                        if (map[i][j - 1] != FLOOR)
-                            return (false);
-                        else
-                        {
-                            map[i][j + 1] = BOMB;
-                            return (true);
-                        }
-                    }
-                    player_found = 1;
-                    break;
-                }
-                else if (this->player_direction == 3) //LEFT DIRECTION
-                {
-                    if (map[i][j - 1] == FLOOR)
-                    {
-                        //placeBomb by updating map 0 becomes 4
-                        if (map[i][j + 1] != FLOOR)
-                            return (false);
-                        else
-                        {
-                            map[i][j - 1] = BOMB;
-                            return (true);
-                        }
-                    }
-                    player_found = 1;
-                    break;
-                }
-                else if (this->player_direction == 2) //DOWN DIRECTION
-                {
-                    if (map[i + 1][j] == FLOOR)
-                    {
-                        //placeBomb by updating map 0 becomes 4
-                        if (map[i - 1][j] != FLOOR)
-                            return (false);
-                        else
-                        {
-                            map[i + 1][j] = BOMB;
-                            return (true);
-                        }
-                    }
-                    player_found = 1;
-                    break;
-                }
-                else if (this->player_direction == 1) //UP DIRECTION
-                {
-                    if (map[i - 1][j] == FLOOR)
-                    {
-                        //placeBomb by updating map 0 becomes 4
-                        if (map[i + 1][j] != FLOOR)
-                            return (false);
-                        else
-                        {
-                            map[i - 1][j] = BOMB;
-                            return (true);
-                        }
-                    }
-                    player_found = 1;
-                    break;
-                }
-                // player_found = 1;
-                // break;
+  for (unsigned int i = 0; i < map.size(); i++){
+    for (unsigned int j = 0; j < map[i].size(); j++){
+      if (map[i][j] == 3){
+        //Check the direction the player is facing
+        //is BOMB placeable there
+        //update map where nextpos = 0 put 4
+        if (this->player_direction == 4){ //RIGHT DIRECTION
+          if (map[i][j + 1] == 0){
+            //placeBomb by updating map 0 becomes 4
+            if (map[i][j - 1] != FLOOR)
+              return (false);
+            else{
+              map[i][j + 1] = BOMB;
+              return (true);
             }
+          }
+          player_found = 1;
+          break;
+        }else if (this->player_direction == 3){ //LEFT DIRECTION
+          if (map[i][j - 1] == FLOOR){
+            //placeBomb by updating map 0 becomes 4
+            if (map[i][j + 1] != FLOOR)
+              return (false);
+            else{
+              map[i][j - 1] = BOMB;
+              return (true);
+            }
+          }
+          player_found = 1;
+          break;
+        } else if (this->player_direction == 2){ //DOWN DIRECTION
+          if (map[i + 1][j] == FLOOR){
+            //placeBomb by updating map 0 becomes 4
+            if (map[i - 1][j] != FLOOR)
+              return (false);
+            else{
+              map[i + 1][j] = BOMB;
+              return (true);
+            }
+          }
+          player_found = 1;
+          break;
+        } else if (this->player_direction == 1){ //UP DIRECTION
+          if (map[i - 1][j] == FLOOR){
+            //placeBomb by updating map 0 becomes 4
+            if (map[i + 1][j] != FLOOR)
+              return (false);
+            else{
+              map[i - 1][j] = BOMB;
+              return (true);
+            }
+          }
+          player_found = 1;
+          break;
         }
-        if (player_found == 1)
-            break;
+        // player_found = 1;
+        // break;
+      }
     }
-    return (false);
-}
-
-bool    GraphicsEngine::createEnemyArray(std::vector<std::vector<int> >  map)
-{
-    int e_number = 9;
-
-    for (unsigned int i = 0; i < map.size(); i++)
-    {
-        for (unsigned int j = 0; j < map[i].size(); j++)
-        {
-            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;
-            if (map[i][j] >= e_number)
-            {
-                this->enemyNumbers.push_back(e_number);
-                e_number++;
-                // bomb_found = 1;
-            }
-        }
-    }
-
-    if (this->enemyNumbers.size() > 1)
-        return (true);
-    return (false);
-}
-
-void    GraphicsEngine::remove_bomb(std::vector<std::vector<int> > & map)
-{
-    // int bomb_found = 0;
-
-    for (unsigned int i = 0; i < map.size(); i++)
-    {
-        for (unsigned int j = 0; j < map[i].size(); j++)
-        {
-            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;
-            if (map[i][j] == BOMB)
-            {
-                map[i][j] = FLOOR;
-                // bomb_found = 1;
-            }
-        }
-    }
-}
-
-void    GraphicsEngine::remove_life(std::vector<std::vector<int> > & map)
-{
-    int player_life_found = 0;
-
-    for (unsigned int i = 0; i < map.size(); i++)
-    {
-        for (unsigned int j = 0; j < map[i].size(); j++)
-        {
-            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;
-            if (map[i][j] == 8)
-            {
-                map[i][j] = FLOOR;
-                player_life_found = 1;
-                break;
-            }
-        }
-        if (player_life_found == 1)
-            break;
-    }
-}
-
-void    GraphicsEngine::reset_player_location(std::vector<std::vector<int> > & map)
-{
-    int player_found = 0;
-
-    for (unsigned int i = 0; i < map.size(); i++)
-    {
-        for (unsigned int j = 0; j < map[i].size(); j++)
-        {
-            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;
-            if (map[i][j] == PLAYER_OBJ)
-            {
-                map[i][j] = FLOOR;
-                map[1][1] = PLAYER_OBJ;
-                player_found = 1;
-                break;
-            }
-        }
-        if (player_found == 1)
-            break;
-    }
-}
-
-
-int    GraphicsEngine::update_bomb_range(std::vector<std::vector<int> > & map)
-{
-    // 3 = PLAYER FOUND IN THE BOMB RANGE
-    // 2 = ENEMY FOUND IN THE BOMB RANGE
-    // 1 = NOTHING FOUND IN THE BOMB RANGE
-
-    int bomb_found = 0;
-
-    for (unsigned int i = 0; i < map.size(); i++)
-    {
-        for (unsigned int j = 0; j < map[i].size(); j++)
-        {
-            // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;
-            if (map[i][j] == 4)
-            {
-                //INCREASING BOMB RANGE
-                if (map[i][j + 1] == 0 || map[i][j + 1] == 3 || map[i][j + 1] == 5 || map[i][j + 1] == 2) //Updating right
-                {
-                    if (map[i][j + 1] == 0 || map[i][j + 1] == 2)
-                        map[i][j + 1] = 4;
-                    if (map[i][j + 1] == 3)
-                        return (3);
-                    if (map[i][j + 1] == 5)
-                        return (2);
-                }
-                if (map[i][j - 1] == 0 || map[i][j - 1] == 3 || map[i][j - 1] == 5 || map[i][j - 1] == 2) // Updating left
-                {
-                    if (map[i][j - 1] == 0 || map[i][j - 1] == 2)
-                        map[i][j - 1] = 4;
-                    if (map[i][j - 1] == 3)
-                        return (3);
-                    if (map[i][j - 1] == 5)
-                        return (2);
-                }
-                if (map[i + 1][j] == 0 || map[i + 1][j] == 3 || map[i + 1][j] == 5 || map[i + 1][j] == 2) //Updating down
-                {
-                    if (map[i + 1][j] == 0 || map[i + 1][j] == 2)
-                        map[i + 1][j] = 4;
-                    if (map[i + 1][j] == 3)
-                        return (3);
-                    if (map[i + 1][j] == 5)
-                        return (2);
-                }
-                if (map[i - 1][j] == 0 || map[i - 1][j] == 3 || map[i - 1][j] == 5 || map[i - 1][j] == 2) //Updating up
-                {
-                    if (map[i - 1][j] == 0 || map[i - 1][j] == 2)
-                        map[i - 1][j] = 4;
-                    if (map[i - 1][j] == 3)
-                        return (3);
-                    if (map[i - 1][j] == 5)
-                        return (2);
-                }
-
-                bomb_found = 1;
-                break;
-            }
-        }
-        if (bomb_found == 1)
+    if (player_found == 1)
         break;
-    }
-    return (-1);
+  }
+  return (false);
 }
 
-bool processInput(Keys &keys)
-{
-    if (keys.input() ==  EXIT)
-        return true;
+bool    GraphicsEngine::createEnemyArray(std::vector<std::vector<int>> map){
+  int e_number = 9;
+
+  for (unsigned int i = 0; i < map.size(); i++){
+    for (unsigned int j = 0; j < map[i].size(); j++){
+      // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;
+      if (map[i][j] >= e_number){
+        this->enemyNumbers.push_back(e_number);
+        e_number++;
+        // bomb_found = 1;
+      }
+    }
+  }
+
+  if (this->enemyNumbers.size() > 1)
+    return (true);
+  return (false);
+}
+
+void    GraphicsEngine::remove_bomb(std::vector<std::vector<int>> &map){
+  // int bomb_found = 0;
+
+  for (unsigned int i = 0; i < map.size(); i++){
+    for (unsigned int j = 0; j < map[i].size(); j++){
+      // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;
+      if (map[i][j] == BOMB){
+        map[i][j] = FLOOR;
+        // bomb_found = 1;
+      }
+    }
+  }
+}
+
+void    GraphicsEngine::remove_life(std::vector<std::vector<int>> &map){
+  int player_life_found = 0;
+
+  for (unsigned int i = 0; i < map.size(); i++){
+    for (unsigned int j = 0; j < map[i].size(); j++){
+      // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;
+      if (map[i][j] == 8){
+        map[i][j] = FLOOR;
+        player_life_found = 1;
+        break;
+      }
+    }
+    if (player_life_found == 1)
+      break;
+  }
+}
+
+void    GraphicsEngine::reset_player_location(std::vector<std::vector<int>> &map){
+  int player_found = 0;
+
+  for (unsigned int i = 0; i < map.size(); i++){
+    for (unsigned int j = 0; j < map[i].size(); j++){
+      // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;
+      if (map[i][j] == PLAYER_OBJ){
+        map[i][j] = FLOOR;
+        map[1][1] = PLAYER_OBJ;
+        player_found = 1;
+        break;
+      }
+    }
+    if (player_found == 1)
+      break;
+  }
+}
+
+int    GraphicsEngine::update_bomb_range(std::vector<std::vector<int>> &map){
+  // 3 = PLAYER FOUND IN THE BOMB RANGE
+  // 2 = ENEMY FOUND IN THE BOMB RANGE
+  // 1 = NOTHING FOUND IN THE BOMB RANGE
+
+  int bomb_found = 0;
+
+  for (unsigned int i = 0; i < map.size(); i++){
+    for (unsigned int j = 0; j < map[i].size(); j++){
+      // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;
+      if (map[i][j] == 4){
+        //INCREASING BOMB RANGE
+        if (map[i][j + 1] == 0 || map[i][j + 1] == 3 || map[i][j + 1] == 5 || map[i][j + 1] == 2){
+          //Updating right
+          if (map[i][j + 1] == 0 || map[i][j + 1] == 2)
+              map[i][j + 1] = 4;
+          if (map[i][j + 1] == 3)
+              return (3);
+          if (map[i][j + 1] == 5)
+              return (2);
+        }
+        if (map[i][j - 1] == 0 || map[i][j - 1] == 3 || map[i][j - 1] == 5 || map[i][j - 1] == 2){
+          // Updating left
+          if (map[i][j - 1] == 0 || map[i][j - 1] == 2)
+              map[i][j - 1] = 4;
+          if (map[i][j - 1] == 3)
+              return (3);
+          if (map[i][j - 1] == 5)
+              return (2);
+        }
+        if (map[i + 1][j] == 0 || map[i + 1][j] == 3 || map[i + 1][j] == 5 || map[i + 1][j] == 2){
+          //Updating down
+          if (map[i + 1][j] == 0 || map[i + 1][j] == 2)
+              map[i + 1][j] = 4;
+          if (map[i + 1][j] == 3)
+              return (3);
+          if (map[i + 1][j] == 5)
+              return (2);
+        }
+        if (map[i - 1][j] == 0 || map[i - 1][j] == 3 || map[i - 1][j] == 5 || map[i - 1][j] == 2){
+          //Updating up
+          if (map[i - 1][j] == 0 || map[i - 1][j] == 2)
+              map[i - 1][j] = 4;
+          if (map[i - 1][j] == 3)
+              return (3);
+          if (map[i - 1][j] == 5)
+              return (2);
+        }
+
+        bomb_found = 1;
+        break;
+      }
+    }
+    if (bomb_found == 1)
+    break;
+  }
+  return (-1);
+}
+
+bool processInput(Keys &keys){
+  if (keys.input() ==  EXIT)
+      return true;
 	return false;
 }
 
-void framebuffer_size_callback(GLFWwindow *window, int width, int height)
-{
-    (void)window;
-    glViewport(0, 0, width, height);
+void framebuffer_size_callback(GLFWwindow *window, int width, int height){
+  (void)window;
+  glViewport(0, 0, width, height);
 }

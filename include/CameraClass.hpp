@@ -33,7 +33,11 @@ class CameraClass
         void    camMovements(Keys &keys);
         void    camRotation(GLFWwindow *window);
         void    playerCamMovements(Keys &keys);
-		void    saveinfo();
+        void    setCamSpeed(float camSpeed);
+        void    setPCamSpeed(float pCamSpeed);
+        void    setCamRotX(float camRotX);
+        void    setCamRotY(float camRotY);
+		    void    saveinfo();
 
         //Camera Configs
         glm::vec3   cameraPos;

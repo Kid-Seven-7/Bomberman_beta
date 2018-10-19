@@ -81,6 +81,22 @@ void    CameraClass::playerCamMovements(Keys &keys){
         this->cameraPos += glm::normalize(glm::cross(glm::vec3(0.0f, 1.0f, 6.0f), glm::vec3(0.0f, 1.0f, 0.0f))) * this->playerCamSpeed;
 }
 
+void    CameraClass::setCamSpeed(float camSpeed){
+  this->camSpeed = camSpeed;
+}
+
+void    CameraClass::setPCamSpeed(float pCamSpeed){
+  this->playerCamSpeed = pCamSpeed;
+}
+
+void    CameraClass::setCamRotX(float camRotX){
+  this->rotate_cam_x = camRotX;
+}
+
+void    CameraClass::setCamRotY(float camRotY){
+  this->rotate_cam_y = camRotY;
+}
+
 void 	CameraClass::saveinfo(){
 	std::ofstream file("gameState/camInfo.txt");
 	file

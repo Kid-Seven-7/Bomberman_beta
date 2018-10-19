@@ -54,6 +54,7 @@ class GraphicsEngine
         void    shaderConfig();
         void    modelProjectionConfig();
         void    updateMap(Player player, std::vector<std::vector<int> > & map);
+        void    setInfo(std::vector<std::vector<int>> maps, Player &player, int slot);
         std::vector<std::vector<int> >  getCurrentObjectsMap();
 
     private:

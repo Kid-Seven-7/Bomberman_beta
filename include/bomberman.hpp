@@ -80,4 +80,7 @@ unsigned int 	setTexture(unsigned int *old_texture, std::string file);
 //bools
 bool 					does_file_exist(std::string fileName);
 
+//floats
+float         convertValue(std::string line, int val);
+
 # endif

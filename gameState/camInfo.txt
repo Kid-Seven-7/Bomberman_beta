@@ -1,0 +1,14 @@
+camSpeed
+0.5
+playerCamSpeed
+0.08
+rotate_cam_x
+0.59
+rotate_cam_y
+0
+cameraPos
+8.87999:0:21.2
+cameraFront
+0:0:-1
+cameraUp
+0:1:0
