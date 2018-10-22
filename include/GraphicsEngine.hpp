@@ -16,6 +16,7 @@
 # include "HeaderHandler.hpp"
 # include "bomberman.hpp"
 # include "BombClass.hpp"
+# include "Enemy.hpp"
 # include <cmath>
 
 //Global Variables
@@ -61,6 +62,9 @@ class GraphicsEngine
         void    modelProjectionConfig();
         void    updateMap(Player player, std::vector<std::vector<int> > & map);
         std::vector<std::vector<int> >  getCurrentObjectsMap();
+
+        //Variable for enemy objects
+        std::vector<Enemy>  enemies;
 
     private:
         GLFWwindow  *window;

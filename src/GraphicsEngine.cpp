@@ -117,6 +117,13 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
         system("say enemies");
         std::cout << "Number of Enemies: " << this->enemyNumbers.size() << std::endl;
         std::cout << "Found Enemy: " << this->enemyNumbers[0] << std::endl;
+        std::cout << "Found Enemy: " << this->enemyNumbers[1] << std::endl;
+
+        for (unsigned int x = 0; x < this->enemyNumbers.size(); x++)
+        {
+            Enemy enemy = Enemy(this->enemyNumbers[x], ourShader, this->currentMap + 1);
+            this->enemies.push_back(enemy);
+        }
     }
     exit(0);
 
