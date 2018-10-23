@@ -73,3 +73,11 @@ void    Enemy::enemyAI(std::vector<std::vector<int> > & map)
 {
     (void)map;
 }
+
+int     Enemy::getObjXCoord() { return (this->obj_pos_x); }
+
+int     Enemy::getObjYCoord() { return (this->obj_pos_y); }
+
+float   Enemy::getXCoord() { return (this->pos_x); }
+
+float   Enemy::getYCoord() { return (this->pos_y); }

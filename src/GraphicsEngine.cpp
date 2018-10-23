@@ -98,6 +98,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     int             pause_counter = 60;
     bool            start_counter = false;
     bool            reset_player = false;
+    unsigned int    enemies_updated = 0;
 
     //Physics Engine
     // PhysicsEngine p_engine; // remove this ENGINE BEFORE SUBMISSION
@@ -207,6 +208,19 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 if (maps[this->currentMap][j][i] == 54)
                 {
                     std::cout << maps[this->currentMap][j][i] << " ";
+                }
+                if (enemies_updated < this->enemies.size())
+                {
+                    //UPDATING ENEMY POSITION COORDINATES
+                    for (unsigned int x = 0; x < this->enemies.size(); x++)
+                    {
+                        if ((unsigned int)this->enemies[x].getObjXCoord() == j && 
+                            (unsigned int)this->enemies[x].getObjYCoord() == i)
+                        {
+                            this->enemies[x].setPosCoords(this->pos_x, this->pos_y);
+                            enemies_updated++;
+                        }
+                    }
                 }
                 player.bodyModel(this->ourShader);
                 player.headModel(this->ourShader);
