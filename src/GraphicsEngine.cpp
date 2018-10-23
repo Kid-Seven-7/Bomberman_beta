@@ -222,6 +222,10 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                         }
                     }
                 }
+                if (enemies_updated == this->enemies.size())
+                {
+                    //ENEMY MOVEMENTS SHOULD ALL HAPPEN HERE
+                }
                 player.bodyModel(this->ourShader);
                 player.headModel(this->ourShader);
                 this->pos_x += 1.4f;
