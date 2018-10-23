@@ -46,25 +46,40 @@ void    Enemy::setPosCoords(float pos_x, float pos_y)
     //SETTING THE POSITION COORDS
     this->pos_x = pos_x;
     this->pos_y = pos_y;
+
+    std::cout << "POS_X: " << this->pos_x << " POS_Y: " << this->pos_y << std::endl;
+    exit(1);
 }
 
-int     Enemy::getEnemyNumber()
+int     Enemy::getEnemyNumber() 
 {
+    //RETURNS ENEMY NUMBER TO USE INCASE OF DEFEAT
     return (enemyNumber);
 }
 
 void    Enemy::setEnemyDirection(int direction)
 {
+    //RETURNS THE CURRENT DIRECTION OF THE ENEMY
     this->direction = direction;
 }
 
 void    Enemy::move()
 {
-
+    //UPDATES ENEMY MOVEMENT
 }
 
 void    Enemy::drawEnemy()
 {
+    //RENDERS ENEMY ON THE SCREEN
+    glm::mat4   enemy = glm::mat4(1.0f);
+    std::cout << "X Coord: " << this->pos_x << " Y Coord: " << this->pos_y << std::endl;
+
+    enemy = glm::translate(enemy, glm::vec3(this->pos_x, -0.85f, this->pos_y));
+
+    enemy = glm::scale(enemy, glm::vec3(0.7f, 0.7f, 0.7f));
+
+    this->shader.setMat4("model", enemy);
+    this->enemy_model.Draw(this->shader);
 }
 
 Enemy::~Enemy() {}

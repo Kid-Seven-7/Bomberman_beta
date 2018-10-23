@@ -37,6 +37,8 @@ class   Enemy
         void    setEnemyDirection(int direction);
         void    setObjCoords(int obj_x, int obj_y);
         void    setPosCoords(float pos_x, float pos_y);
+        void    drawEnemy();
+
         int     getEnemyNumber();
         int     getObjXCoord();
         int     getObjYCoord();
@@ -61,11 +63,6 @@ class   Enemy
 
         //Vector of possible coordinates
         std::vector<int>    p_coords;
-
-        //Movement
-        void    drawEnemy();
-        int     changeDirection();
-
 };
 
 # endif

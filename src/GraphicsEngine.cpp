@@ -127,6 +127,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
         for (unsigned int x = 0; x < this->enemyNumbers.size(); x++)
         {
             Enemy enemy = Enemy(this->enemyNumbers[x][0], ourShader, this->currentMap + 1);
+            std::cout << "Enemy: " << this->enemyNumbers[x][0] << " X Coord: " << this->enemyNumbers[x][1] << " Y Coord: " << this->enemyNumbers[x][2] << std::endl;
             enemy.setObjCoords(this->enemyNumbers[x][1], this->enemyNumbers[x][2]); //SETTING ENEMY OBJ COORDS
             this->enemies.push_back(enemy);
         }
@@ -224,7 +225,12 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 }
                 if (enemies_updated == this->enemies.size())
                 {
+                    // exit(5);
                     //ENEMY MOVEMENTS SHOULD ALL HAPPEN HERE
+                    for (unsigned int x = 0; x < enemies.size(); x++)
+                    {
+                        enemies[x].drawEnemy();
+                    }
                 }
                 player.bodyModel(this->ourShader);
                 player.headModel(this->ourShader);
@@ -513,7 +519,10 @@ bool    GraphicsEngine::createEnemyArray(std::vector<std::vector<int> >  map, un
     }
 
     if (this->enemyNumbers.size() >= 1)
+    {
+        std::sort(enemyNumbers.begin(), enemyNumbers.end());
         return (true);
+    }
     return (false);
 }
 
