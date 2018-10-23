@@ -12,9 +12,7 @@
 
 # include "../include/Enemy.hpp"
 
-Enemy::Enemy()
-{
-}
+Enemy::Enemy() {}
 
 Enemy::Enemy(int enemyNumber, Shader shader, int level)
 {
@@ -43,14 +41,21 @@ void    Enemy::setObjCoords(int obj_x, int obj_y)
     this->obj_pos_y = obj_y;
 }
 
+void    Enemy::setPosCoords(float pos_x, float pos_y)
+{
+    //SETTING THE POSITION COORDS
+    this->pos_x = pos_x;
+    this->pos_y = pos_y;
+}
+
 int     Enemy::getEnemyNumber()
 {
-    return (0);
+    return (enemyNumber);
 }
 
 void    Enemy::setEnemyDirection(int direction)
 {
-    direction = 0;
+    this->direction = direction;
 }
 
 void    Enemy::move()

@@ -16,6 +16,7 @@
 # include 		<exception>
 # include 		<vector>
 # include 		<map>
+# include       <unistd.h>
 
 # include 		"shader.hpp"
 # include 		"sound.hpp"

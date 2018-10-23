@@ -18,6 +18,7 @@
 # include "BombClass.hpp"
 # include "Enemy.hpp"
 # include <cmath>
+# include <unistd.h>
 
 //Global Variables
 #define WIDTH 1200
@@ -85,7 +86,7 @@ class GraphicsEngine
         int lives;
 
         //Enemy vector from map
-        std::vector<int>    enemyNumbers;
+        std::vector<std::vector<int> >    enemyNumbers;
 
         //Remove player life from banch
         void    remove_life(std::vector<std::vector<int> > & map);

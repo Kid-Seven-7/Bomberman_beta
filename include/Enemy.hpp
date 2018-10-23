@@ -36,6 +36,7 @@ class   Enemy
         //SETTERS AND GETTERS
         void    setEnemyDirection(int direction);
         void    setObjCoords(int obj_x, int obj_y);
+        void    setPosCoords(float pos_x, float pos_y);
         int     getEnemyNumber();
         int     getObjXCoord();
         int     getObjYCoord();

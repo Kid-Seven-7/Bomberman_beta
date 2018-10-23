@@ -14,7 +14,8 @@
 
 GraphicsEngine::GraphicsEngine()
 {
-    if (!glfwInit()){
+    if (!glfwInit())
+    {
         std::cout << "GLFW failed to start" << std::endl;
         exit(1);
     }
@@ -113,20 +114,25 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
 
     if (this->createEnemyArray(maps[this->currentMap], 3))
     {
-        //create enemies
-        system("say enemies");
-        std::cout << "Number of Enemies: " << this->enemyNumbers.size() << std::endl;
-        std::cout << "Found Enemy: " << this->enemyNumbers[0] << std::endl;
-        std::cout << "Found Enemy: " << this->enemyNumbers[1] << std::endl;
+        //CHECKING IF THERE ARE ENEMIES ON THE MAP OF OBJS
+        if (this->enemyNumbers.size() < 1)
+        {
+            std::cout << RED << "Error: " << NC << "Couldn't find any enemies on the map." << std::endl;
+            std::cout << GREEN << "Info: " << NC << "Terminating application..." << std::endl;
+            exit(1);
+        }
 
+        //create enemies
         for (unsigned int x = 0; x < this->enemyNumbers.size(); x++)
         {
-            Enemy enemy = Enemy(this->enemyNumbers[x], ourShader, this->currentMap + 1);
+            Enemy enemy = Enemy(this->enemyNumbers[x][0], ourShader, this->currentMap + 1);
+            enemy.setObjCoords(this->enemyNumbers[x][1], this->enemyNumbers[x][2]); //SETTING ENEMY OBJ COORDS
             this->enemies.push_back(enemy);
         }
     }
-    exit(0);
 
+    std::cout << GREEN << "info: " << NC << "Loading resources" << std::endl;
+    usleep(100000);
     while (!glfwWindowShouldClose(this->window))
     {
         //input process
@@ -466,6 +472,7 @@ bool    GraphicsEngine::array_check(std::vector<std::vector<int> > & map)
 bool    GraphicsEngine::createEnemyArray(std::vector<std::vector<int> >  map, unsigned int numCheck)
 {
     int e_number = 53;
+    std::vector<int>    enemyElements;
 
     for (unsigned int check = 0; numCheck > check; check++)
     {
@@ -476,10 +483,12 @@ bool    GraphicsEngine::createEnemyArray(std::vector<std::vector<int> >  map, un
                 // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
                 if (map[i][j] == e_number)
                 {
-                    std::cout << "Enemy: " << e_number << std::endl;
-                    this->enemyNumbers.push_back(e_number);
+                    enemyElements.clear();
+                    enemyElements.push_back(e_number);
+                    enemyElements.push_back(j); //Enemy X coord on the map of objects   
+                    enemyElements.push_back(i); //Enemy Y coord on the map of objects
+                    this->enemyNumbers.push_back(enemyElements);
                 }
-                // bomb_found = 1;
             }
         }
         e_number++;
