@@ -128,7 +128,7 @@ if [ ! -d ~/Library/frameworks/FLAC.framework ];
 then
 	echo ${RED}no FLAC.framework folder found${NC}
 	echo ${ORANGE}copying FLAC.framework directory...${NC}
-  cp -rf LIB_1/SFML/extlibs/FLAC.framework ~/Library/Frameworks
+  cp -rf SFML/extlibs/FLAC.framework ~/Library/Frameworks
 else
 	echo "${GREEN}FLAC.framework directory found${NC}"
 fi
@@ -137,7 +137,7 @@ if [ ! -d ~/Library/frameworks/freetype.framework ];
 then
 	echo ${RED}no freetype.framework folder found${NC}
 	echo ${ORANGE}copying freetype.framework directory...${NC}
-  cp -rf LIB_1/SFML/extlibs/freetype.framework ~/Library/Frameworks
+  cp -rf SFML/extlibs/freetype.framework ~/Library/Frameworks
 else
 	echo "${GREEN}freetype.framework directory found${NC}"
 fi
@@ -146,7 +146,7 @@ if [ ! -d ~/Library/frameworks/ogg.framework ];
 then
 	echo ${RED}no ogg.framework folder found${NC}
 	echo ${ORANGE}copying ogg.framework directory...${NC}
-  cp -rf LIB_1/SFML/extlibs/ogg.framework ~/Library/Frameworks
+  cp -rf SFML/extlibs/ogg.framework ~/Library/Frameworks
 else
 	echo "${GREEN}ogg.framework directory found${NC}"
 fi
@@ -155,7 +155,7 @@ if [ ! -d ~/Library/frameworks/OpenAL.framework ];
 then
 	echo ${RED}no OpenAL.framework folder found${NC}
 	echo ${ORANGE}copying OpenAL.framework directory...${NC}
-  cp -rf LIB_1/SFML/extlibs/OpenAL.framework ~/Library/Frameworks
+  cp -rf SFML/extlibs/OpenAL.framework ~/Library/Frameworks
 else
 	echo "${GREEN}OpenAL.framework directory found"
 fi
@@ -164,7 +164,7 @@ if [ ! -d ~/Library/frameworks/vorbis.framework ];
 then
 	echo ${RED}no vorbis.framework folder found${NC}
 	echo ${ORANGE}copying vorbis.framework directory...${NC}
-  cp -rf LIB_1/SFML/extlibs/vorbis.framework ~/Library/Frameworks
+  cp -rf SFML/extlibs/vorbis.framework ~/Library/Frameworks
 else
 	echo ${GREEN}vorbis.framework directory found${NC}
 fi
@@ -173,7 +173,7 @@ if [ ! -d ~/Library/frameworks/vorbisfile.framework ];
 then
 	echo ${RED}no vorbisfile.framework folder found${NC}
 	echo ${ORANGE}copying vorbisfile.framework directory...${NC}
-  cp -rf LIB_1/SFML/extlibs/vorbisfile.framework ~/Library/Frameworks
+  cp -rf SFML/extlibs/vorbisfile.framework ~/Library/Frameworks
 else
 	echo "${GREEN}vorbisfile.framework directory found"
 fi
@@ -182,7 +182,7 @@ if [ ! -d ~/Library/frameworks/vorbisenc.framework ];
 then
 	echo ${RED}no vorbisenc.framework folder found${NC}
 	echo ${ORANGE}copying vorbisenc.framework directory...${NC}
-  cp -rf LIB_1/SFML/extlibs/vorbisenc.framework ~/Library/Frameworks
+  cp -rf SFML/extlibs/vorbisenc.framework ~/Library/Frameworks
 else
 	echo ${GREEN}vorbisenc.framework directory found${NC}
 fi
@@ -191,7 +191,7 @@ if [ ! -d ~/Library/frameworks/sfml-audio.framework ];
 then
 	echo ${RED}no sfml-audio.framework folder found${NC}
 	echo ${ORANGE}copying sfml-audio.framework directory...${NC}
-  cp -rf LIB_1/SFML/Frameworks/sfml-audio.framework ~/Library/Frameworks
+  cp -rf SFML/Frameworks/sfml-audio.framework ~/Library/Frameworks
 else
 	echo "${GREEN}FLAC.framework directory found${NC}"
 fi

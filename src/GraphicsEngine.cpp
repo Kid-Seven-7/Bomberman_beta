@@ -28,11 +28,71 @@ static void readFile(std::string filepath, int lineNo, std::string *store){
 		std::cout << "Unable to open file";
 }
 
-void GraphicsEngine::setInfo(std::vector<std::vector<int>> maps, Player &player, int slot){
+static void readFile(std::string filepath, int start, int end, std::string *store){
+  std::string line = "";
+	int index = 0;
+
+  *store = "";
+  std::ifstream saveFile(filepath);
+  if (saveFile.is_open()){
+    while (getline (saveFile,line)){
+			if (++index > start && index < end)
+				store->append(line);
+		}
+    saveFile.close();
+  } else
+		std::cout << "Unable to open file";
+}
+
+void getMapData(std::vector<std::vector<int>> &maps, int slot){
+  std::string filepath, store, line;
+  float map, rows, cols;
+
+  filepath = (slot == 1)?"save/slot1.txt": (slot == 2)?"save/slot2.txt":
+  (slot == 3)?"save/slot3.txt": (slot == 4)?"save/slot4.txt":"save/slot5.txt";
+
+
+  readFile(filepath, 20, &store);
+  map = convertValue(store, 1);
+  rows = convertValue(store, 2);
+  cols = convertValue(store, 3);
+  readFile(filepath, 20, 32, &store);
+
+  int x = 0;
+
+  for (int i = 0; i < rows; ++i){
+    for (int j = 0; j < cols; ++j)
+      std::cout << "maps at ["<<i<<"]["<<j<<"] was : " <<maps[i][j]<< '\n';
+  }
+
+  for (int i = 0; i < rows; ++i){
+    for (int j = 0; j < cols; ++j){
+      std::string temp = "";
+      temp += store[x];
+      maps[i][j] = std::stoi(temp, nullptr, 0);
+      x++;
+    }
+  }
+
+  for (int i = 0; i < rows; ++i){
+    for (int j = 0; j < cols; ++j)
+      std::cout << "maps at ["<<i<<"]["<<j<<"] is : " <<maps[i][j]<< '\n';
+  }
+
+  // std::cout << "map is : " << map << '\n';
+  // std::cout << "rows is : " << rows << '\n';
+  // std::cout << "cols is : " << cols << '\n';
+  // std::cout << "store has\n" << store << '\n';
+
+  // (void)maps;
+  // (void)slot;
+}
+
+void GraphicsEngine::setInfo(std::vector<std::vector<int>> &maps, Player &player, int slot){
   std::string info, filepath;
   float x, y, z;
 
-  (void)maps;
+  getMapData(maps, slot);
   filepath = (slot == 1)?"save/slot1.txt": (slot == 2)?"save/slot2.txt":
   (slot == 3)?"save/slot3.txt": (slot == 4)?"save/slot4.txt":"save/slot5.txt";
 
@@ -169,8 +229,9 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int slot){
 
     if (slot != 0){
       std::string info;
-      readFile(filepath, 13, &info);
+      readFile(filepath, 20, &info);
       int x = convertValue(info, 1);
+      std::cout << "current map is : " << this->currentMap << " x is : " << x << '\n';
       setInfo(maps[x], player, slot);
     }
 
