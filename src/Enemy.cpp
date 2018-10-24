@@ -47,8 +47,8 @@ void    Enemy::setPosCoords(float pos_x, float pos_y)
     this->pos_x = pos_x;
     this->pos_y = pos_y;
 
-    std::cout << "POS_X: " << this->pos_x << " POS_Y: " << this->pos_y << std::endl;
-    exit(1);
+    // std::cout << "POS_X: " << this->pos_x << " POS_Y: " << this->pos_y << std::endl;
+    // exit(1);
 }
 
 int     Enemy::getEnemyNumber() 
@@ -72,11 +72,11 @@ void    Enemy::drawEnemy()
 {
     //RENDERS ENEMY ON THE SCREEN
     glm::mat4   enemy = glm::mat4(1.0f);
-    std::cout << "X Coord: " << this->pos_x << " Y Coord: " << this->pos_y << std::endl;
+    // std::cout << "X Coord: " << this->pos_x << " Y Coord: " << this->pos_y << std::endl;
 
-    enemy = glm::translate(enemy, glm::vec3(this->pos_x, -0.85f, this->pos_y));
+    enemy = glm::translate(enemy, glm::vec3(this->pos_x - 3.3f, -0.85f, this->pos_y - 1.85f));
 
-    enemy = glm::scale(enemy, glm::vec3(0.7f, 0.7f, 0.7f));
+    enemy = glm::scale(enemy, glm::vec3(0.6f, 0.6f, 0.6f));
 
     this->shader.setMat4("model", enemy);
     this->enemy_model.Draw(this->shader);

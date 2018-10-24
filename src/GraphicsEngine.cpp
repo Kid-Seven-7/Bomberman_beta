@@ -206,8 +206,14 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     if (bomb_counter >= 75)
                         bomb.putBomb(ourShader, this->pos_x, this->pos_y, 2);
                 }
-                if (maps[this->currentMap][j][i] == 54)
+                if (maps[this->currentMap][j][i] == 53)
                 {
+                    // std::cout << this->pos_x << " " << this->pos_y << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
+                }
+                if (maps[this->currentMap][j][i] == 55)
+                {
+                    // std::cout << this->pos_x << " " << this->pos_y << " ";
                     std::cout << maps[this->currentMap][j][i] << " ";
                 }
                 if (enemies_updated < this->enemies.size())
@@ -215,10 +221,10 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     //UPDATING ENEMY POSITION COORDINATES
                     for (unsigned int x = 0; x < this->enemies.size(); x++)
                     {
-                        if ((unsigned int)this->enemies[x].getObjXCoord() == j && 
-                            (unsigned int)this->enemies[x].getObjYCoord() == i)
+                        if ((unsigned int)this->enemies[x].getObjXCoord() == i && 
+                            (unsigned int)this->enemies[x].getObjYCoord() == j)
                         {
-                            this->enemies[x].setPosCoords(this->pos_x, this->pos_y);
+                            this->enemies[x].setPosCoords(this->pos_x + 1.4f, this->pos_y);
                             enemies_updated++;
                         }
                     }
@@ -242,6 +248,11 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             this->pos_y += 1.3f;
             this->pos_x = 0.0f;
         }
+        // std::cout << std::endl;
+        // std::cout << "Enemy: " << this->enemies[0].getEnemyNumber() << 
+        //     " X Coord: " << this->enemies[0].getXCoord() <<
+        //     " Y Coord: " << this->enemies[0].getYCoord() << std::endl;
+        // exit(0);
         this->pos_y = 0.0f;
         if (start_counter)
             bomb_counter++;
@@ -259,7 +270,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 }
             }
         }
-        if (bomb_counter >= 150)
+        if (bomb_counter >= 100)
         {
             bomb_counter = 0;
             start_counter = false;
