@@ -14,11 +14,17 @@
 # define    ENEMY_HPP
 
 # include "model.hpp"
+# include <time.h>
 
 # define    CHECK_UP 1
 # define    CHECK_RIGHT 2
 # define    CHECK_DOWN 3
 # define    CHECK_LEFT 4
+
+# define    DIRECTION_UP    2.5f
+# define    DIRECTION_RIGHT 0.9f
+# define    DIRECTION_DOWN  -0.65f
+# define    DIRECTION_LEFT  -2.3F
 
 # define    CHECK_BOMB 4 //BOMB VALUE ON THE MAP
 
@@ -31,13 +37,15 @@ class   Enemy
 
         void    move();
         void    enemyAI(std::vector<std::vector<int> > & map);
-        int     check_if_empty(std::vector<std::vector<int> > map);
+        void    check_if_empty(std::vector<std::vector<int> > map);
+        int     choosePath();
 
         //SETTERS AND GETTERS
         void    setEnemyDirection(int direction);
         void    setObjCoords(int obj_x, int obj_y);
         void    setPosCoords(float pos_x, float pos_y);
         void    drawEnemy();
+        
 
         int     getEnemyNumber();
         int     getObjXCoord();
@@ -46,6 +54,9 @@ class   Enemy
         float   getYCoord();
 
     private:
+        void    updateMap(std::vector<std::vector<int> > & map);
+        bool    isUpdateMap(std::vector<std::vector<int> > map);
+
         Model   enemy_model;
         Shader  shader;
 
@@ -60,6 +71,9 @@ class   Enemy
         //Enemy movement positions
         float   pos_x;
         float   pos_y;
+        // float   speed;
+        std::vector<int>    possible_directions;
+
 
         //Vector of possible coordinates
         std::vector<int>    p_coords;

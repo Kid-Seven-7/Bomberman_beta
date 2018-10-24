@@ -70,11 +70,24 @@ void    Enemy::move()
 
 void    Enemy::drawEnemy()
 {
+    //MOVE X BY 1.45f
+    //glm::vec3((float)glfwGetTime() + 
+
     //RENDERS ENEMY ON THE SCREEN
     glm::mat4   enemy = glm::mat4(1.0f);
     // std::cout << "X Coord: " << this->pos_x << " Y Coord: " << this->pos_y << std::endl;
 
     enemy = glm::translate(enemy, glm::vec3(this->pos_x - 3.3f, -0.85f, this->pos_y - 1.85f));
+
+    //ENEMY DIRECTION
+    if (this->direction == CHECK_UP)
+        enemy = glm::rotate(enemy, DIRECTION_UP ,glm::vec3(0.0f, 1.0f, 0.0f));
+    if (this->direction == CHECK_RIGHT)
+        enemy = glm::rotate(enemy, DIRECTION_RIGHT ,glm::vec3(0.0f, 1.0f, 0.0f));
+    if (this->direction == CHECK_DOWN)
+        enemy = glm::rotate(enemy, DIRECTION_DOWN ,glm::vec3(0.0f, 1.0f, 0.0f));
+    if (this->direction == CHECK_LEFT)
+        enemy = glm::rotate(enemy, DIRECTION_LEFT ,glm::vec3(0.0f, 1.0f, 0.0f));
 
     enemy = glm::scale(enemy, glm::vec3(0.6f, 0.6f, 0.6f));
 
@@ -86,7 +99,63 @@ Enemy::~Enemy() {}
 
 void    Enemy::enemyAI(std::vector<std::vector<int> > & map)
 {
-    (void)map;
+    this->check_if_empty(map);
+    this->setEnemyDirection(this->choosePath());
+    // this->updateMap(map);
+    this->drawEnemy();
+}
+
+// void    Enemy::updateMap(std::vector<std::vector<int> > & map)
+// {
+//     //UPDATING ENEMY MOVEMENT ON THE MAP
+
+//     //Current Coordinates
+//     float   curXCoord = getXCoord();
+//     float   curYCoord = getYCoord();
+// }
+
+void    Enemy::check_if_empty(std::vector<std::vector<int> > map)
+{
+    bool    enemyFound = false;
+
+    for (unsigned int i = 0; i < map.size(); i++)
+    {
+        for (unsigned int j = 0; j < map[i].size(); j++)
+        {
+            if (map[i][j] == this->getEnemyNumber())
+            {
+                this->possible_directions.clear();
+                if (map[i][j + 1] == 0) // RIGHT
+                {
+                    this->possible_directions.push_back(CHECK_RIGHT);
+                }
+                if (map[i][j - 1] == 0) // LEFT
+                {
+                    this->possible_directions.push_back(CHECK_LEFT);
+                }
+                if (map[i + 1][j] == 0) // DOWN
+                {
+                    this->possible_directions.push_back(CHECK_DOWN);
+                }
+                if (map[i - 1][j] == 0) //UP
+                {
+                    this->possible_directions.push_back(CHECK_UP);
+                }
+                enemyFound = true;
+                break;
+            }
+        }
+        if (enemyFound)
+            break;
+    }
+}
+
+int     Enemy::choosePath()
+{
+    srand(time(NULL));
+
+    int randPath = rand() % (int)this->possible_directions.size();
+    return (this->possible_directions[(unsigned int)randPath]);
 }
 
 int     Enemy::getObjXCoord() { return (this->obj_pos_x); }

@@ -235,7 +235,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     //ENEMY MOVEMENTS SHOULD ALL HAPPEN HERE
                     for (unsigned int x = 0; x < enemies.size(); x++)
                     {
-                        enemies[x].drawEnemy();
+                        enemies[x].enemyAI(maps[this->currentMap]);
                     }
                 }
                 player.bodyModel(this->ourShader);
