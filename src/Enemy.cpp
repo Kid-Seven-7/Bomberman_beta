@@ -32,6 +32,8 @@ Enemy::Enemy(int enemyNumber, Shader shader, int level)
     this->enemyNumber = enemyNumber;
     //Enemy shader
     this->shader = shader;
+    this->updateLoc = false;
+    this->animeLoc = false;
 }
 
 void    Enemy::setObjCoords(int obj_x, int obj_y)
@@ -70,25 +72,68 @@ void    Enemy::move()
 
 void    Enemy::drawEnemy()
 {
+    
     //MOVE X BY 1.45f
-    //glm::vec3((float)glfwGetTime() + 
-
+    //float)glfwGetTime()
+    
     //RENDERS ENEMY ON THE SCREEN
     glm::mat4   enemy = glm::mat4(1.0f);
-    // std::cout << "X Coord: " << this->pos_x << " Y Coord: " << this->pos_y << std::endl;
-
-    enemy = glm::translate(enemy, glm::vec3(this->pos_x - 3.3f, -0.85f, this->pos_y - 1.85f));
 
     //ENEMY DIRECTION
     if (this->direction == CHECK_UP)
+    {
+        enemy = glm::translate(enemy, glm::vec3(this->pos_x - 3.3f, -0.85f, this->pos_y - 1.85f));
         enemy = glm::rotate(enemy, DIRECTION_UP ,glm::vec3(0.0f, 1.0f, 0.0f));
-    if (this->direction == CHECK_RIGHT)
+    }
+    else if (this->direction == CHECK_RIGHT)
+    {
+        enemy = glm::translate(enemy, glm::vec3(this->pos_x - 3.3f, -0.85f, this->pos_y - 1.85f));
         enemy = glm::rotate(enemy, DIRECTION_RIGHT ,glm::vec3(0.0f, 1.0f, 0.0f));
-    if (this->direction == CHECK_DOWN)
-        enemy = glm::rotate(enemy, DIRECTION_DOWN ,glm::vec3(0.0f, 1.0f, 0.0f));
-    if (this->direction == CHECK_LEFT)
-        enemy = glm::rotate(enemy, DIRECTION_LEFT ,glm::vec3(0.0f, 1.0f, 0.0f));
+        // if (this->pos_x <= this->nextXCoord)
+        // {
+        //     this->pos_x += 0.0005f;
+        //     this->updateLoc = false;
+        // }
+        // else
+        // {
+        //     this->updateLoc = true;
+        //     this->nextXCoord = this->pos_x + 1.45f;
+        // }
 
+    }
+    else if (this->direction == CHECK_DOWN)
+    {
+        enemy = glm::translate(enemy, glm::vec3(this->pos_x - 3.3f, -0.85f, this->pos_y - 1.85f));
+        enemy = glm::rotate(enemy, DIRECTION_DOWN ,glm::vec3(0.0f, 1.0f, 0.0f));
+    }
+    else if (this->direction == CHECK_LEFT)
+    {
+        if (this->nextXCoord < 0)
+        {
+            this->nextXCoord = this->pos_x - 1.45f;
+            this->animeLoc = true;
+        }
+        enemy = glm::translate(enemy, glm::vec3(this->pos_x - 3.3f, -0.85f, this->pos_y - 1.85f));
+        enemy = glm::rotate(enemy, DIRECTION_LEFT ,glm::vec3(0.0f, 1.0f, 0.0f));
+        if (this->pos_x > this->nextXCoord)
+        {
+            if (animeLoc)
+            {
+                this->pos_x -= 0.0005f;
+                if ((this->pos_x - 0.0005f) < this->nextXCoord)
+                {
+                    animeLoc = false;
+                    this->pos_x -= 0.0005f;
+                }
+            }
+        }
+        else
+        {
+            this->updateLoc = true;            
+            this->nextXCoord = this->pos_x - 1.45f;
+            std::cout << "Next X Coord: " << this->nextXCoord << std::endl;
+        }
+    }
     enemy = glm::scale(enemy, glm::vec3(0.6f, 0.6f, 0.6f));
 
     this->shader.setMat4("model", enemy);
@@ -100,19 +145,40 @@ Enemy::~Enemy() {}
 void    Enemy::enemyAI(std::vector<std::vector<int> > & map)
 {
     this->check_if_empty(map);
-    this->setEnemyDirection(this->choosePath());
-    // this->updateMap(map);
+    if (this->checkDirection(map, this->direction))
+    {
+        this->updateMap(map);
+    }
+    else
+    {
+        this->setEnemyDirection(this->choosePath());
+    }
     this->drawEnemy();
 }
 
-// void    Enemy::updateMap(std::vector<std::vector<int> > & map)
-// {
-//     //UPDATING ENEMY MOVEMENT ON THE MAP
-
-//     //Current Coordinates
-//     float   curXCoord = getXCoord();
-//     float   curYCoord = getYCoord();
-// }
+void    Enemy::updateMap(std::vector<std::vector<int> > & map)
+{
+    if (this->updateLoc)
+    {
+        if (this->direction == CHECK_RIGHT)
+        {
+            std::cout << "DIRECTION: " << this->direction << std::endl;
+            map[this->getObjYCoord()][this->getObjXCoord() + 1] = this->enemyNumber;
+            map[this->getObjYCoord()][this->getObjXCoord()] = 0;
+            this->setObjCoords(this->getObjXCoord() + 1, this->getObjYCoord());
+            this->updateLoc = false;
+        }
+        else if (this->direction == CHECK_LEFT)
+        {
+            std::cout << "DIRECTION: " << this->direction << std::endl;
+            map[this->getObjYCoord()][this->getObjXCoord() - 1] = this->enemyNumber;
+            map[this->getObjYCoord()][this->getObjXCoord()] = 0;
+            this->setObjCoords(this->getObjXCoord() - 1, this->getObjYCoord());
+            this->updateLoc = false;
+            this->animeLoc = true;
+        }
+    }
+}
 
 void    Enemy::check_if_empty(std::vector<std::vector<int> > map)
 {
@@ -148,6 +214,40 @@ void    Enemy::check_if_empty(std::vector<std::vector<int> > map)
         if (enemyFound)
             break;
     }
+}
+
+bool    Enemy::checkDirection(std::vector<std::vector<int> > map, int direction)
+{
+    bool    direction_safe = false;
+    for (unsigned int i = 0; i < map.size(); i++)
+    {
+        for (unsigned int j = 0; j < map[i].size(); j++)
+        {
+            if (map[i][j] == this->getEnemyNumber())
+            {
+                if (direction == CHECK_RIGHT)
+                {
+                    if (map[i][j + 1] == 0)
+                    {
+                        direction_safe = true;
+                        break;
+                    }
+                }
+                else if (direction == CHECK_LEFT)
+                {
+                    if (map[i][j - 1] == 0)
+                    {
+                        direction_safe = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if (direction_safe)
+            break;
+    }
+
+    return (direction_safe);
 }
 
 int     Enemy::choosePath()

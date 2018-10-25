@@ -11,11 +11,17 @@
 
 # include <cmath>
 # include <unistd.h>
+# include <signal.h>
+# include <stdio.h>
+# include <unistd.h>
+
+void ouch(int sig)
+{
+    printf("OUCH! - I got signal %d\n", sig);
+}
 
 int main()
 {
-  try
-  {
     Sound sound;
     Keys keys;
     // sound.playloop();
@@ -39,11 +45,6 @@ int main()
     initCheck();
 
     displayStart(sound, keys, window);
-  }
-  catch(std::exception &e)
-  {
-    e.what();
-    std::cout << "Status: Released all resources in memory" << std::endl;
-  }
-  return 0;
+    exit(0);
+    return 0;
 }

@@ -55,7 +55,7 @@ class   Enemy
 
     private:
         void    updateMap(std::vector<std::vector<int> > & map);
-        bool    isUpdateMap(std::vector<std::vector<int> > map);
+        bool    checkDirection(std::vector<std::vector<int> > map, int direction);
 
         Model   enemy_model;
         Shader  shader;
@@ -77,6 +77,18 @@ class   Enemy
 
         //Vector of possible coordinates
         std::vector<int>    p_coords;
+
+        // //NEXT COORDINATES
+        float   nextXCoord;
+        // float   nextYCoord;
+
+        // //PREV COORDINATES
+        // float   prevXCoord;
+        // float   prevYCoord;
+
+        //UPDATE LOCATION
+        bool    updateLoc;
+        bool    animeLoc;
 };
 
 # endif
