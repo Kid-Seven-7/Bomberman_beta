@@ -206,11 +206,11 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     if (bomb_counter >= 75)
                         bomb.putBomb(ourShader, this->pos_x, this->pos_y, 2);
                 }
-                if (maps[this->currentMap][j][i] == 53)
-                {
-                    // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
-                }
+                // if (maps[this->currentMap][j][i] == 53)
+                // {
+                //     // std::cout << this->pos_x << " " << this->pos_y << " ";
+                //     std::cout << maps[this->currentMap][j][i] << " ";
+                // }
                 if (maps[this->currentMap][j][i] == 55)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";

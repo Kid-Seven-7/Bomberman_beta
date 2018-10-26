@@ -48,6 +48,7 @@ void    Enemy::setPosCoords(float pos_x, float pos_y)
     //SETTING THE POSITION COORDS
     this->pos_x = pos_x;
     this->pos_y = pos_y;
+    
 
     // std::cout << "POS_X: " << this->pos_x << " POS_Y: " << this->pos_y << std::endl;
     // exit(1);
@@ -80,31 +81,33 @@ void    Enemy::drawEnemy()
     glm::mat4   enemy = glm::mat4(1.0f);
 
     //ENEMY DIRECTION
-    if (this->direction == CHECK_UP)
+    if (this->direction == CHECK_RIGHT)
     {
-        enemy = glm::translate(enemy, glm::vec3(this->pos_x - 3.3f, -0.85f, this->pos_y - 1.85f));
-        enemy = glm::rotate(enemy, DIRECTION_UP ,glm::vec3(0.0f, 1.0f, 0.0f));
-    }
-    else if (this->direction == CHECK_RIGHT)
-    {
+        if (this->nextXCoord < 0)
+        {
+            this->nextXCoord = this->pos_x + 1.45f;
+            this->animeLoc = true;
+        }
         enemy = glm::translate(enemy, glm::vec3(this->pos_x - 3.3f, -0.85f, this->pos_y - 1.85f));
         enemy = glm::rotate(enemy, DIRECTION_RIGHT ,glm::vec3(0.0f, 1.0f, 0.0f));
-        // if (this->pos_x <= this->nextXCoord)
+        // if (this->pos_x < this->nextXCoord)
         // {
-        //     this->pos_x += 0.0005f;
-        //     this->updateLoc = false;
+        //     if (animeLoc)
+        //     {
+        //         this->pos_x += 0.0005f;
+        //         if ((this->pos_x + 0.0005f) > this->nextXCoord)
+        //         {
+        //             animeLoc = false;
+        //             this->pos_x += 0.0005f;
+        //         }
+        //     }
         // }
         // else
         // {
-        //     this->updateLoc = true;
+        //     this->updateLoc = true;            
         //     this->nextXCoord = this->pos_x + 1.45f;
         // }
 
-    }
-    else if (this->direction == CHECK_DOWN)
-    {
-        enemy = glm::translate(enemy, glm::vec3(this->pos_x - 3.3f, -0.85f, this->pos_y - 1.85f));
-        enemy = glm::rotate(enemy, DIRECTION_DOWN ,glm::vec3(0.0f, 1.0f, 0.0f));
     }
     else if (this->direction == CHECK_LEFT)
     {
@@ -115,24 +118,85 @@ void    Enemy::drawEnemy()
         }
         enemy = glm::translate(enemy, glm::vec3(this->pos_x - 3.3f, -0.85f, this->pos_y - 1.85f));
         enemy = glm::rotate(enemy, DIRECTION_LEFT ,glm::vec3(0.0f, 1.0f, 0.0f));
-        if (this->pos_x > this->nextXCoord)
+        // if (this->pos_x > this->nextXCoord)
+        // {
+        //     if (animeLoc)
+        //     {
+        //         this->pos_x -= 0.0005f;
+        //         if ((this->pos_x - 0.0005f) < this->nextXCoord)
+        //         {
+        //             animeLoc = false;
+        //             this->pos_x -= 0.0005f;
+        //         }
+        //     }
+        // }
+        // else
+        // {
+        //     this->updateLoc = true;            
+        //     this->nextXCoord = this->pos_x - 1.45f;
+        //     std::cout << "Next X Coord: " << this->nextXCoord << std::endl;
+        // }
+    }
+    else if (this->direction == CHECK_UP)
+    {
+        if (this->nextYCoord < 0)
         {
+            std::cout << "Y Coord: " << this->pos_y << std::endl;
+            std::cout << "Next Y Coord: " << this->nextYCoord << std::endl;
+            this->animeLoc = true;
+            this->nextYCoord = this->pos_y - 1.3f;
+        }
+        enemy = glm::translate(enemy, glm::vec3(this->pos_x - 3.3f, -0.85f, this->pos_y - 1.85f));
+        enemy = glm::rotate(enemy, DIRECTION_UP ,glm::vec3(0.0f, 1.0f, 0.0f));
+        if (this->pos_y > this->nextYCoord)
+        {
+            std::cout << "Y Coord: " << this->pos_y << std::endl;
+            std::cout << "Next Y Coord: " << this->nextYCoord << std::endl;
             if (animeLoc)
             {
-                this->pos_x -= 0.0005f;
-                if ((this->pos_x - 0.0005f) < this->nextXCoord)
+                this->pos_y -= 0.0005f;
+                if ((this->pos_y - 0.0005f) < this->nextYCoord)
                 {
                     animeLoc = false;
-                    this->pos_x -= 0.0005f;
+                    this->pos_y -= 0.0005f;
+                    exit(0);
                 }
             }
         }
         else
         {
             this->updateLoc = true;            
-            this->nextXCoord = this->pos_x - 1.45f;
-            std::cout << "Next X Coord: " << this->nextXCoord << std::endl;
+            this->nextYCoord = this->pos_y - 1.3f;
+            std::cout << "Next Y Coord: " << this->nextYCoord << std::endl;
         }
+    }
+    else if (this->direction == CHECK_DOWN)
+    {
+        if (this->nextYCoord < 0)
+        {
+            this->nextYCoord = this->pos_y + 1.45f;
+            this->animeLoc = true;
+        }
+        enemy = glm::translate(enemy, glm::vec3(this->pos_x - 3.3f, -0.85f, this->pos_y - 1.85f));
+        enemy = glm::rotate(enemy, DIRECTION_DOWN ,glm::vec3(0.0f, 1.0f, 0.0f));
+        // if (this->pos_y < this->nextYCoord)
+        // {
+        //     if (animeLoc)
+        //     {
+        //         this->pos_y += 0.0005f;
+        //         if ((this->pos_y - 0.0005f) > this->nextYCoord)
+        //         {
+        //             animeLoc = false;
+        //             this->pos_y += 0.0005f;
+        //         }
+        //     }
+        // }
+        // else
+        // {
+        //     this->updateLoc = true;            
+        //     this->nextYCoord = this->pos_y + 1.45f;
+        //     std::cout << "Next Y Coord: " << this->nextYCoord << std::endl;
+        // }
     }
     enemy = glm::scale(enemy, glm::vec3(0.6f, 0.6f, 0.6f));
 
@@ -167,6 +231,7 @@ void    Enemy::updateMap(std::vector<std::vector<int> > & map)
             map[this->getObjYCoord()][this->getObjXCoord()] = 0;
             this->setObjCoords(this->getObjXCoord() + 1, this->getObjYCoord());
             this->updateLoc = false;
+            this->animeLoc = true;
         }
         else if (this->direction == CHECK_LEFT)
         {
@@ -174,6 +239,24 @@ void    Enemy::updateMap(std::vector<std::vector<int> > & map)
             map[this->getObjYCoord()][this->getObjXCoord() - 1] = this->enemyNumber;
             map[this->getObjYCoord()][this->getObjXCoord()] = 0;
             this->setObjCoords(this->getObjXCoord() - 1, this->getObjYCoord());
+            this->updateLoc = false;
+            this->animeLoc = true;
+        }
+        else if (this->direction == CHECK_UP)
+        {
+            std::cout << "DIRECTION: " << this->direction << std::endl;
+            map[this->getObjYCoord() - 1][this->getObjXCoord()] = this->enemyNumber;
+            map[this->getObjYCoord()][this->getObjXCoord()] = 0;
+            this->setObjCoords(this->getObjXCoord(), this->getObjYCoord() - 1);
+            this->updateLoc = false;
+            this->animeLoc = true;
+        }
+        else if (this->direction == CHECK_DOWN)
+        {
+            std::cout << "DIRECTION: " << this->direction << std::endl;
+            map[this->getObjYCoord() + 1][this->getObjXCoord()] = this->enemyNumber;
+            map[this->getObjYCoord()][this->getObjXCoord()] = 0;
+            this->setObjCoords(this->getObjXCoord(), this->getObjYCoord() + 1);
             this->updateLoc = false;
             this->animeLoc = true;
         }
@@ -225,17 +308,34 @@ bool    Enemy::checkDirection(std::vector<std::vector<int> > map, int direction)
         {
             if (map[i][j] == this->getEnemyNumber())
             {
-                if (direction == CHECK_RIGHT)
+                // if (direction == CHECK_RIGHT)
+                // {
+                //     if (map[i][j + 1] == 0)
+                //     {
+                //         direction_safe = true;
+                //         break;
+                //     }
+                // }
+                // else 
+                if (direction == CHECK_LEFT)
                 {
-                    if (map[i][j + 1] == 0)
+                    if (map[i][j - 1] == 0)
                     {
                         direction_safe = true;
                         break;
                     }
                 }
-                else if (direction == CHECK_LEFT)
+                else if (direction == CHECK_UP)
                 {
-                    if (map[i][j - 1] == 0)
+                    if (map[i - 1][j] == 0)
+                    {
+                        direction_safe = true;
+                        break;
+                    }
+                }
+                else if (direction == CHECK_DOWN)
+                {
+                    if (map[i + 1][j] == 0)
                     {
                         direction_safe = true;
                         break;

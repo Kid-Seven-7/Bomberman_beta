@@ -80,7 +80,7 @@ class   Enemy
 
         // //NEXT COORDINATES
         float   nextXCoord;
-        // float   nextYCoord;
+        float   nextYCoord;
 
         // //PREV COORDINATES
         // float   prevXCoord;
