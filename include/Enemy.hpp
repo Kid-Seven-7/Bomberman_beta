@@ -15,6 +15,7 @@
 
 # include "model.hpp"
 # include <time.h>
+# include <unistd.h>
 
 # define    CHECK_UP 1
 # define    CHECK_RIGHT 2
@@ -45,6 +46,7 @@ class   Enemy
         void    setObjCoords(int obj_x, int obj_y);
         void    setPosCoords(float pos_x, float pos_y);
         void    drawEnemy();
+        void    mapPatch(std::vector<std::vector<int> > & map);
         
 
         int     getEnemyNumber();
@@ -89,6 +91,7 @@ class   Enemy
         //UPDATE LOCATION
         bool    updateLoc;
         bool    animeLoc;
+        bool    animeDone;
 };
 
 # endif
