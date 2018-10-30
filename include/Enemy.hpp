@@ -38,14 +38,15 @@ class   Enemy
 
         void    move();
         void    enemyAI(std::vector<std::vector<int> > & map);
-        void    check_if_empty(std::vector<std::vector<int> > map);
+        void    check_possible_directions(std::vector<std::vector<int> > map);
         int     choosePath();
 
         //SETTERS AND GETTERS
         void    setEnemyDirection(int direction);
         void    setObjCoords(int obj_x, int obj_y);
         void    setPosCoords(float pos_x, float pos_y);
-        void    drawEnemy();
+        void    drawEnemyRight(std::vector<std::vector<int> > & map);
+        void    drawEnemyLeft(std::vector<std::vector<int> > & map);
         void    mapPatch(std::vector<std::vector<int> > & map);
         
 
@@ -56,9 +57,6 @@ class   Enemy
         float   getYCoord();
 
     private:
-        void    updateMap(std::vector<std::vector<int> > & map);
-        bool    checkDirection(std::vector<std::vector<int> > map, int direction);
-
         Model   enemy_model;
         Shader  shader;
 
@@ -91,7 +89,7 @@ class   Enemy
         //UPDATE LOCATION
         bool    updateLoc;
         bool    animeLoc;
-        bool    animeDone;
+        bool    changeDirection;
 };
 
 # endif
