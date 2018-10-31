@@ -27,7 +27,7 @@ GraphicsEngine::GraphicsEngine()
     glEnable(GL_DEPTH_TEST);
 
     //Initializing current map
-    this->currentMap = 2;
+    this->currentMap = 1;
 
     //Default player direction
      this->player_direction = -1;
@@ -45,7 +45,7 @@ GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
 	glEnable(GL_DEPTH_TEST);
 
 	//Initializing current map
-	this->currentMap = 2;
+	this->currentMap = 1;
 
     //Default player direction
      this->player_direction = -1;
