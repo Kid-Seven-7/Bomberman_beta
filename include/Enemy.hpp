@@ -40,14 +40,14 @@ class   Enemy
         void    enemyAI(std::vector<std::vector<int> > & map);
         void    check_possible_directions(std::vector<std::vector<int> > map);
         int     choosePath();
+        bool    checkDirection(std::vector<std::vector<int> > map);
 
         //SETTERS AND GETTERS
         void    setEnemyDirection(int direction);
         void    setObjCoords(int obj_x, int obj_y);
         void    setPosCoords(float pos_x, float pos_y);
-        void    drawEnemyRight(std::vector<std::vector<int> > & map);
-        void    drawEnemyLeft(std::vector<std::vector<int> > & map);
-        void    mapPatch(std::vector<std::vector<int> > & map);
+        void    drawEnemy();
+        void    updateEnemyLocation(std::vector<std::vector<int> > & map);
         
 
         int     getEnemyNumber();
@@ -74,17 +74,14 @@ class   Enemy
         // float   speed;
         std::vector<int>    possible_directions;
 
+        //NEXT POINT IN THE MAP
+        int     moveCounter;
+        int     nextMoveCounter;
 
         //Vector of possible coordinates
         std::vector<int>    p_coords;
 
-        // //NEXT COORDINATES
-        float   nextXCoord;
-        float   nextYCoord;
-
         // //PREV COORDINATES
-        // float   prevXCoord;
-        // float   prevYCoord;
 
         //UPDATE LOCATION
         bool    updateLoc;

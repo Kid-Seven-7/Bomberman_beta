@@ -84,14 +84,14 @@ int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std
       if (this->checkNexPos(MOVE_UP, mapOfObjects) == 1)
       {
         // std::cout << "Return is: " << !(this->checkNexPos(MOVE_UP, mapOfObjects) == -1) << std::endl;
-        this->move_y -= 0.1f;
-        this->body_r_y += 0.2f;
+        this->move_y -= 0.2f;
+        this->body_r_y += 0.3f;
         player_direction = MOVE_UP;
         return (1);
       }
       else
       {
-        this->body_r_y += 0.2f;
+        this->body_r_y += 0.3f;
       }
     }
     else if (keys.input() == DOWN)
@@ -99,13 +99,13 @@ int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std
 			// sound.playFX(BB8_MISC);
       if (this->checkNexPos(MOVE_DOWN, mapOfObjects) == 1)
       {
-        move_y += 0.1f;
-        this->body_r_y -= 0.2f;
+        move_y += 0.2f;
+        this->body_r_y -= 0.3f;
         player_direction = MOVE_DOWN;
         return (1);
       }
       else
-        this->body_r_y -= 0.2f;
+        this->body_r_y -= 0.3f;
     }
     else if (keys.input() == RIGHT)
     {
@@ -114,8 +114,8 @@ int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std
       if (this->checkNexPos(MOVE_RIGHT, mapOfObjects) == 1)
       {
         // std::cout << "Return is: " << !(this->checkNexPos(MOVE_RIGHT, mapOfObjects) == -1) << std::endl;
-        this->move_x += 0.1f;
-        this->body_r_x += 0.2f;
+        this->move_x += 0.2f;
+        this->body_r_x += 0.3f;
         player_direction = MOVE_RIGHT;
         return (1);
       }
@@ -129,13 +129,13 @@ int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std
 			// sound.playFX(BB8_MISC);
       if (this->checkNexPos(MOVE_LEFT, mapOfObjects) == 1)
       {
-        this->move_x -= 0.1f;
-        this->body_r_x -= 0.2f;
+        this->move_x -= 0.2f;
+        this->body_r_x -= 0.3f;
         player_direction = MOVE_LEFT;
         return (1);
       }
       else
-        this->body_r_x -= 0.2f;
+        this->body_r_x -= 0.3f;
     }
     else
     {

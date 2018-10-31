@@ -69,7 +69,7 @@ void   CameraClass::camRotation(GLFWwindow *window){
 }
 
 void    CameraClass::playerCamMovements(Keys &keys){
-    this->playerCamSpeed = 0.08f;
+    this->playerCamSpeed = 0.13f;
 
     if (keys.input() == UP)
         this->cameraPos += this->playerCamSpeed * this->cameraFront;

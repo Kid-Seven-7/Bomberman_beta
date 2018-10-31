@@ -27,7 +27,7 @@ GraphicsEngine::GraphicsEngine()
     glEnable(GL_DEPTH_TEST);
 
     //Initializing current map
-    this->currentMap = 0;
+    this->currentMap = 2;
 
     //Default player direction
      this->player_direction = -1;
@@ -45,7 +45,7 @@ GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
 	glEnable(GL_DEPTH_TEST);
 
 	//Initializing current map
-	this->currentMap = 0;
+	this->currentMap = 2;
 
     //Default player direction
      this->player_direction = -1;
@@ -99,6 +99,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     bool            start_counter = false;
     bool            reset_player = false;
     unsigned int    enemies_updated = 0;
+    unsigned int    currentEnemy = 0;
 
     //Physics Engine
     // PhysicsEngine p_engine; // remove this ENGINE BEFORE SUBMISSION
@@ -126,7 +127,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
         //create enemies
         for (unsigned int x = 0; x < this->enemyNumbers.size(); x++)
         {
-            Enemy enemy = Enemy(this->enemyNumbers[x][0], ourShader, this->currentMap + 1);
+            Enemy enemy = Enemy(this->enemyNumbers[x][0], ourShader, 1);
             // std::cout << "Enemy: " << this->enemyNumbers[x][0] << " X Coord: " << this->enemyNumbers[x][1] << " Y Coord: " << this->enemyNumbers[x][2] << std::endl;
             enemy.setObjCoords(this->enemyNumbers[x][1], this->enemyNumbers[x][2]); //SETTING ENEMY OBJ COORDS
             this->enemies.push_back(enemy);
@@ -206,16 +207,6 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     if (bomb_counter >= 75)
                         bomb.putBomb(ourShader, this->pos_x, this->pos_y, 2);
                 }
-                // if (maps[this->currentMap][j][i] == 53)
-                // {
-                //     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                //     std::cout << maps[this->currentMap][j][i] << " ";
-                // }
-                if (maps[this->currentMap][j][i] == 55)
-                {
-                    // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
-                }
                 if (enemies_updated < this->enemies.size())
                 {
                     //UPDATING ENEMY POSITION COORDINATES
@@ -241,6 +232,16 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 player.bodyModel(this->ourShader);
                 player.headModel(this->ourShader);
                 this->pos_x += 1.4f;
+
+                //Render A different Enemy
+                if ((currentEnemy + 1) < this->enemyNumbers.size())
+                {
+                    currentEnemy++;
+                }
+                else
+                {
+                    currentEnemy = 0;
+                }
             }
             // std::cout << "Player X: " << player.getXcoord() << std::endl;
             // std::cout << "Player Y: " << player.getYcoord() << std::endl;
@@ -301,6 +302,8 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
         this->updateMap(player, maps[this->currentMap]);
         m_engine.updateCurrentMap(currentMap, maps[this->currentMap]);
+
+        
     }
     nextXPos = 2.6f;
     nextYPos = 2.6f;
