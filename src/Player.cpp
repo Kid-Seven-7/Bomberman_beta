@@ -83,7 +83,6 @@ int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std
 			// sound.playFX(BB8_MISC);
       if (this->checkNexPos(MOVE_UP, mapOfObjects) == 1)
       {
-        // std::cout << "Return is: " << !(this->checkNexPos(MOVE_UP, mapOfObjects) == -1) << std::endl;
         this->move_y -= 0.2f;
         this->body_r_y += 0.3f;
         player_direction = MOVE_UP;
@@ -109,11 +108,8 @@ int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std
     }
     else if (keys.input() == RIGHT)
     {
-			// sound.playFX(BB8_MISC);
-      // std::cout << "Key INPUT = RIGHT" << std::endl;
       if (this->checkNexPos(MOVE_RIGHT, mapOfObjects) == 1)
       {
-        // std::cout << "Return is: " << !(this->checkNexPos(MOVE_RIGHT, mapOfObjects) == -1) << std::endl;
         this->move_x += 0.2f;
         this->body_r_x += 0.3f;
         player_direction = MOVE_RIGHT;
@@ -148,19 +144,14 @@ int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std
 //Getting current position of the player
 void  Player::getPlayerPos(std::vector<std::vector<int> >  mapOfObjects)
 {
-  // std::cout << "mapOfObjects: 1: " << mapOfObjects.size() << std::endl;    
   int player_found = 0;
   for (unsigned int i = 0; i < mapOfObjects.size(); i++)
   {
     for (unsigned int j = 0; j < mapOfObjects[i].size(); j++)
     {
-      // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
       if (mapOfObjects[i][j] == 3)
       {
         player_found = 1;
-        // std::cout << "Player Pos Value: " << mapOfObjects[i][j] << std::endl;
-        // std::cout << "Player X Pos: " << j << std::endl;
-        // std::cout << "Player Y Pos: " << i << std::endl;
         this->playerPos.clear();
         this->playerPos.push_back(j);
         this->playerPos.push_back(i);
@@ -226,14 +217,11 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
     x_player_pos = this->playerPos[0];
     y_player_pos = this->playerPos[1];
 
-    // std::cout << "X_POS_RIGHT: " << this->playerPos[0] << std::endl;
-    // std::cout << "Y_POS_RIGHT: " << this->playerPos[1] << std::endl;
     if ((mapOfObjects[y_player_pos][x_player_pos - 1] != 1) &&
       (mapOfObjects[y_player_pos][x_player_pos - 1] != 2) &&
       (mapOfObjects[y_player_pos][x_player_pos - 1] != 4) &&
       (mapOfObjects[y_player_pos][x_player_pos - 1] != 8))
     {
-      // std::cout << "Next Pos: " << mapOfObjects[y_player_pos][x_player_pos + 1] << std::endl;
       //Storing new player position
       this->NewPlayerPos.clear();
       this->NewPlayerPos.push_back(x_player_pos - 1);
@@ -244,19 +232,15 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
   }
   if (direction == MOVE_RIGHT)
   {
-    // std::cout << "Moving to the right" << std::endl;
     this->getPlayerPos(mapOfObjects);
     x_player_pos = this->playerPos[0];
     y_player_pos = this->playerPos[1];
 
-    // std::cout << "X_POS_RIGHT: " << this->playerPos[0] << std::endl;
-    // std::cout << "Y_POS_RIGHT: " << this->playerPos[1] << std::endl;
     if ((mapOfObjects[y_player_pos][x_player_pos + 1] != 1) &&
       (mapOfObjects[y_player_pos][x_player_pos + 1] != 2) &&
       (mapOfObjects[y_player_pos][x_player_pos + 1] != 4) &&
       (mapOfObjects[y_player_pos][x_player_pos + 1] != 8))
     {
-      // std::cout << "Next Pos: " << mapOfObjects[y_player_pos][x_player_pos + 1] << std::endl;
       //Storing new player position
       this->NewPlayerPos.clear();
       this->NewPlayerPos.push_back(x_player_pos + 1);

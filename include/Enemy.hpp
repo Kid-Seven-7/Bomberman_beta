@@ -87,6 +87,8 @@ class   Enemy
         bool    updateLoc;
         bool    animeLoc;
         bool    changeDirection;
+
+        
 };
 
 # endif

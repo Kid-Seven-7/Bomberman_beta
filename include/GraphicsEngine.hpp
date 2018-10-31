@@ -63,6 +63,7 @@ class GraphicsEngine
         void    modelProjectionConfig();
         void    updateMap(Player player, std::vector<std::vector<int> > & map);
         std::vector<std::vector<int> >  getCurrentObjectsMap();
+        bool    in_array(int e_number, std::vector<int> enemies);
 
         //Variable for enemy objects
         std::vector<Enemy>  enemies;
@@ -101,6 +102,11 @@ class GraphicsEngine
         void    remove_bomb(std::vector<std::vector<int> > & map);
         bool    createEnemyArray(std::vector<std::vector<int> >  map, unsigned int numCheck = 1);
         int     update_bomb_range(std::vector<std::vector<int> > & map);
+
+        //ENEMY DELETION
+        bool                deleteEnemy;
+        unsigned int        currentEnemy;
+        std::vector<int>    destroyedEnemy;
 };
 
 # endif

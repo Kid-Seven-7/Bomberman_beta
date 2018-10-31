@@ -35,8 +35,6 @@ Enemy::Enemy(int enemyNumber, Shader shader, int level)
     }
 
     //Enemy movement
-    // this->pos_x = pos_x;
-    // this->pos_y = pos_y;
 
     this->enemyNumber = enemyNumber;
     //Enemy shader
@@ -88,8 +86,6 @@ void    Enemy::move()
             this->moveCounter = 0;
             this->updateLoc = true;
         }
-        // std::cout << std::endl;
-        // std::cout << "MoveCounter: " << this->moveCounter << std::endl;
         this->moveCounter++;
     }
 }
@@ -250,19 +246,19 @@ void    Enemy::check_possible_directions(std::vector<std::vector<int> > map)
             if (map[i][j] == this->getEnemyNumber())
             {
                 this->possible_directions.clear();
-                if (map[i][j + 1] == 0) // RIGHT
+                if (map[i][j + 1] == 0 || map[i][j + 1] == 3) // RIGHT
                 {
                     this->possible_directions.push_back(CHECK_RIGHT);
                 }
-                if (map[i][j - 1] == 0) // LEFT
+                if (map[i][j - 1] == 0 || map[i][j - 1] == 3) // LEFT
                 {
                     this->possible_directions.push_back(CHECK_LEFT);
                 }
-                if (map[i - 1][j] == 0) // UP
+                if (map[i - 1][j] == 0 || map[i - 1][j] == 3) // UP
                 {
                     this->possible_directions.push_back(CHECK_UP);
                 }
-                if (map[i + 1][j] == 0) // DOWN
+                if (map[i + 1][j] == 0 || map[i + 1][j] == 3) // DOWN
                 {
                     this->possible_directions.push_back(CHECK_DOWN);
                 }
