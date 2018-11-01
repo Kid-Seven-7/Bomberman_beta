@@ -253,7 +253,8 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                         this->deleteEnemy = false;
                         this->destroyedEnemy.push_back(this->enemyNumbers[this->currentEnemy][0]);
                     }
-                    exit(0);
+                    // exit(0);
+                    break;
                 }
             }
             // std::cout << "Player X: " << player.getXcoord() << std::endl;
@@ -277,6 +278,19 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     this->reset_player_location(maps[this->currentMap]);
                     this->reset_camera();
                     reset_player = true;
+                    this->lives--;
+
+                    //Reseting bomb after player suicide
+                    bomb_counter = 0;
+                    start_counter = false;
+                    this->remove_bomb(maps[this->currentMap]);
+                }
+                else
+                {
+                    //GAME OVER
+                    std::cout << std::endl;
+                    std::cout << "GAME OVER MOTHERFUCKER" << std::endl;
+                    exit(0);
                 }
             }
         }
