@@ -46,6 +46,7 @@ Enemy::Enemy(int enemyNumber, Shader shader, int level)
 
     //NEXT POINT IN THE MAP
     this->moveCounter = 0;
+    this->killPlayer = false;   
 }
 
 void    Enemy::setObjCoords(int obj_x, int obj_y)
@@ -154,23 +155,31 @@ bool    Enemy::checkDirection(std::vector<std::vector<int> > map)
         {
             if (map[i][j] == this->getEnemyNumber())
             {
-                if (map[i][j + 1] == 0 && this->direction == CHECK_RIGHT) // RIGHT
+                if ((map[i][j + 1] == 0 || map[i][j + 1] == 3) && this->direction == CHECK_RIGHT) // RIGHT
                 {
+                    if (map[i][j + 1] == 3)
+                        this->killPlayer = true;
                     directionSafe = true;
                     break;
                 }
-                if (map[i][j - 1] == 0 && this->direction == CHECK_LEFT) // LEFT
+                if ((map[i][j - 1] == 0 || map[i][j - 1] == 3) && this->direction == CHECK_LEFT) // LEFT
                 {
+                    if (map[i][j - 1] == 3)
+                        this->killPlayer = true;
                     directionSafe = true;
                     break;
                 }
-                if (map[i - 1][j] == 0 && this->direction == CHECK_UP) // UP
+                if ((map[i - 1][j] == 0 || map[i - 1][j] == 3) && this->direction == CHECK_UP) // UP
                 {
+                    if (map[i - 1][j] == 3)
+                        this->killPlayer = true;
                     directionSafe = true;
                     break;
                 }
-                if (map[i + 1][j] == 0 && this->direction == CHECK_DOWN) //DOWN
+                if ((map[i + 1][j] == 0 || map[i + 1][j] == 3) && this->direction == CHECK_DOWN) //DOWN
                 {
+                    if (map[i + 1][j] == 3)
+                        this->killPlayer = true;
                     directionSafe = true;
                     break;
                 }
@@ -295,3 +304,13 @@ int     Enemy::getObjYCoord() { return (this->obj_pos_y); }
 float   Enemy::getXCoord() { return (this->pos_x); }
 
 float   Enemy::getYCoord() { return (this->pos_y); }
+
+void    Enemy::setKillPlayerValue(bool  killPlayer)
+{
+    this->killPlayer = killPlayer;
+}
+
+bool    Enemy::getKillPlayerValue()
+{
+    return (this->killPlayer);
+}

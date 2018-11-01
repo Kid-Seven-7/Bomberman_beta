@@ -113,8 +113,6 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     
     std::vector<std::vector<std::vector<int>>> maps = m_engine.getObjectsMaps();
 
-
-
     if (this->createEnemyArray(maps[this->currentMap], 3))
     {
         //CHECKING IF THERE ARE ENEMIES ON THE MAP OF OBJS
@@ -228,6 +226,29 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     {
                         this->enemies[x].enemyAI(maps[this->currentMap]);
                         this->currentEnemy = x;
+                        if (this->enemies[x].getKillPlayerValue() && !reset_player)
+                        {
+                            std::cout << "LIVES: " << this->lives << std::endl;
+                            if (this->lives >= 1)
+                            {
+                                // maps[this->currentMap][j][i] = 0;
+                                this->remove_life(maps[this->currentMap]);
+                                player.setPcoords(0.0f, 0.0f);
+                                this->reset_player_location(maps[this->currentMap]);
+                                this->reset_camera();
+                                reset_player = true;
+                                this->lives--;
+                                this->enemies[x].setKillPlayerValue(false);
+                            }
+                            else
+                            {
+                                //GAME OVER
+                                std::cout << std::endl;
+                                std::cout << "LIVES: " << this->lives << std::endl;
+                                std::cout << "GAME OVER MOTHERFUCKER Muhaha" << std::endl;
+                                exit(0);
+                            }
+                        }
                     }
                 }
                 player.bodyModel(this->ourShader);
