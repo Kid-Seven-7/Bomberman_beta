@@ -168,31 +168,31 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 if (maps[this->currentMap][j][i] == HARD_WALL)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.hard_wall_func(this->ourShader, this->pos_x, this->pos_y);
                 }
                 if (maps[this->currentMap][j][i] == SOFT_WALL)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
                 }
                 if (maps[this->currentMap][j][i] == FLOOR)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     //TODO
                 }
                 if (maps[this->currentMap][j][i] == PLAYER_OBJ)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     //TODO
                 }
                 if (maps[this->currentMap][j][i] == 8)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.player_life_func(this->ourShader, this->pos_x, this->pos_y);
                     model_object.headModel(this->ourShader, this->pos_x, this->pos_y);
                     //TODO
@@ -200,7 +200,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 if (maps[this->currentMap][j][i] == BOMB)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
+                    // std::cout << maps[this->currentMap][j][i] << " ";
                     //FIX BOMB CLASS!!!
                     //CALL ARRAY CHECK BEFORE PLACING BOMB
                     bomb.putBomb(ourShader, this->pos_x, this->pos_y, 1);
@@ -232,7 +232,8 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 }
                 player.bodyModel(this->ourShader);
                 player.headModel(this->ourShader);
-                if (isinf(this->pos_x += 1.4f))
+                if ((this->pos_x + 1.4f) <  std::numeric_limits<float>::max() && 
+                    (this->pos_x + 1.4f) < std::numeric_limits<float>::infinity())
                     this->pos_x += 1.4f;
 
             }
@@ -250,7 +251,6 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                         {
                             if (this->enemies.size() == 0)
                                 break;
-                            std::cout << "X: " << this->enemies.size() << std::endl;
                             this->enemies.erase(this->enemies.begin() + i);
                             // if (this->enemyNumbers.size())
                             //     this->enemyNumbers.erase(this->enemyNumbers.begin() + 1);
@@ -258,11 +258,13 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                         }
                     }
                 }
+                this->deleteEnemy = false;
             }
             // std::cout << "Player X: " << player.getXcoord() << std::endl;
             // std::cout << "Player Y: " << player.getYcoord() << std::endl;
             std::cout << std::endl;
-            if (isinf(this->pos_y += 1.3f))
+            if ((this->pos_y + 1.3f) < std::numeric_limits<float>::max() &&
+                (this->pos_y + 1.3f) < std::numeric_limits<float>::infinity())
                 this->pos_y += 1.3f;
             this->pos_x = 0.0f;
         }

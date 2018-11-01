@@ -19,6 +19,7 @@
 # include "Enemy.hpp"
 # include <cmath>
 # include <unistd.h>
+# include <limits>
 
 //Global Variables
 #define WIDTH 1200

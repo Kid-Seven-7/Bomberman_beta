@@ -238,6 +238,7 @@ void    Enemy::updateEnemyLocation(std::vector<std::vector<int> > & map)
 void    Enemy::check_possible_directions(std::vector<std::vector<int> > map)
 {
     bool    enemyFound = false;
+    bool    no_path = true;
 
     for (unsigned int i = 0; i < map.size(); i++)
     {
@@ -249,18 +250,26 @@ void    Enemy::check_possible_directions(std::vector<std::vector<int> > map)
                 if (map[i][j + 1] == 0 || map[i][j + 1] == 3) // RIGHT
                 {
                     this->possible_directions.push_back(CHECK_RIGHT);
+                    no_path = false;
                 }
                 if (map[i][j - 1] == 0 || map[i][j - 1] == 3) // LEFT
                 {
                     this->possible_directions.push_back(CHECK_LEFT);
+                    no_path = false;
                 }
                 if (map[i - 1][j] == 0 || map[i - 1][j] == 3) // UP
                 {
                     this->possible_directions.push_back(CHECK_UP);
+                    no_path = false;
                 }
                 if (map[i + 1][j] == 0 || map[i + 1][j] == 3) // DOWN
                 {
                     this->possible_directions.push_back(CHECK_DOWN);
+                    no_path = false;
+                }
+                if (no_path)
+                {
+                    this->possible_directions.push_back(CHECK_RIGHT);
                 }
                 enemyFound = true;
                 break;
