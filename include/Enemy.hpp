@@ -16,6 +16,8 @@
 # include "model.hpp"
 # include <time.h>
 # include <unistd.h>
+// # include <fenv.h>
+// # pragma STDC FENV_ACCESS ON
 
 # define    CHECK_UP 1
 # define    CHECK_RIGHT 2

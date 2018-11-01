@@ -232,39 +232,43 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 }
                 player.bodyModel(this->ourShader);
                 player.headModel(this->ourShader);
-                this->pos_x += 1.4f;
+                if (isinf(this->pos_x += 1.4f))
+                    this->pos_x += 1.4f;
 
             }
 
             //ENEMY DEATH THINGS
             if (bomb_counter == 75 && this->deleteEnemy)
             {
-                if (this->update_bomb_range(maps[this->currentMap]) == 10 && this->deleteEnemy)
+                if (this->ft_deleteEnemy(this->bombXCoord, this->bombYCoord, maps[this->currentMap]))
                 {
-                    std::cout << "ENEMY DIED: " << this->currentEnemy << std::endl;
-                    if (!this->in_array(this->currentEnemy, this->destroyedEnemy))
+                    std::cout << std::endl;
+                    std::cout << "Current Enemy to delete: " << this->currentDeletedEnemy << std::endl;
+                    for (unsigned int i = 0; i < this->enemies.size(); i++)
                     {
-                        this->enemies.erase(this->enemies.begin() + this->currentEnemy);
-                        this->deleteEnemy = false;
+                        if (this->enemies.size() && this->enemies[i].getEnemyNumber() == this->currentDeletedEnemy)
+                        {
+                            if (this->enemies.size() == 0)
+                                break;
+                            std::cout << "X: " << this->enemies.size() << std::endl;
+                            this->enemies.erase(this->enemies.begin() + i);
+                            // if (this->enemyNumbers.size())
+                            //     this->enemyNumbers.erase(this->enemyNumbers.begin() + 1);
+                            enemies_updated--;
+                        }
                     }
-                    else
-                    {
-                        this->enemies.erase(this->enemies.begin() + this->currentEnemy);
-                        this->deleteEnemy = false;
-                        this->destroyedEnemy.push_back(this->enemyNumbers[this->currentEnemy][0]);
-                    }
-                    // exit(0);
-                    break;
                 }
             }
             // std::cout << "Player X: " << player.getXcoord() << std::endl;
             // std::cout << "Player Y: " << player.getYcoord() << std::endl;
             std::cout << std::endl;
-            this->pos_y += 1.3f;
+            if (isinf(this->pos_y += 1.3f))
+                this->pos_y += 1.3f;
             this->pos_x = 0.0f;
         }
 
         this->pos_y = 0.0f;
+
         if (start_counter)
             bomb_counter++;
         if (bomb_counter == 75)
@@ -325,8 +329,6 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
         this->updateMap(player, maps[this->currentMap]);
         m_engine.updateCurrentMap(currentMap, maps[this->currentMap]);
-
-        
     }
     nextXPos = 2.6f;
     nextYPos = 2.6f;
@@ -334,20 +336,35 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     prevYpos = -2.6f;
 }
 
-bool    GraphicsEngine::in_array(int e_number, std::vector<int> enemies)
+bool    GraphicsEngine::ft_deleteEnemy(int x_pos, int y_pos, std::vector<std::vector<int> > & map)
 {
-    bool    enemy_found = false;
+    bool    enemyDeleted = false;
 
-    for (unsigned int x = 0; x < enemies.size(); x++)
+    if (map[y_pos][x_pos + 1] > 50) // CHECK RIGHT
     {
-        if (enemies[x] == e_number)
-        {
-            enemy_found = true;
-            break;
-        }
+        this->currentDeletedEnemy = map[y_pos][x_pos + 1];
+        map[y_pos][x_pos + 1] = 0;
+        enemyDeleted = true;
     }
-
-    return (enemy_found);
+    if (map[y_pos][x_pos - 1] > 50) // CHECK LEFT
+    {
+        this->currentDeletedEnemy = map[y_pos][x_pos - 1];
+        map[y_pos][x_pos - 1] = 0;
+        enemyDeleted = true;
+    }
+    if (map[y_pos - 1][x_pos] > 50) // CHECK UP
+    {
+        this->currentDeletedEnemy = map[y_pos - 1][x_pos];
+        map[y_pos - 1][x_pos] = 0;
+        enemyDeleted = true;
+    }
+    if (map[y_pos + 1][x_pos] > 50) // CHECK DOWN
+    {
+        this->currentDeletedEnemy = map[y_pos + 1][x_pos];
+        map[y_pos + 1][x_pos] = 0;
+        enemyDeleted = true;
+    }
+    return (enemyDeleted);
 }
 
 void    GraphicsEngine::modelProjectionConfig()
@@ -655,6 +672,10 @@ int    GraphicsEngine::update_bomb_range(std::vector<std::vector<int> > & map)
             // std::cout << "mapOfObjects: 2: " << mapOfObjects[i].size() << std::endl;    
             if (map[i][j] == 4)
             {
+                //SETTING BOMB COORDINATES
+                this->bombXCoord = j;
+                this->bombYCoord = i;
+
                 //INCREASING BOMB RANGE
                 if (map[i][j + 1] == 0 || map[i][j + 1] == 3 || map[i][j + 1] >= 50 || map[i][j + 1] == 2) //Updating right
                 {
@@ -670,7 +691,7 @@ int    GraphicsEngine::update_bomb_range(std::vector<std::vector<int> > & map)
                         return (10);
                     }
                 }
-                if (map[i][j - 1] == 0 || map[i][j - 1] == 3 || map[i][j - 1] >= 0|| map[i][j - 1] == 2) // Updating left
+                if (map[i][j - 1] == 0 || map[i][j - 1] == 3 || map[i][j - 1] >= 50|| map[i][j - 1] == 2) // Updating left
                 {
                     if (map[i][j - 1] == 0 || map[i][j - 1] == 2)
                         map[i][j - 1] = 4;
@@ -712,13 +733,12 @@ int    GraphicsEngine::update_bomb_range(std::vector<std::vector<int> > & map)
                         return (10);
                     }
                 }
-
                 bomb_found = 1;
                 break;
             }
         }
         if (bomb_found == 1)
-        break;
+            break;
     }
     return (-1);
 }

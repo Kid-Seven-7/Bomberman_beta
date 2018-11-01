@@ -63,7 +63,7 @@ class GraphicsEngine
         void    modelProjectionConfig();
         void    updateMap(Player player, std::vector<std::vector<int> > & map);
         std::vector<std::vector<int> >  getCurrentObjectsMap();
-        bool    in_array(int e_number, std::vector<int> enemies);
+        bool    ft_deleteEnemy(int x_pos, int y_pos, std::vector<std::vector<int> > & map);
 
         //Variable for enemy objects
         std::vector<Enemy>  enemies;
@@ -74,8 +74,8 @@ class GraphicsEngine
         Shader  ourShader;
 
         //Positions of objects
-        float   pos_x;
-        float   pos_y;
+        double   pos_x;
+        double   pos_y;
 
         //Current Map
         int     currentMap;
@@ -88,6 +88,8 @@ class GraphicsEngine
 
         //Enemy vector from map
         std::vector<std::vector<int> >    enemyNumbers;
+        int     bombXCoord;
+        int     bombYCoord;
 
         //Remove player life from banch
         void    remove_life(std::vector<std::vector<int> > & map);
@@ -106,7 +108,7 @@ class GraphicsEngine
         //ENEMY DELETION
         bool                deleteEnemy;
         unsigned int        currentEnemy;
-        std::vector<int>    destroyedEnemy;
+        int                 currentDeletedEnemy;
 };
 
 # endif
