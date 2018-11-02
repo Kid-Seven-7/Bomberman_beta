@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 13:30:40 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/17 11:55:43 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/03 00:39:21 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,7 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
     if ((mapOfObjects[y_player_pos - 1][x_player_pos] != 1) &&
       (mapOfObjects[y_player_pos - 1][x_player_pos] != 2) &&
       (mapOfObjects[y_player_pos - 1][x_player_pos] != 4) &&
-      (mapOfObjects[y_player_pos - 1][x_player_pos] != 8))
+      (mapOfObjects[y_player_pos - 1][x_player_pos] < 50))
     {
       // std::cout << "Next Pos: " << mapOfObjects[y_player_pos - 1][x_player_pos] << std::endl;
       //Storing new player position
@@ -229,7 +229,7 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
     if ((mapOfObjects[y_player_pos + 1][x_player_pos] != 1) &&
       (mapOfObjects[y_player_pos + 1][x_player_pos] != 2) &&
       (mapOfObjects[y_player_pos + 1][x_player_pos] != 4) &&
-      (mapOfObjects[y_player_pos + 1][x_player_pos] != 8))
+      (mapOfObjects[y_player_pos + 1][x_player_pos] < 50))
     {
       // std::cout << "Next Pos: " << mapOfObjects[y_player_pos - 1][x_player_pos] << std::endl;
       //Storing new player position
@@ -250,7 +250,7 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
     if ((mapOfObjects[y_player_pos][x_player_pos - 1] != 1) &&
       (mapOfObjects[y_player_pos][x_player_pos - 1] != 2) &&
       (mapOfObjects[y_player_pos][x_player_pos - 1] != 4) &&
-      (mapOfObjects[y_player_pos][x_player_pos - 1] != 8))
+      (mapOfObjects[y_player_pos][x_player_pos - 1] < 50))
     {
       //Storing new player position
       this->NewPlayerPos.clear();
@@ -269,7 +269,7 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
     if ((mapOfObjects[y_player_pos][x_player_pos + 1] != 1) &&
       (mapOfObjects[y_player_pos][x_player_pos + 1] != 2) &&
       (mapOfObjects[y_player_pos][x_player_pos + 1] != 4) &&
-      (mapOfObjects[y_player_pos][x_player_pos + 1] != 8))
+      (mapOfObjects[y_player_pos][x_player_pos + 1] < 50))
     {
       //Storing new player position
       this->NewPlayerPos.clear();

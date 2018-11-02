@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:28:24 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/19 12:11:52 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/02 23:24:00 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "bomberman.hpp"
 # include "BombClass.hpp"
 # include "Enemy.hpp"
+# include "LoadingScreen.hpp"
 # include <cmath>
 # include <unistd.h>
 # include <limits>
@@ -59,7 +60,6 @@ class GraphicsEngine
         void    glfwConfig();
         void    gladConfg();
         void    MainControl(Sound &sound, Keys &keys);
-        void    RestartGame(Sound &sound, Keys &keys, GLFWwindow  *window);
         void    callMovementFunctions(Player &player, Sound &sound, Keys &keys, std::vector<std::vector<int> > mapOfObjects);
         void    shaderConfig();
         void    modelProjectionConfig();

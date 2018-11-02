@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/19 13:09:02 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/19 14:26:09 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/03 00:20:45 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,9 @@ Enemy::Enemy(int enemyNumber, Shader shader, int level)
 
     //NEXT POINT IN THE MAP
     this->moveCounter = 0;
+
+    //PLAYER STATE
+    this->playerDead = false;
 }
 
 void    Enemy::setObjCoords(int obj_x, int obj_y)
@@ -144,7 +147,7 @@ void    Enemy::enemyAI(std::vector<std::vector<int> > & map)
    this->drawEnemy();
 }
 
-bool    Enemy::checkDirection(std::vector<std::vector<int> > map)
+bool    Enemy::checkDirection(std::vector<std::vector<int> > & map)
 {
     bool    directionSafe = false;
 
@@ -154,23 +157,47 @@ bool    Enemy::checkDirection(std::vector<std::vector<int> > map)
         {
             if (map[i][j] == this->getEnemyNumber())
             {
-                if (map[i][j + 1] == 0 && this->direction == CHECK_RIGHT) // RIGHT
+                if ((map[i][j + 1] == 0 || map[i][j + 1] == 3)  && this->direction == CHECK_RIGHT) // RIGHT
                 {
+                    if (map[i][j + 1] == 3)
+                    {
+                        map[i][j + 1] = 0;
+                        map[1][1] = 3;
+                        this->playerDead = true;
+                    }
                     directionSafe = true;
                     break;
                 }
-                if (map[i][j - 1] == 0 && this->direction == CHECK_LEFT) // LEFT
+                if ((map[i][j - 1] == 0 || map[i][j - 1] == 3) && this->direction == CHECK_LEFT) // LEFT
                 {
+                    if (map[i][j - 1] == 3)
+                    {
+                        map[i][j - 1] = 0;
+                        map[1][1] = 3;
+                        this->playerDead = true;
+                    }
                     directionSafe = true;
                     break;
                 }
-                if (map[i - 1][j] == 0 && this->direction == CHECK_UP) // UP
+                if ((map[i - 1][j] == 0 || map[i - 1][j] == 3) && this->direction == CHECK_UP) // UP
                 {
+                    if (map[i - 1][j] == 3)
+                    {
+                        map[i - 1][j] = 0;
+                        map[1][1] = 3;
+                        this->playerDead = true;
+                    }
                     directionSafe = true;
                     break;
                 }
-                if (map[i + 1][j] == 0 && this->direction == CHECK_DOWN) //DOWN
+                if ((map[i + 1][j] == 0 || map[i - 1][j] == 3) && this->direction == CHECK_DOWN) //DOWN
                 {
+                    if (map[i + 1][j] == 3)
+                    {
+                        map[i + 1][j] = 0;
+                        map[1][1] = 3;
+                        this->playerDead = true;
+                    }
                     directionSafe = true;
                     break;
                 }
@@ -181,6 +208,16 @@ bool    Enemy::checkDirection(std::vector<std::vector<int> > map)
     }
 
     return (directionSafe);
+}
+
+bool    Enemy::playerBeDead()
+{
+    return (this->playerDead);
+}
+
+void    Enemy::setPlayerState(bool state)
+{
+    this->playerDead = state;
 }
 
 void    Enemy::updateEnemyLocation(std::vector<std::vector<int> > & map)
@@ -247,6 +284,7 @@ void    Enemy::check_possible_directions(std::vector<std::vector<int> > map)
             if (map[i][j] == this->getEnemyNumber())
             {
                 this->possible_directions.clear();
+
                 if (map[i][j + 1] == 0) // RIGHT
                 {
                     this->possible_directions.push_back(CHECK_RIGHT);

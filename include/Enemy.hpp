@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/17 13:23:46 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/19 14:25:58 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/03 00:29:53 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ class   Enemy
         void    enemyAI(std::vector<std::vector<int> > & map);
         void    check_possible_directions(std::vector<std::vector<int> > map);
         int     choosePath();
-        bool    checkDirection(std::vector<std::vector<int> > map);
+        bool    checkDirection(std::vector<std::vector<int> > & map);
 
         //SETTERS AND GETTERS
         void    setEnemyDirection(int direction);
@@ -57,6 +57,9 @@ class   Enemy
         int     getObjYCoord();
         float   getXCoord();
         float   getYCoord();
+        bool    playerBeDead();
+        void    setPlayerState(bool state);
+
 
     private:
         Model   enemy_model;
@@ -89,6 +92,7 @@ class   Enemy
         bool    updateLoc;
         bool    animeLoc;
         bool    changeDirection;
+        bool    playerDead;
 };
 
 # endif

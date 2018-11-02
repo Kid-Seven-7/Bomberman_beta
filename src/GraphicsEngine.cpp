@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/19 12:08:46 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/03 00:40:56 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
 
 GraphicsEngine::~GraphicsEngine()
 {
-    glfwTerminate();
+    // glfwTerminate();
 }
 
 void    GraphicsEngine::glfwConfig()
@@ -99,6 +99,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     Player          player;
     Model_Objects   model_object;
     BombClass       bomb;
+    // LoadingScreen   restartGame;
     int             bomb_counter = 0;
     int             pause_counter = 60;
     bool            start_counter = false;
@@ -115,6 +116,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     m_engine.convertMaps();
 
     std::vector<std::vector<std::vector<int>>> maps = m_engine.getObjectsMaps();
+    std::vector<std::vector<int> > old_map = maps[this->currentMap];
 
     if (this->createEnemyArray(maps[this->currentMap], 3))
     {
@@ -234,43 +236,22 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     {
                         this->enemies[x].enemyAI(maps[this->currentMap]);
                         this->currentEnemy = x;
+
+                        if (this->enemies[x].playerBeDead())
+                        {
+                            player.setPcoords(0.0f, 0.0f);
+                            this->enemies[x].setPlayerState(false);
+                            this->lives--;
+                            this->reset_camera();
+                        }
                     }
                 }
                 player.bodyModel(this->ourShader);
                 player.headModel(this->ourShader);
 
-                if (player.checkForEnemies(maps[this->currentMap]))
-                {
-                    if (this->lives >= 1)
-                    {
-                        std::vector<int> pos = player.getPlayerPos(maps[this->currentMap]);
-                        maps[this->currentMap][pos[0]][pos[1]] = 0;
-                        reset_player = true;
-                        player.setPcoords(0.0f, 0.0f);
-                        this->reset_camera();
-                        this->lives--;
-                        this->skipMapUpdate = true;
-                        this->reset_player_location(maps[this->currentMap]);
-
-                        //RESETTING THE GAME
-                        player.~Player();
-                        model_object.~Model_Objects();
-                        bomb.~BombClass();
-                        this->restart_game = true;
-                        this->RestartGame(sound, keys, this->window);
-                    }
-                    else
-                    {
-                        //GAME OVER
-                        std::cout << std::endl;
-                        std::cout << "GAME OVER MOTHERFUCKER" << std::endl;
-                        // exit(0);
-                    }
-                }
                 if ((this->pos_x + 1.4f) <  std::numeric_limits<float>::max() && 
                     (this->pos_x + 1.4f) < std::numeric_limits<float>::infinity())
                     this->pos_x += 1.4f;
-
             }
 
             //ENEMY DEATH THINGS
@@ -278,8 +259,6 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             {
                 if (this->ft_deleteEnemy(this->bombXCoord, this->bombYCoord, maps[this->currentMap]))
                 {
-                    std::cout << std::endl;
-                    std::cout << "Current Enemy to delete: " << this->currentDeletedEnemy << std::endl;
                     for (unsigned int i = 0; i < this->enemies.size(); i++)
                     {
                         if (this->enemies.size() && this->enemies[i].getEnemyNumber() == this->currentDeletedEnemy)
@@ -410,41 +389,6 @@ bool    GraphicsEngine::ft_deleteEnemy(int x_pos, int y_pos, std::vector<std::ve
         enemyDeleted = true;
     }
     return (enemyDeleted);
-}
-
-void    GraphicsEngine::RestartGame(Sound &sound, Keys &keys, GLFWwindow  *window)
-{
-    //Destroy GLFW INSTANCE
-    glfwTerminate();
-
-    //RE-INITIALIZING 
-    if (!glfwInit())
-    {
-        std::cout << "GLFW failed to start" << std::endl;
-        exit(1);
-    }
-    this->glfwConfig();
-    this->gladConfg();
-    this->window = window;
-
-    //Variable Init
-    this->ourShader = Shader("Shaders/texture.vs", "Shaders/texture.fs");
-    glEnable(GL_DEPTH_TEST);
-
-    //Initializing current map
-    this->currentMap = 1;
-
-    //Default player direction
-    this->player_direction = -1;
-    this->lives = 2;
-    this->cam = CameraClass();
-    this->deleteEnemy = false;
-    this->currentEnemy = 0;
-    this->skipMapUpdate = false;
-    this->restart_game = false;
-
-    this->ourShader = Shader("Shaders/texture.vs", "Shaders/texture.fs");
-    this->MainControl(sound, keys);
 }
 
 void    GraphicsEngine::modelProjectionConfig()

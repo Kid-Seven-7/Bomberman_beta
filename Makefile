@@ -27,6 +27,7 @@ SRC = $(SRCPATH)main.cpp\
 			$(SRCPATH)processInput.cpp\
 			$(SRCPATH)BombClass.cpp\
 			$(SRCPATH)Enemy.cpp\
+			$(SRCPATH)LoadingScreen.cpp\
 			Image_Loader/loader.o
 
 COMP = clang++
