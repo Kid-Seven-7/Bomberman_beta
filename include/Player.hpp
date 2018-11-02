@@ -51,6 +51,8 @@ class Player
         std::vector<int>    getPrevPlayer();
         std::vector<int>    getNewPlayerPos();
         void    setPcoords(float pos_x, float pos_y);
+        bool    checkForEnemies(std::vector<std::vector<int> > map);
+        std::vector<int> getPlayerPos(std::vector<std::vector<int> >  mapOfObjects); //Search for the player
 
 
     private:
@@ -71,8 +73,7 @@ class Player
         std::vector<int>    playerPos;
         std::vector<int>    NewPlayerPos;
         std::vector<std::vector<int> > mapOfObjectsUpdate;
-        void     getPlayerPos(std::vector<std::vector<int> >  mapOfObjects); //Search for the player
-        int     checkNexPos(int direction, std::vector<std::vector<int> >  mapOfObjects); //Checking position next to the player
+        int      checkNexPos(int direction, std::vector<std::vector<int> >  mapOfObjects); //Checking position next to the player
 };
 
 # endif

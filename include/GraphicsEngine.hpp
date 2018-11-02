@@ -59,6 +59,7 @@ class GraphicsEngine
         void    glfwConfig();
         void    gladConfg();
         void    MainControl(Sound &sound, Keys &keys);
+        void    RestartGame(Sound &sound, Keys &keys, GLFWwindow  *window);
         void    callMovementFunctions(Player &player, Sound &sound, Keys &keys, std::vector<std::vector<int> > mapOfObjects);
         void    shaderConfig();
         void    modelProjectionConfig();
@@ -68,6 +69,7 @@ class GraphicsEngine
 
         //Variable for enemy objects
         std::vector<Enemy>  enemies;
+        bool    restart_game;
 
     private:
         GLFWwindow  *window;
@@ -110,6 +112,8 @@ class GraphicsEngine
         bool                deleteEnemy;
         unsigned int        currentEnemy;
         int                 currentDeletedEnemy;
+        bool                skipMapUpdate;
+        std::vector<std::vector<float> > enemyCoords;
 };
 
 # endif

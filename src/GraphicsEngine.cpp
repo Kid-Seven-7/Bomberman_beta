@@ -35,6 +35,8 @@ GraphicsEngine::GraphicsEngine()
      this->cam = CameraClass();
      this->deleteEnemy = false;
      this->currentEnemy = 0;
+     this->skipMapUpdate = false;
+     this->restart_game = false;
 }
 
 GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
@@ -53,6 +55,7 @@ GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
      this->player_direction = -1;
      this->lives = 2;
      this->cam = CameraClass();
+     this->restart_game = false;
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -105,12 +108,12 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     //Physics Engine
     // PhysicsEngine p_engine; // remove this ENGINE BEFORE SUBMISSION
 
+    
     //MapEngine Testing
     MapEngine m_engine;
     m_engine.getMapPaths("./maps");
     m_engine.convertMaps();
 
-    
     std::vector<std::vector<std::vector<int>>> maps = m_engine.getObjectsMaps();
 
     if (this->createEnemyArray(maps[this->currentMap], 3))
@@ -166,31 +169,31 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 if (maps[this->currentMap][j][i] == HARD_WALL)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    // std::cout << maps[this->currentMap][j][i] << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.hard_wall_func(this->ourShader, this->pos_x, this->pos_y);
                 }
                 if (maps[this->currentMap][j][i] == SOFT_WALL)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    // std::cout << maps[this->currentMap][j][i] << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
                 }
                 if (maps[this->currentMap][j][i] == FLOOR)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    // std::cout << maps[this->currentMap][j][i] << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
                     //TODO
                 }
                 if (maps[this->currentMap][j][i] == PLAYER_OBJ)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    // std::cout << maps[this->currentMap][j][i] << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
                     //TODO
                 }
                 if (maps[this->currentMap][j][i] == 8)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    // std::cout << maps[this->currentMap][j][i] << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.player_life_func(this->ourShader, this->pos_x, this->pos_y);
                     model_object.headModel(this->ourShader, this->pos_x, this->pos_y);
                     //TODO
@@ -198,7 +201,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 if (maps[this->currentMap][j][i] == BOMB)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    // std::cout << maps[this->currentMap][j][i] << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
                     //FIX BOMB CLASS!!!
                     //CALL ARRAY CHECK BEFORE PLACING BOMB
                     bomb.putBomb(ourShader, this->pos_x, this->pos_y, 1);
@@ -207,6 +210,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 }
                 if (enemies_updated < this->enemies.size())
                 {
+                    std::vector<float>  coords;
                     //UPDATING ENEMY POSITION COORDINATES
                     for (unsigned int x = 0; x < this->enemies.size(); x++)
                     {
@@ -214,6 +218,10 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                             (unsigned int)this->enemies[x].getObjYCoord() == j)
                         {
                             this->enemies[x].setPosCoords(this->pos_x + 1.4f, this->pos_y);
+                            coords.push_back(this->pos_x + 1.4f);
+                            coords.push_back(this->pos_y);
+
+                            this->enemyCoords.push_back(coords);
                             enemies_updated++;
                         }
                     }
@@ -226,33 +234,39 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     {
                         this->enemies[x].enemyAI(maps[this->currentMap]);
                         this->currentEnemy = x;
-                        if (this->enemies[x].getKillPlayerValue() && !reset_player)
-                        {
-                            std::cout << "LIVES: " << this->lives << std::endl;
-                            if (this->lives >= 1)
-                            {
-                                // maps[this->currentMap][j][i] = 0;
-                                this->remove_life(maps[this->currentMap]);
-                                player.setPcoords(0.0f, 0.0f);
-                                this->reset_player_location(maps[this->currentMap]);
-                                this->reset_camera();
-                                reset_player = true;
-                                this->lives--;
-                                this->enemies[x].setKillPlayerValue(false);
-                            }
-                            else
-                            {
-                                //GAME OVER
-                                std::cout << std::endl;
-                                std::cout << "LIVES: " << this->lives << std::endl;
-                                std::cout << "GAME OVER MOTHERFUCKER Muhaha" << std::endl;
-                                exit(0);
-                            }
-                        }
                     }
                 }
                 player.bodyModel(this->ourShader);
                 player.headModel(this->ourShader);
+
+                if (player.checkForEnemies(maps[this->currentMap]))
+                {
+                    if (this->lives >= 1)
+                    {
+                        std::vector<int> pos = player.getPlayerPos(maps[this->currentMap]);
+                        maps[this->currentMap][pos[0]][pos[1]] = 0;
+                        reset_player = true;
+                        player.setPcoords(0.0f, 0.0f);
+                        this->reset_camera();
+                        this->lives--;
+                        this->skipMapUpdate = true;
+                        this->reset_player_location(maps[this->currentMap]);
+
+                        //RESETTING THE GAME
+                        player.~Player();
+                        model_object.~Model_Objects();
+                        bomb.~BombClass();
+                        this->restart_game = true;
+                        this->RestartGame(sound, keys, this->window);
+                    }
+                    else
+                    {
+                        //GAME OVER
+                        std::cout << std::endl;
+                        std::cout << "GAME OVER MOTHERFUCKER" << std::endl;
+                        // exit(0);
+                    }
+                }
                 if ((this->pos_x + 1.4f) <  std::numeric_limits<float>::max() && 
                     (this->pos_x + 1.4f) < std::numeric_limits<float>::infinity())
                     this->pos_x += 1.4f;
@@ -300,12 +314,15 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             {
                 if (this->lives >= 1)
                 {
+                    
                     this->remove_life(maps[this->currentMap]);
                     player.setPcoords(0.0f, 0.0f);
                     this->reset_player_location(maps[this->currentMap]);
                     this->reset_camera();
                     reset_player = true;
                     this->lives--;
+
+                    
 
                     //Reseting bomb after player suicide
                     bomb_counter = 0;
@@ -350,8 +367,13 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
         }
         if (pause_counter >= 60)
             this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
-        this->updateMap(player, maps[this->currentMap]);
-        m_engine.updateCurrentMap(currentMap, maps[this->currentMap]);
+        if (!this->skipMapUpdate)
+        {
+            this->updateMap(player, maps[this->currentMap]);
+            m_engine.updateCurrentMap(currentMap, maps[this->currentMap]);
+        }
+        else
+            this->skipMapUpdate = false;
     }
     nextXPos = 2.6f;
     nextYPos = 2.6f;
@@ -388,6 +410,41 @@ bool    GraphicsEngine::ft_deleteEnemy(int x_pos, int y_pos, std::vector<std::ve
         enemyDeleted = true;
     }
     return (enemyDeleted);
+}
+
+void    GraphicsEngine::RestartGame(Sound &sound, Keys &keys, GLFWwindow  *window)
+{
+    //Destroy GLFW INSTANCE
+    glfwTerminate();
+
+    //RE-INITIALIZING 
+    if (!glfwInit())
+    {
+        std::cout << "GLFW failed to start" << std::endl;
+        exit(1);
+    }
+    this->glfwConfig();
+    this->gladConfg();
+    this->window = window;
+
+    //Variable Init
+    this->ourShader = Shader("Shaders/texture.vs", "Shaders/texture.fs");
+    glEnable(GL_DEPTH_TEST);
+
+    //Initializing current map
+    this->currentMap = 1;
+
+    //Default player direction
+    this->player_direction = -1;
+    this->lives = 2;
+    this->cam = CameraClass();
+    this->deleteEnemy = false;
+    this->currentEnemy = 0;
+    this->skipMapUpdate = false;
+    this->restart_game = false;
+
+    this->ourShader = Shader("Shaders/texture.vs", "Shaders/texture.fs");
+    this->MainControl(sound, keys);
 }
 
 void    GraphicsEngine::modelProjectionConfig()
@@ -659,8 +716,6 @@ void    GraphicsEngine::remove_life(std::vector<std::vector<int> > & map)
 
 void    GraphicsEngine::reset_player_location(std::vector<std::vector<int> > & map)
 {
-    int player_found = 0;
-
     for (unsigned int i = 0; i < map.size(); i++)
     {
         for (unsigned int j = 0; j < map[i].size(); j++)
@@ -669,13 +724,8 @@ void    GraphicsEngine::reset_player_location(std::vector<std::vector<int> > & m
             if (map[i][j] == PLAYER_OBJ)
             {
                 map[i][j] = FLOOR;
-                map[1][1] = PLAYER_OBJ;
-                player_found = 1;
-                break;
             }
         }
-        if (player_found == 1)
-            break;
     }
 }
 

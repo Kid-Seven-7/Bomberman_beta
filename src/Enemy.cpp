@@ -46,7 +46,6 @@ Enemy::Enemy(int enemyNumber, Shader shader, int level)
 
     //NEXT POINT IN THE MAP
     this->moveCounter = 0;
-    this->killPlayer = false;   
 }
 
 void    Enemy::setObjCoords(int obj_x, int obj_y)
@@ -155,31 +154,23 @@ bool    Enemy::checkDirection(std::vector<std::vector<int> > map)
         {
             if (map[i][j] == this->getEnemyNumber())
             {
-                if ((map[i][j + 1] == 0 || map[i][j + 1] == 3) && this->direction == CHECK_RIGHT) // RIGHT
+                if (map[i][j + 1] == 0 && this->direction == CHECK_RIGHT) // RIGHT
                 {
-                    if (map[i][j + 1] == 3)
-                        this->killPlayer = true;
                     directionSafe = true;
                     break;
                 }
-                if ((map[i][j - 1] == 0 || map[i][j - 1] == 3) && this->direction == CHECK_LEFT) // LEFT
+                if (map[i][j - 1] == 0 && this->direction == CHECK_LEFT) // LEFT
                 {
-                    if (map[i][j - 1] == 3)
-                        this->killPlayer = true;
                     directionSafe = true;
                     break;
                 }
-                if ((map[i - 1][j] == 0 || map[i - 1][j] == 3) && this->direction == CHECK_UP) // UP
+                if (map[i - 1][j] == 0 && this->direction == CHECK_UP) // UP
                 {
-                    if (map[i - 1][j] == 3)
-                        this->killPlayer = true;
                     directionSafe = true;
                     break;
                 }
-                if ((map[i + 1][j] == 0 || map[i + 1][j] == 3) && this->direction == CHECK_DOWN) //DOWN
+                if (map[i + 1][j] == 0 && this->direction == CHECK_DOWN) //DOWN
                 {
-                    if (map[i + 1][j] == 3)
-                        this->killPlayer = true;
                     directionSafe = true;
                     break;
                 }
@@ -256,22 +247,22 @@ void    Enemy::check_possible_directions(std::vector<std::vector<int> > map)
             if (map[i][j] == this->getEnemyNumber())
             {
                 this->possible_directions.clear();
-                if (map[i][j + 1] == 0 || map[i][j + 1] == 3) // RIGHT
+                if (map[i][j + 1] == 0) // RIGHT
                 {
                     this->possible_directions.push_back(CHECK_RIGHT);
                     no_path = false;
                 }
-                if (map[i][j - 1] == 0 || map[i][j - 1] == 3) // LEFT
+                if (map[i][j - 1] == 0) // LEFT
                 {
                     this->possible_directions.push_back(CHECK_LEFT);
                     no_path = false;
                 }
-                if (map[i - 1][j] == 0 || map[i - 1][j] == 3) // UP
+                if (map[i - 1][j] == 0) // UP
                 {
                     this->possible_directions.push_back(CHECK_UP);
                     no_path = false;
                 }
-                if (map[i + 1][j] == 0 || map[i + 1][j] == 3) // DOWN
+                if (map[i + 1][j] == 0) // DOWN
                 {
                     this->possible_directions.push_back(CHECK_DOWN);
                     no_path = false;
@@ -304,13 +295,3 @@ int     Enemy::getObjYCoord() { return (this->obj_pos_y); }
 float   Enemy::getXCoord() { return (this->pos_x); }
 
 float   Enemy::getYCoord() { return (this->pos_y); }
-
-void    Enemy::setKillPlayerValue(bool  killPlayer)
-{
-    this->killPlayer = killPlayer;
-}
-
-bool    Enemy::getKillPlayerValue()
-{
-    return (this->killPlayer);
-}

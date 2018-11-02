@@ -58,9 +58,6 @@ class   Enemy
         float   getXCoord();
         float   getYCoord();
 
-        bool    getKillPlayerValue();
-        void    setKillPlayerValue(bool killPlayer);
-
     private:
         Model   enemy_model;
         Shader  shader;
@@ -92,7 +89,6 @@ class   Enemy
         bool    updateLoc;
         bool    animeLoc;
         bool    changeDirection;
-        bool    killPlayer;
 };
 
 # endif

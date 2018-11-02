@@ -142,9 +142,10 @@ int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std
 }
 
 //Getting current position of the player
-void  Player::getPlayerPos(std::vector<std::vector<int> >  mapOfObjects)
+std::vector<int>  Player::getPlayerPos(std::vector<std::vector<int> >  mapOfObjects)
 {
   int player_found = 0;
+
   for (unsigned int i = 0; i < mapOfObjects.size(); i++)
   {
     for (unsigned int j = 0; j < mapOfObjects[i].size(); j++)
@@ -161,6 +162,35 @@ void  Player::getPlayerPos(std::vector<std::vector<int> >  mapOfObjects)
     if (player_found == 1)
       break;
   }
+  return (this->playerPos);
+}
+
+bool  Player::checkForEnemies(std::vector<std::vector<int> > map)
+{
+  bool  player_found = false;
+  
+  for (unsigned int i = 0; i < map.size(); i++)
+  {
+    for (unsigned int j = 0; j < map[i].size(); j++)
+    {
+      if (map[i][j] == 3)
+      {
+        if (map[i][j + 1] >= 50) // CHECK RIGHT
+          return (true);
+        else if (map[i][j - 1] >= 50) // CHECK LEFT
+          return (true);
+        else if (map[i - 1][j] >= 50) // CHECK UP
+          return (true);
+        else if (map[i + 1][j] >= 50) // CHECK DOWN
+          return (true);
+        player_found = true;
+        break;
+      }
+    }
+    if (player_found)
+      break;
+  }
+  return (false);
 }
 
 int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOfObjects)
