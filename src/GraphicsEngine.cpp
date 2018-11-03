@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/11/03 02:24:51 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/03 03:09:45 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,11 +105,12 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     bool            start_counter = false;
     bool            reset_player = false;
     unsigned int    enemies_updated = 0;
+    bool            resetAllObjs = false;
+    int             resetAllCounter = 60;
 
     //Physics Engine
     // PhysicsEngine p_engine; // remove this ENGINE BEFORE SUBMISSION
 
-    
     //MapEngine Testing
     MapEngine m_engine;
     m_engine.getMapPaths("./maps");
@@ -232,18 +233,23 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 {
                     // exit(5);
                     //ENEMY MOVEMENTS SHOULD ALL HAPPEN HERE
-                    for (unsigned int x = 0; x < this->enemies.size(); x++)
-                    {
-                        this->enemies[x].enemyAI(maps[this->currentMap]);
-                        this->currentEnemy = x;
 
-                        if (this->enemies[x].playerBeDead())
+                    if (!resetAllObjs)
+                    {
+                        for (unsigned int x = 0; x < this->enemies.size(); x++)
                         {
-                            player.setPcoords(0.0f, 0.0f);
-                            this->enemies[x].setPlayerState(false);
-                            this->reset_camera();
-                            reset_player = true;
-                            this->remove_life(maps[this->currentMap]);
+                            this->enemies[x].enemyAI(maps[this->currentMap]);
+                            this->currentEnemy = x;
+
+                            if (this->enemies[x].playerBeDead())
+                            {
+                                player.setPcoords(0.0f, 0.0f);
+                                this->enemies[x].setPlayerState(false);
+                                this->reset_camera();
+                                reset_player = true;
+                                this->remove_life(maps[this->currentMap]);
+                                resetAllObjs = true;
+                            }
                         }
                     }
                 }
@@ -256,25 +262,26 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             }
 
             //ENEMY DEATH THINGS
-            // if (bomb_counter == 75 && this->deleteEnemy)
-            // {
-            //     if (this->ft_deleteEnemy(this->bombXCoord, this->bombYCoord, maps[this->currentMap]))
-            //     {
-            //         for (unsigned int i = 0; i < this->enemies.size(); i++)
-            //         {
-            //             if (this->enemies.size() && this->enemies[i].getEnemyNumber() == this->currentDeletedEnemy)
-            //             {
-            //                 if (this->enemies.size() == 0)
-            //                     break;
-            //                 this->enemies.erase(this->enemies.begin() + i);
-            //                 // if (this->enemyNumbers.size())
-            //                 //     this->enemyNumbers.erase(this->enemyNumbers.begin() + 1);
-            //                 enemies_updated--;
-            //             }
-            //         }
-            //     }
-            //     this->deleteEnemy = false;
-            // }
+            if (bomb_counter == 75 && this->deleteEnemy)
+            {
+                if (this->ft_deleteEnemy(this->bombXCoord, this->bombYCoord, maps[this->currentMap]))
+                {
+                    for (unsigned int i = 0; i < this->enemies.size(); i++)
+                    {
+                        if (this->enemies.size() && this->enemies[i].getEnemyNumber() == this->currentDeletedEnemy)
+                        {
+                            if (this->enemies.size() == 0)
+                                break;
+                            this->enemies.erase(this->enemies.begin() + i);
+                            // if (this->enemyNumbers.size())
+                            //     this->enemyNumbers.erase(this->enemyNumbers.begin() + 1);
+                            enemies_updated--;
+                        }
+                    }
+                }
+                this->deleteEnemy = false;
+            }
+
             // std::cout << "Player X: " << player.getXcoord() << std::endl;
             // std::cout << "Player Y: " << player.getYcoord() << std::endl;
             std::cout << std::endl;
@@ -288,6 +295,12 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
 
         if (start_counter)
             bomb_counter++;
+        if (lives < 1)
+        {
+            std::cout << std::endl;
+            std::cout << "GAME OVER MOTHERFUCKER" << std::endl;
+            exit(0);
+        }
         if (bomb_counter == 75)
         {
             if (this->update_bomb_range(maps[this->currentMap]) == 3)
@@ -334,6 +347,17 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 this->remove_bomb(maps[this->currentMap]);
             }
         }
+        if (resetAllObjs)
+        {
+            if (resetAllCounter > 1)
+                resetAllCounter--;
+            else
+            {
+                resetAllCounter = 60;
+                resetAllObjs = false;
+                usleep(9999999);
+            }
+        }
         glfwSwapBuffers(this->window);
         glfwPollEvents();
 
@@ -342,8 +366,9 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             if (!(start_counter) && (this->array_check(maps[this->currentMap])))
                 start_counter = true;
         }
-        if (pause_counter >= 60)
-            this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
+        if (pause_counter >= 60) // TODO :: ADD ANOTHER IF TO CHECK FOR THE PLAYER RESET AFTER ENEMY ATTACK
+            if (resetAllCounter >= 60)
+                this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
         if (!this->skipMapUpdate)
         {
             this->updateMap(player, maps[this->currentMap]);
