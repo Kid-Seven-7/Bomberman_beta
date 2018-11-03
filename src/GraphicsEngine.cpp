@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/11/03 00:40:56 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/03 02:24:51 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     std::vector<std::vector<std::vector<int>>> maps = m_engine.getObjectsMaps();
     std::vector<std::vector<int> > old_map = maps[this->currentMap];
 
-    if (this->createEnemyArray(maps[this->currentMap], 3))
+    if (this->createEnemyArray(maps[this->currentMap], 4))
     {
         //CHECKING IF THERE ARE ENEMIES ON THE MAP OF OBJS
         if (this->enemyNumbers.size() < 1)
@@ -241,8 +241,9 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                         {
                             player.setPcoords(0.0f, 0.0f);
                             this->enemies[x].setPlayerState(false);
-                            this->lives--;
                             this->reset_camera();
+                            reset_player = true;
+                            this->remove_life(maps[this->currentMap]);
                         }
                     }
                 }
@@ -255,25 +256,25 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             }
 
             //ENEMY DEATH THINGS
-            if (bomb_counter == 75 && this->deleteEnemy)
-            {
-                if (this->ft_deleteEnemy(this->bombXCoord, this->bombYCoord, maps[this->currentMap]))
-                {
-                    for (unsigned int i = 0; i < this->enemies.size(); i++)
-                    {
-                        if (this->enemies.size() && this->enemies[i].getEnemyNumber() == this->currentDeletedEnemy)
-                        {
-                            if (this->enemies.size() == 0)
-                                break;
-                            this->enemies.erase(this->enemies.begin() + i);
-                            // if (this->enemyNumbers.size())
-                            //     this->enemyNumbers.erase(this->enemyNumbers.begin() + 1);
-                            enemies_updated--;
-                        }
-                    }
-                }
-                this->deleteEnemy = false;
-            }
+            // if (bomb_counter == 75 && this->deleteEnemy)
+            // {
+            //     if (this->ft_deleteEnemy(this->bombXCoord, this->bombYCoord, maps[this->currentMap]))
+            //     {
+            //         for (unsigned int i = 0; i < this->enemies.size(); i++)
+            //         {
+            //             if (this->enemies.size() && this->enemies[i].getEnemyNumber() == this->currentDeletedEnemy)
+            //             {
+            //                 if (this->enemies.size() == 0)
+            //                     break;
+            //                 this->enemies.erase(this->enemies.begin() + i);
+            //                 // if (this->enemyNumbers.size())
+            //                 //     this->enemyNumbers.erase(this->enemyNumbers.begin() + 1);
+            //                 enemies_updated--;
+            //             }
+            //         }
+            //     }
+            //     this->deleteEnemy = false;
+            // }
             // std::cout << "Player X: " << player.getXcoord() << std::endl;
             // std::cout << "Player Y: " << player.getYcoord() << std::endl;
             std::cout << std::endl;
@@ -299,9 +300,6 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     this->reset_player_location(maps[this->currentMap]);
                     this->reset_camera();
                     reset_player = true;
-                    this->lives--;
-
-                    
 
                     //Reseting bomb after player suicide
                     bomb_counter = 0;
@@ -650,6 +648,7 @@ void    GraphicsEngine::remove_life(std::vector<std::vector<int> > & map)
             {
                 map[i][j] = FLOOR;
                 player_life_found = 1;
+                this->lives--;
                 break;
             }
         }
