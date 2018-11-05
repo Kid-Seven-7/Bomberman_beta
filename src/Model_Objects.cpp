@@ -22,6 +22,8 @@ Model_Objects::Model_Objects()
     this->base_model = Model("bomberman_assets/timeship/BASE.obj");
     this->player_life = Model("bomberman_assets/player/bb8/bb8-body-to_scale1.obj");
     this->player_head = Model("bomberman_assets/player/bb8/bb8-head-to_scale.obj");
+    this->portal_door = Model("bomberman_assets/misc/portal1.obj");
+    this->clock_model = Model("bomberman_assets/clock/clock.obj");
 }
 
 Model_Objects::~Model_Objects() {}
@@ -127,7 +129,7 @@ void    Model_Objects::Engine(Shader shader, float pos_x, float pos_y)
     //bb_head positions
     engine_model = glm::translate(engine_model, glm::vec3(pos_x, 4.0f, pos_y));
 
-    //Resising the bb_head model
+    //Resizing the bb_head model
     engine_model = glm::scale(engine_model, glm::vec3(2.0f, 2.0f, 2.0f));
 
     //engine_model rotation
@@ -137,4 +139,39 @@ void    Model_Objects::Engine(Shader shader, float pos_x, float pos_y)
     //Drawing the bb_head model
     shader.setMat4("model", engine_model);
     this->engine_model.Draw(shader);
+}
+
+//PORTAL DOOR
+void    Model_Objects::PortalDoor(Shader shader, float pos_x, float pos_y)
+{
+    glm::mat4   portal_door = glm::mat4(1.0f);
+
+    //Softwalls positions
+    portal_door = glm::translate(portal_door, glm::vec3(-1.9f + pos_x, -1.1f, -1.9f + pos_y));
+
+    //Resising the soft wall model
+    portal_door = glm::scale(portal_door, glm::vec3(0.5f, 0.5f, 0.5f));
+
+    portal_door = glm::rotate(portal_door, (float)glfwGetTime() * 35.0f ,glm::vec3(0.0f, 1.0f, 0.0f));
+
+    //Drawing the soft wall model
+    shader.setMat4("model", portal_door);
+    this->portal_door.Draw(shader);
+}
+
+void    Model_Objects::ClockModel(Shader shader, float pos_x, float pos_y)
+{
+    glm::mat4   clock_ = glm::mat4(1.0f);
+
+    //Clock positions
+    clock_ = glm::translate(clock_, glm::vec3(-1.9f + pos_x, -1.1f, -1.9f + pos_y));
+
+    //Resising the clock model
+    clock_ = glm::scale(clock_, glm::vec3(0.5f, 0.5f, 0.5f));
+
+    clock_ = glm::rotate(clock_, (float)glfwGetTime() * 35.0f ,glm::vec3(0.0f, 1.0f, 0.0f));
+
+    //Drawing the soft wall model
+    shader.setMat4("model", clock_);
+    this->clock_model.Draw(shader);
 }

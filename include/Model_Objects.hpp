@@ -28,7 +28,9 @@ class Model_Objects
         void    base_func(Shader shader);
         void    Engine(Shader shader, float pos_x, float pos_y);
         void    headModel(Shader shader, float pos_x, float pos_y);
-
+        void    PortalDoor(Shader shader, float pos_x, float pos_y);
+        void    ClockModel(Shader shader, float pos_x, float pos_y);
+        void    setPortalScale(bool state);
 
     private:
         //Model variables
@@ -39,6 +41,8 @@ class Model_Objects
         Model   base_model;
         Model   player_life;
         Model   player_head;
+        Model   portal_door;
+        Model   clock_model;
 };
 
 # endif

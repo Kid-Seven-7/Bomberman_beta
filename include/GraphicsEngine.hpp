@@ -109,10 +109,12 @@ class GraphicsEngine
         int     update_bomb_range(std::vector<std::vector<int> > & map);
 
         //ENEMY DELETION
+        bool                deletePlayer;
         bool                deleteEnemy;
         unsigned int        currentEnemy;
         int                 currentDeletedEnemy;
         bool                skipMapUpdate;
+        bool                isDoor;
         std::vector<std::vector<float> > enemyCoords;
 };
 

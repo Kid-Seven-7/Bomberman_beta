@@ -28,20 +28,22 @@ GraphicsEngine::GraphicsEngine()
 
     //Initializing current map
     this->currentMap = 1;
+    this->deletePlayer = false;
 
     //Default player direction
      this->player_direction = -1;
-     this->lives = 2;
      this->cam = CameraClass();
      this->deleteEnemy = false;
      this->currentEnemy = 0;
      this->skipMapUpdate = false;
      this->restart_game = false;
+     this->isDoor = false;
 }
 
 GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
 {
 	this->window = window;
+    // this->glfwConfig();
 	this->gladConfg();
 
 	//Variable Init
@@ -50,12 +52,17 @@ GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
 
 	//Initializing current map
 	this->currentMap = 1;
+    this->deletePlayer = false;
+
 
     //Default player direction
      this->player_direction = -1;
-     this->lives = 2;
      this->cam = CameraClass();
+     this->deleteEnemy = false;
+     this->currentEnemy = 0;
+     this->skipMapUpdate = false;
      this->restart_game = false;
+     this->isDoor = false;
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -181,6 +188,17 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     std::cout << maps[this->currentMap][j][i] << " ";
                     model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
                 }
+                if (maps[this->currentMap][j][i] == DOOR)
+                {
+                    // std::cout << this->pos_x << " " << this->pos_y << " ";
+                    std::cout << maps[this->currentMap][j][i] << " ";
+                    if (this->isDoor)
+                    {
+                        model_object.PortalDoor(this->ourShader, this->pos_x, this->pos_y);
+                    }
+                    else
+                        model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
+                }
                 if (maps[this->currentMap][j][i] == FLOOR)
                 {
                     // std::cout << this->pos_x << " " << this->pos_y << " ";
@@ -249,6 +267,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                                 reset_player = true;
                                 this->remove_life(maps[this->currentMap]);
                                 resetAllObjs = true;
+                                this->deletePlayer = true;
                             }
                         }
                     }
@@ -295,7 +314,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
 
         if (start_counter)
             bomb_counter++;
-        if (lives < 1)
+        if (this->deletePlayer)
         {
             std::cout << std::endl;
             std::cout << "GAME OVER MOTHERFUCKER" << std::endl;
@@ -305,27 +324,22 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
         {
             if (this->update_bomb_range(maps[this->currentMap]) == 3)
             {
-                if (this->lives >= 1)
-                {
-                    
-                    this->remove_life(maps[this->currentMap]);
-                    player.setPcoords(0.0f, 0.0f);
-                    this->reset_player_location(maps[this->currentMap]);
-                    this->reset_camera();
-                    reset_player = true;
+                this->remove_life(maps[this->currentMap]);
+                player.setPcoords(0.0f, 0.0f);
+                this->reset_player_location(maps[this->currentMap]);
+                this->reset_camera();
+                reset_player = true;
+                this->deletePlayer = true;
 
-                    //Reseting bomb after player suicide
-                    bomb_counter = 0;
-                    start_counter = false;
-                    this->remove_bomb(maps[this->currentMap]);
-                }
-                else
-                {
-                    //GAME OVER
-                    std::cout << std::endl;
-                    std::cout << "GAME OVER MOTHERFUCKER" << std::endl;
-                    exit(0);
-                }
+                //Reseting bomb after player suicide
+                bomb_counter = 0;
+                start_counter = false;
+                this->remove_bomb(maps[this->currentMap]);
+                
+                //GAME OVER
+                std::cout << std::endl;
+                std::cout << "GAME OVER MOTHERFUCKER" << std::endl;
+                exit(0);
             }
         }
         if (bomb_counter >= 100)
@@ -355,7 +369,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             {
                 resetAllCounter = 60;
                 resetAllObjs = false;
-                usleep(9999999);
+                // usleep(999999);
             }
         }
         glfwSwapBuffers(this->window);
@@ -673,7 +687,6 @@ void    GraphicsEngine::remove_life(std::vector<std::vector<int> > & map)
             {
                 map[i][j] = FLOOR;
                 player_life_found = 1;
-                this->lives--;
                 break;
             }
         }
@@ -718,7 +731,7 @@ int    GraphicsEngine::update_bomb_range(std::vector<std::vector<int> > & map)
                 this->bombYCoord = i;
 
                 //INCREASING BOMB RANGE
-                if (map[i][j + 1] == 0 || map[i][j + 1] == 3 || map[i][j + 1] >= 50 || map[i][j + 1] == 2) //Updating right
+                if (map[i][j + 1] == 0 || map[i][j + 1] == 3 || map[i][j + 1] >= 50 || map[i][j + 1] == DOOR || map[i][j + 1] == 2) //Updating right
                 {
                     if (map[i][j + 1] == 0 || map[i][j + 1] == 2)
                         map[i][j + 1] = 4;
@@ -731,8 +744,10 @@ int    GraphicsEngine::update_bomb_range(std::vector<std::vector<int> > & map)
                         this->deleteEnemy = true;
                         return (10);
                     }
+                    if (map[i][j + 1] == DOOR)
+                        this->isDoor = true;
                 }
-                if (map[i][j - 1] == 0 || map[i][j - 1] == 3 || map[i][j - 1] >= 50|| map[i][j - 1] == 2) // Updating left
+                if (map[i][j - 1] == 0 || map[i][j - 1] == 3 || map[i][j - 1] >= 50|| map[i][j - 1] == DOOR || map[i][j - 1] == 2) // Updating left
                 {
                     if (map[i][j - 1] == 0 || map[i][j - 1] == 2)
                         map[i][j - 1] = 4;
@@ -745,8 +760,10 @@ int    GraphicsEngine::update_bomb_range(std::vector<std::vector<int> > & map)
                         this->deleteEnemy = true;
                         return (10);
                     }
+                    if (map[i][j - 1] == DOOR)
+                        this->isDoor = true;
                 }
-                if (map[i + 1][j] == 0 || map[i + 1][j] == 3 || map[i + 1][j] >= 50 || map[i + 1][j] == 2) //Updating down
+                if (map[i + 1][j] == 0 || map[i + 1][j] == 3 || map[i + 1][j] >= 50 || map[i + 1][j] == DOOR || map[i + 1][j] == 2) //Updating down
                 {
                     if (map[i + 1][j] == 0 || map[i + 1][j] == 2)
                         map[i + 1][j] = 4;
@@ -759,8 +776,10 @@ int    GraphicsEngine::update_bomb_range(std::vector<std::vector<int> > & map)
                         this->deleteEnemy = true;
                         return (10);
                     }
+                    if (map[i + 1][j] == DOOR)
+                        this->isDoor = true;
                 }
-                if (map[i - 1][j] == 0 || map[i - 1][j] == 3 || map[i - 1][j] >= 50 || map[i - 1][j] == 2) //Updating up
+                if (map[i - 1][j] == 0 || map[i - 1][j] == 3 || map[i - 1][j] >= 50 || map[i - 1][j] == DOOR || map[i - 1][j] == 2) //Updating up
                 {
                     if (map[i - 1][j] == 0 || map[i - 1][j] == 2)
                         map[i - 1][j] = 4;
@@ -773,6 +792,8 @@ int    GraphicsEngine::update_bomb_range(std::vector<std::vector<int> > & map)
                         this->deleteEnemy = true;
                         return (10);
                     }
+                    if (map[i - 1][j] == DOOR)
+                        this->isDoor = true;
                 }
                 bomb_found = 1;
                 break;
