@@ -53,6 +53,7 @@ class Player
         void    setPcoords(float pos_x, float pos_y);
         bool    checkForEnemies(std::vector<std::vector<int> > map);
         std::vector<int> getPlayerPos(std::vector<std::vector<int> >  mapOfObjects); //Search for the player
+        void    setNextStage(int n_enemies, bool & changeStage, std::vector<std::vector<int> > map);
 
 
     private:
@@ -68,12 +69,16 @@ class Player
         float   move_x;
         float   move_y;
         bool    bounce;
+        int     currentDirection;
 
         //Checking if movement is possible
         std::vector<int>    playerPos;
         std::vector<int>    NewPlayerPos;
         std::vector<std::vector<int> > mapOfObjectsUpdate;
         int      checkNexPos(int direction, std::vector<std::vector<int> >  mapOfObjects); //Checking position next to the player
+
+        //SETTING NEXT STAGE
+        int n_enemies;
 };
 
 # endif

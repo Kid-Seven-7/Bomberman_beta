@@ -116,6 +116,7 @@ class GraphicsEngine
         bool                skipMapUpdate;
         bool                isDoor;
         std::vector<std::vector<float> > enemyCoords;
+        bool    changeStage;
 };
 
 # endif

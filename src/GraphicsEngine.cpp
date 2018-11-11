@@ -38,6 +38,7 @@ GraphicsEngine::GraphicsEngine()
      this->skipMapUpdate = false;
      this->restart_game = false;
      this->isDoor = false;
+     this->changeStage = false;
 }
 
 GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
@@ -63,6 +64,7 @@ GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
      this->skipMapUpdate = false;
      this->restart_game = false;
      this->isDoor = false;
+     this->changeStage = false;
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -149,247 +151,275 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     // usleep(100000);
     while (!glfwWindowShouldClose(this->window))
     {
-        //input process
-        if (processInput(keys))
-        {
-			m_engine.dumpCurrentMap(this->currentMap);
-			std::ofstream file("gameState/playerCoords.txt");
-			file << "Player data\n" << player.getXcoord() << ":" << player.getYcoord() << std::endl;
-			cam.saveinfo();
-			displayStart(sound, keys, window);
-			glEnable(GL_DEPTH_TEST);
-		}
-
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        //Start of rendering...
-        this->modelProjectionConfig();
-        model_object.universe_func(ourShader);
-        model_object.Engine(ourShader, 3.95f, -28.5f);
-        model_object.Engine(ourShader, 4.15f, 35.5f);
-        model_object.Engine(ourShader, 37.5f, 4.15f);
-        model_object.Engine(ourShader, -27.5f, 4.15f);
-        model_object.base_func(ourShader);
-
-        for (unsigned int j = 0; j < maps[this->currentMap].size(); j++)
+        if (!this->changeStage)
         {
-            for (unsigned int i = 0; i < maps[this->currentMap][j].size(); i++)
+            //input process
+            if (processInput(keys))
             {
-                if (maps[this->currentMap][j][i] == HARD_WALL)
+                m_engine.dumpCurrentMap(this->currentMap);
+                std::ofstream file("gameState/playerCoords.txt");
+                file << "Player data\n" << player.getXcoord() << ":" << player.getYcoord() << std::endl;
+                cam.saveinfo();
+                displayStart(sound, keys, window);
+                glEnable(GL_DEPTH_TEST);
+            }
+
+
+            //Start of rendering...
+            this->modelProjectionConfig();
+            model_object.universe_func(ourShader);
+            model_object.Engine(ourShader, 3.95f, -28.5f);
+            model_object.Engine(ourShader, 4.15f, 35.5f);
+            model_object.Engine(ourShader, 37.5f, 4.15f);
+            model_object.Engine(ourShader, -27.5f, 4.15f);
+            model_object.base_func(ourShader);
+
+            for (unsigned int j = 0; j < maps[this->currentMap].size(); j++)
+            {
+                for (unsigned int i = 0; i < maps[this->currentMap][j].size(); i++)
                 {
-                    // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
-                    model_object.hard_wall_func(this->ourShader, this->pos_x, this->pos_y);
-                }
-                if (maps[this->currentMap][j][i] == SOFT_WALL)
-                {
-                    // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
-                    model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
-                }
-                if (maps[this->currentMap][j][i] == DOOR)
-                {
-                    // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
-                    if (this->isDoor)
+                    if (maps[this->currentMap][j][i] == HARD_WALL)
                     {
-                        model_object.PortalDoor(this->ourShader, this->pos_x, this->pos_y);
+                        // std::cout << this->pos_x << " " << this->pos_y << " ";
+                        std::cout << maps[this->currentMap][j][i] << " ";
+                        model_object.hard_wall_func(this->ourShader, this->pos_x, this->pos_y);
                     }
-                    else
+                    if (maps[this->currentMap][j][i] == SOFT_WALL)
+                    {
+                        // std::cout << this->pos_x << " " << this->pos_y << " ";
+                        std::cout << maps[this->currentMap][j][i] << " ";
                         model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
-                }
-                if (maps[this->currentMap][j][i] == FLOOR)
-                {
-                    // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
-                    //TODO
-                }
-                if (maps[this->currentMap][j][i] == PLAYER_OBJ)
-                {
-                    // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
-                    //TODO
-                }
-                if (maps[this->currentMap][j][i] == 8)
-                {
-                    // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
-                    model_object.player_life_func(this->ourShader, this->pos_x, this->pos_y);
-                    model_object.headModel(this->ourShader, this->pos_x, this->pos_y);
-                    //TODO
-                }
-                if (maps[this->currentMap][j][i] == BOMB)
-                {
-                    // std::cout << this->pos_x << " " << this->pos_y << " ";
-                    std::cout << maps[this->currentMap][j][i] << " ";
-                    //FIX BOMB CLASS!!!
-                    //CALL ARRAY CHECK BEFORE PLACING BOMB
-                    bomb.putBomb(ourShader, this->pos_x, this->pos_y, 1);
-                    if (bomb_counter >= 75)
-                        bomb.putBomb(ourShader, this->pos_x, this->pos_y, 2);
-                }
-                if (enemies_updated < this->enemies.size())
-                {
-                    std::vector<float>  coords;
-                    //UPDATING ENEMY POSITION COORDINATES
-                    for (unsigned int x = 0; x < this->enemies.size(); x++)
-                    {
-                        if ((unsigned int)this->enemies[x].getObjXCoord() == i && 
-                            (unsigned int)this->enemies[x].getObjYCoord() == j)
-                        {
-                            this->enemies[x].setPosCoords(this->pos_x + 1.4f, this->pos_y);
-                            coords.push_back(this->pos_x + 1.4f);
-                            coords.push_back(this->pos_y);
-
-                            this->enemyCoords.push_back(coords);
-                            enemies_updated++;
-                        }
                     }
-                }
-                if (enemies_updated == this->enemies.size())
-                {
-                    // exit(5);
-                    //ENEMY MOVEMENTS SHOULD ALL HAPPEN HERE
-
-                    if (!resetAllObjs)
+                    if (maps[this->currentMap][j][i] == DOOR)
                     {
+                        // std::cout << this->pos_x << " " << this->pos_y << " ";
+                        std::cout << maps[this->currentMap][j][i] << " ";
+                        if (this->isDoor)
+                        {
+                            model_object.PortalDoor(this->ourShader, this->pos_x, this->pos_y);
+                        }
+                        else
+                            model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
+                    }
+                    if (maps[this->currentMap][j][i] == FLOOR)
+                    {
+                        // std::cout << this->pos_x << " " << this->pos_y << " ";
+                        std::cout << maps[this->currentMap][j][i] << " ";
+                        //TODO
+                    }
+                    if (maps[this->currentMap][j][i] == PLAYER_OBJ)
+                    {
+                        // std::cout << this->pos_x << " " << this->pos_y << " ";
+                        std::cout << maps[this->currentMap][j][i] << " ";
+                        //TODO
+                    }
+                    if (maps[this->currentMap][j][i] == 8)
+                    {
+                        // std::cout << this->pos_x << " " << this->pos_y << " ";
+                        std::cout << maps[this->currentMap][j][i] << " ";
+                        model_object.player_life_func(this->ourShader, this->pos_x, this->pos_y);
+                        model_object.headModel(this->ourShader, this->pos_x, this->pos_y);
+                        //TODO
+                    }
+                    if (maps[this->currentMap][j][i] == BOMB)
+                    {
+                        // std::cout << this->pos_x << " " << this->pos_y << " ";
+                        std::cout << maps[this->currentMap][j][i] << " ";
+                        //FIX BOMB CLASS!!!
+                        //CALL ARRAY CHECK BEFORE PLACING BOMB
+                        bomb.putBomb(ourShader, this->pos_x, this->pos_y, 1);
+                        if (bomb_counter >= 75)
+                            bomb.putBomb(ourShader, this->pos_x, this->pos_y, 2);
+                    }
+                    if (enemies_updated < this->enemies.size())
+                    {
+                        std::vector<float>  coords;
+                        //UPDATING ENEMY POSITION COORDINATES
                         for (unsigned int x = 0; x < this->enemies.size(); x++)
                         {
-                            this->enemies[x].enemyAI(maps[this->currentMap]);
-                            this->currentEnemy = x;
-
-                            if (this->enemies[x].playerBeDead())
+                            if ((unsigned int)this->enemies[x].getObjXCoord() == i && 
+                                (unsigned int)this->enemies[x].getObjYCoord() == j)
                             {
-                                player.setPcoords(0.0f, 0.0f);
-                                this->enemies[x].setPlayerState(false);
-                                this->reset_camera();
-                                reset_player = true;
-                                this->remove_life(maps[this->currentMap]);
-                                resetAllObjs = true;
-                                this->deletePlayer = true;
+                                this->enemies[x].setPosCoords(this->pos_x + 1.4f, this->pos_y);
+                                coords.push_back(this->pos_x + 1.4f);
+                                coords.push_back(this->pos_y);
+
+                                this->enemyCoords.push_back(coords);
+                                enemies_updated++;
                             }
                         }
                     }
-                }
-                player.bodyModel(this->ourShader);
-                player.headModel(this->ourShader);
-
-                if ((this->pos_x + 1.4f) <  std::numeric_limits<float>::max() && 
-                    (this->pos_x + 1.4f) < std::numeric_limits<float>::infinity())
-                    this->pos_x += 1.4f;
-            }
-
-            //ENEMY DEATH THINGS
-            if (bomb_counter == 75 && this->deleteEnemy)
-            {
-                if (this->ft_deleteEnemy(this->bombXCoord, this->bombYCoord, maps[this->currentMap]))
-                {
-                    for (unsigned int i = 0; i < this->enemies.size(); i++)
+                    if (enemies_updated == this->enemies.size())
                     {
-                        if (this->enemies.size() && this->enemies[i].getEnemyNumber() == this->currentDeletedEnemy)
+                        // exit(5);
+                        //ENEMY MOVEMENTS SHOULD ALL HAPPEN HERE
+
+                        if (!resetAllObjs)
                         {
-                            if (this->enemies.size() == 0)
-                                break;
-                            this->enemies.erase(this->enemies.begin() + i);
-                            // if (this->enemyNumbers.size())
-                            //     this->enemyNumbers.erase(this->enemyNumbers.begin() + 1);
-                            enemies_updated--;
+                            for (unsigned int x = 0; x < this->enemies.size(); x++)
+                            {
+                                this->enemies[x].enemyAI(maps[this->currentMap]);
+                                this->currentEnemy = x;
+
+                                if (this->enemies[x].playerBeDead())
+                                {
+                                    player.setPcoords(0.0f, 0.0f);
+                                    this->enemies[x].setPlayerState(false);
+                                    this->reset_camera();
+                                    reset_player = true;
+                                    this->remove_life(maps[this->currentMap]);
+                                    resetAllObjs = true;
+                                    this->deletePlayer = true;
+                                }
+                            }
                         }
                     }
+                    player.bodyModel(this->ourShader);
+                    player.headModel(this->ourShader);
+                    player.setNextStage(this->enemies.size(), this->changeStage , maps[this->currentMap]);
+
+                    if ((this->pos_x + 1.4f) <  std::numeric_limits<float>::max() && 
+                        (this->pos_x + 1.4f) < std::numeric_limits<float>::infinity())
+                        this->pos_x += 1.4f;
                 }
-                this->deleteEnemy = false;
+
+                //ENEMY DEATH THINGS
+                if (bomb_counter == 75 && this->deleteEnemy)
+                {
+                    std::cout << "Number of enemies b4: " << this->enemies.size() << std::endl;
+                    if (this->ft_deleteEnemy(this->bombXCoord, this->bombYCoord, maps[this->currentMap]))
+                    {
+                        for (unsigned int i = 0; i < this->enemies.size(); i++)
+                        {
+                            if (this->enemies.size() && this->enemies[i].getEnemyNumber() == this->currentDeletedEnemy)
+                            {
+                                if (this->enemies.size() == 0)
+                                    break;
+                                this->enemies.erase(this->enemies.begin() + i);
+                                // if (this->enemyNumbers.size())
+                                //     this->enemyNumbers.erase(this->enemyNumbers.begin() + 1);
+                                enemies_updated--;
+                            }
+                        }
+                    }
+                    this->deleteEnemy = false;
+                }
+
+                // std::cout << "Player X: " << player.getXcoord() << std::endl;
+                // std::cout << "Player Y: " << player.getYcoord() << std::endl;
+                std::cout << std::endl;
+                if ((this->pos_y + 1.3f) < std::numeric_limits<float>::max() &&
+                    (this->pos_y + 1.3f) < std::numeric_limits<float>::infinity())
+                    this->pos_y += 1.3f;
+                this->pos_x = 0.0f;
             }
 
-            // std::cout << "Player X: " << player.getXcoord() << std::endl;
-            // std::cout << "Player Y: " << player.getYcoord() << std::endl;
-            std::cout << std::endl;
-            if ((this->pos_y + 1.3f) < std::numeric_limits<float>::max() &&
-                (this->pos_y + 1.3f) < std::numeric_limits<float>::infinity())
-                this->pos_y += 1.3f;
-            this->pos_x = 0.0f;
-        }
+            this->pos_y = 0.0f;
 
-        this->pos_y = 0.0f;
-
-        if (start_counter)
-            bomb_counter++;
-        if (this->deletePlayer)
-        {
-            std::cout << std::endl;
-            std::cout << "GAME OVER MOTHERFUCKER" << std::endl;
-            exit(0);
-        }
-        if (bomb_counter == 75)
-        {
-            if (this->update_bomb_range(maps[this->currentMap]) == 3)
+            if (start_counter)
+                bomb_counter++;
+            if (this->deletePlayer)
             {
-                this->remove_life(maps[this->currentMap]);
-                player.setPcoords(0.0f, 0.0f);
-                this->reset_player_location(maps[this->currentMap]);
-                this->reset_camera();
-                reset_player = true;
-                this->deletePlayer = true;
-
-                //Reseting bomb after player suicide
-                bomb_counter = 0;
-                start_counter = false;
-                this->remove_bomb(maps[this->currentMap]);
-                
-                //GAME OVER
                 std::cout << std::endl;
                 std::cout << "GAME OVER MOTHERFUCKER" << std::endl;
                 exit(0);
             }
-        }
-        if (bomb_counter >= 100)
-        {
-            bomb_counter = 0;
-            start_counter = false;
-            this->remove_bomb(maps[this->currentMap]);
-        }
-        if (reset_player)
-        {
-            if (pause_counter > 1)
-                pause_counter--;
-            else
+            if (bomb_counter == 75)
             {
-                pause_counter = 60;
-                reset_player = false;
+                if (this->update_bomb_range(maps[this->currentMap]) == 3)
+                {
+                    this->remove_life(maps[this->currentMap]);
+                    player.setPcoords(0.0f, 0.0f);
+                    this->reset_player_location(maps[this->currentMap]);
+                    this->reset_camera();
+                    reset_player = true;
+                    this->deletePlayer = true;
+
+                    //Reseting bomb after player suicide
+                    bomb_counter = 0;
+                    start_counter = false;
+                    this->remove_bomb(maps[this->currentMap]);
+                    
+                    //GAME OVER
+                    std::cout << std::endl;
+                    std::cout << "GAME OVER MOTHERFUCKER" << std::endl;
+                    exit(0);
+                }
+            }
+            if (bomb_counter >= 100)
+            {
                 bomb_counter = 0;
                 start_counter = false;
                 this->remove_bomb(maps[this->currentMap]);
             }
-        }
-        if (resetAllObjs)
-        {
-            if (resetAllCounter > 1)
-                resetAllCounter--;
-            else
+            if (reset_player)
             {
-                resetAllCounter = 60;
-                resetAllObjs = false;
-                // usleep(999999);
+                if (pause_counter > 1)
+                    pause_counter--;
+                else
+                {
+                    pause_counter = 60;
+                    reset_player = false;
+                    bomb_counter = 0;
+                    start_counter = false;
+                    this->remove_bomb(maps[this->currentMap]);
+                }
             }
+            if (resetAllObjs)
+            {
+                if (resetAllCounter > 1)
+                    resetAllCounter--;
+                else
+                {
+                    resetAllCounter = 60;
+                    resetAllObjs = false;
+                    // usleep(999999);
+                }
+            }
+            // glfwSwapBuffers(this->window);
+            // glfwPollEvents();
+
+            if (keys.input() == SPACE)
+            {
+                if (!(start_counter) && (this->array_check(maps[this->currentMap])))
+                    start_counter = true;
+            }
+            if (pause_counter >= 60) // TODO :: ADD ANOTHER IF TO CHECK FOR THE PLAYER RESET AFTER ENEMY ATTACK
+                if (resetAllCounter >= 60)
+                    this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
+            if (!this->skipMapUpdate)
+            {
+                this->updateMap(player, maps[this->currentMap]);
+                m_engine.updateCurrentMap(currentMap, maps[this->currentMap]);
+            }
+            else
+                this->skipMapUpdate = false;
+
+            if (this->changeStage)
+            {
+                std::cout << "Change stage: " << this->changeStage << std::endl;
+            }
+            std::cout << "Current running code... 1" << std::endl;
+        } //CHANGE STAGE IF STATEMENT ENDS HERE
+        else
+        {
+            //RENDER WIN OR WHATEVER
+            this->currentMap += 1;
+            this->changeStage = false;
+
+            //Reset Player
+            player.setPcoords(0.0f, 0.0f);
+            
+
+            model_object.universe_func(ourShader);
+            std::cout << "Current running code... 2" << std::endl;
         }
+        //Clearing Buffer
         glfwSwapBuffers(this->window);
         glfwPollEvents();
-
-        if (keys.input() == SPACE)
-        {
-            if (!(start_counter) && (this->array_check(maps[this->currentMap])))
-                start_counter = true;
-        }
-        if (pause_counter >= 60) // TODO :: ADD ANOTHER IF TO CHECK FOR THE PLAYER RESET AFTER ENEMY ATTACK
-            if (resetAllCounter >= 60)
-                this->callMovementFunctions(player, sound, keys, maps[this->currentMap]);
-        if (!this->skipMapUpdate)
-        {
-            this->updateMap(player, maps[this->currentMap]);
-            m_engine.updateCurrentMap(currentMap, maps[this->currentMap]);
-        }
-        else
-            this->skipMapUpdate = false;
     }
     nextXPos = 2.6f;
     nextYPos = 2.6f;
