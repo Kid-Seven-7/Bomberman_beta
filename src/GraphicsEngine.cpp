@@ -410,6 +410,12 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             this->currentMap += 1;
             this->changeStage = false;
 
+            //Resetting Next Pos vars
+            nextXPos = 2.6f;
+            nextYPos = 2.6f;
+            prevXpos = -2.6f;
+            prevYpos = -2.6f;
+
             //Reset Player
             player.setPcoords(0.0f, 0.0f);
             
