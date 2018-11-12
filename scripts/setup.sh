@@ -88,7 +88,7 @@ if [ -z "$(ls -A SFML)" ];
 then
 	echo ${RED}submodules not found${NC}
 	echo ${ORANGE}cloning submodules...${NC}
-	git submodule update --init --recursive
+	git submodule update --init --recursive  --remote
 else
 	echo ${GREEN}submodules found${NC}
 	echo ${ORANGE}updating submodules...${NC}
