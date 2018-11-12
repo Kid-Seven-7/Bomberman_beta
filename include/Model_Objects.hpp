@@ -29,8 +29,10 @@ class Model_Objects
         void    Engine(Shader shader, float pos_x, float pos_y);
         void    headModel(Shader shader, float pos_x, float pos_y);
         void    PortalDoor(Shader shader, float pos_x, float pos_y);
-        void    ClockModel(Shader shader, float pos_x, float pos_y);
+        void    ClockModel(Shader shader);
+        void    ClockHand(Shader shader);
         void    setPortalScale(bool state);
+        void    gameOverScreen(Shader shader, int model);
 
     private:
         //Model variables
@@ -43,6 +45,9 @@ class Model_Objects
         Model   player_head;
         Model   portal_door;
         Model   clock_model;
+        Model   clock_hand_model;
+        Model   you_win_model;
+        Model   you_lose_model;
 };
 
 # endif

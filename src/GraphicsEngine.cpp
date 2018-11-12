@@ -171,6 +171,8 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             //Start of rendering...
             this->modelProjectionConfig();
             model_object.universe_func(ourShader);
+            model_object.ClockModel(ourShader);
+            model_object.ClockHand(ourShader);
             model_object.Engine(ourShader, 3.95f, -28.5f);
             model_object.Engine(ourShader, 4.15f, 35.5f);
             model_object.Engine(ourShader, 37.5f, 4.15f);
@@ -325,7 +327,42 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             {
                 std::cout << std::endl;
                 std::cout << "GAME OVER MOTHERFUCKER" << std::endl;
-                exit(0);
+
+                //Render Dead Screen
+                for (int x = 0; x < 500; x++)
+                {
+                    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                    model_object.universe_func(ourShader);
+                    model_object.gameOverScreen(ourShader, 2);
+
+                    //Clearing Buffer
+                    glfwSwapBuffers(this->window);
+                    glfwPollEvents();
+                }
+
+                for (int x = 0; x < 500; x++)
+                {
+                    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                    model_object.universe_func(ourShader);
+                    model_object.gameOverScreen(ourShader, 2);
+
+                    //Clearing Buffer
+                    glfwSwapBuffers(this->window);
+                    glfwPollEvents();
+                }
+
+                //NEXT POSITION RESET
+                nextXPos = 2.6f;
+                nextYPos = 2.6f;
+                prevXpos = -2.6f;
+                prevYpos = -2.6f;
+                this->currentMap = 0;
+
+                displayStart(sound, keys, this->window);
             }
             if (bomb_counter == 75)
             {
@@ -346,7 +383,14 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     //GAME OVER
                     std::cout << std::endl;
                     std::cout << "GAME OVER MOTHERFUCKER" << std::endl;
-                    exit(0);
+
+                    //DESTROY
+                    nextXPos = 2.6f;
+                    nextYPos = 2.6f;
+                    prevXpos = -2.6f;
+                    prevYpos = -2.6f;
+
+                    displayStart(sound, keys, this->window);
                 }
             }
             if (bomb_counter >= 100)
@@ -415,6 +459,28 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             nextYPos = 2.6f;
             prevXpos = -2.6f;
             prevYpos = -2.6f;
+
+            //CREATING ENEMIES FOR NEXT LEVEL
+            if (this->createEnemyArray(maps[this->currentMap], 4))
+            {
+                //CHECKING IF THERE ARE ENEMIES ON THE MAP OF OBJS
+                if (this->enemyNumbers.size() == 0)
+                {
+                    std::cout << RED << "Error: " << NC << "Couldn't find any enemies on the map." << std::endl;
+                    std::cout << GREEN << "Info: " << NC << "Terminating application..." << std::endl;
+                    exit(1);
+                }
+
+                //create enemies
+                for (unsigned int x = 0; x < this->enemyNumbers.size(); x++)
+                {
+                    Enemy enemy = Enemy(this->enemyNumbers[x][0], ourShader, 1);
+                    enemy.setObjCoords(this->enemyNumbers[x][1], this->enemyNumbers[x][2]); //SETTING ENEMY OBJ COORDS
+                    this->enemies.push_back(enemy);
+                    std::cout << "The enemies" << std::endl;
+                    exit(0);
+                }
+            }
 
             //Reset Player
             player.setPcoords(0.0f, 0.0f);
