@@ -30,6 +30,7 @@
 # define 			BASS 16
 # define 			BB8_DEATH 17
 # define 			BB8_MISC 18
+# define 			FUCKED 19
 # define 			PRECIPICE 99
 // # define 			BASS
 // # define 			BASS
@@ -61,6 +62,7 @@ class Sound{
 		sf::Music _ghost;
 		sf::Music _oneup;
 		sf::Music _death;
+		sf::Music _fucked;
 		sf::Music _bassdrop;
 		sf::Music _bb8_death;
 		sf::Music _bb8_sound;
