@@ -59,7 +59,7 @@ class GraphicsEngine
 
         void    glfwConfig();
         void    gladConfg();
-        void    MainControl(Sound &sound, Keys &keys, int level = 1);
+        void    MainControl(Sound &sound, Keys &keys, int level = 8);
         void    callMovementFunctions(Player &player, Sound &sound, Keys &keys, std::vector<std::vector<int> > mapOfObjects);
         void    shaderConfig();
         void    modelProjectionConfig();

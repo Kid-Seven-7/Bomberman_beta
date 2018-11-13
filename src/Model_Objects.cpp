@@ -26,7 +26,7 @@ Model_Objects::Model_Objects()
     this->clock_model = Model("bomberman_assets/clock/clockInvert.obj");
     this->clock_hand_model = Model("bomberman_assets/clock/clock-arm.obj");
     this->you_win_model = Model("bomberman_assets/misc/youWinCube.obj");
-    this->you_lose_model = Model("bomberman_assets/misc/youLoseCube.obj");
+    this->you_lose_model = Model("bomberman_assets/misc/youLoseCube1.obj");
     this->score_model = Model("bomberman_assets/clock/holder.obj");
 }
 

@@ -14,7 +14,7 @@
 
 CameraClass::CameraClass(){
     //setting the camera position, and angle view
-    this->cameraPos = glm::vec3(0.0f, 0.0f, 18.0f);
+    this->cameraPos = glm::vec3(0.0f, 0.0f, 23.0f);
     this->cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
     this->cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -40,7 +40,7 @@ void    CameraClass::setCam(Shader shader){
 
 void    CameraClass::camMovements(Keys &keys){
 	(void)keys;
-    this->camSpeed = 0.5f;
+    this->camSpeed = 0.9f;
 
     // //Updating the camera point of view
     // if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)

@@ -367,7 +367,8 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                 this->currentMap = 0;
 
                 counter = 0;
-                glfwSetTime(0.1f); 
+                glfwSetTime(0.1f);
+                this->isDoor = false;
                 displayStart(sound, keys, this->window);
             }
             if (bomb_counter == 75)
@@ -407,6 +408,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
 
                     counter = 0;
                     glfwSetTime(0.1f);
+                    this->isDoor = false;
                     displayStart(sound, keys, this->window);
                 }
             }
@@ -468,7 +470,35 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
         else
         {
             //RENDER WIN OR WHATEVER
-            this->currentMap += 1;
+            if (this->currentMap < 8)
+                this->currentMap += 1;
+            else
+            {
+                //Resetting Next Pos vars
+                nextXPos = 2.6f;
+                nextYPos = 2.6f;
+                prevXpos = -2.6f;
+                prevYpos = -2.6f;
+                //Reset Player
+                player.setPcoords(0.0f, 0.0f);
+                
+                for (int x = 0; x < 60; x++)
+                {
+                    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                    model_object.universe_func(ourShader);
+                    model_object.gameOverScreen(ourShader, 1);
+
+                    //Clearing Buffer
+                    glfwSwapBuffers(this->window);
+                    glfwPollEvents();
+                }
+                counter = 0;
+                model_object.~Model_Objects();
+                glfwSetTime(0.1f);
+                this->isDoor = false;
+            }
             this->changeStage = false;
 
             //Resetting Next Pos vars
@@ -494,6 +524,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
             counter = 0;
             model_object.~Model_Objects();
             glfwSetTime(0.1f);
+            this->isDoor = false;
             nextStageInit.LoadGame(this->window, sound, keys, this->currentMap);
         }
         //Clearing Buffer
@@ -524,6 +555,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
 
             glfwSetTime(0.1f);
             counter = 0;
+            this->isDoor = false;
             displayStart(sound, keys, this->window);   
         }
     }
