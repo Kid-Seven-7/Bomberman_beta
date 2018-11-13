@@ -105,7 +105,11 @@ void    GraphicsEngine::gladConfg()
 
 void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
 {
+    //Game Settings Sway
+    glfwSetTime(0.1f); 
     this->currentMap = level;
+
+    //Init things 
     Player          player;
     Model_Objects   model_object;
     BombClass       bomb;
@@ -118,6 +122,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
     bool            resetAllObjs = false;
     int             resetAllCounter = 60;
     LoadingScreen   nextStageInit;
+    int             counter = 0;
 
     //Physics Engine
     // PhysicsEngine p_engine; // remove this ENGINE BEFORE SUBMISSION
@@ -174,6 +179,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
             this->modelProjectionConfig();
             model_object.universe_func(ourShader);
             model_object.ClockModel(ourShader);
+            model_object.Score(ourShader);
             model_object.ClockHand(ourShader);
             model_object.Engine(ourShader, 3.95f, -28.5f);
             model_object.Engine(ourShader, 4.15f, 35.5f);
@@ -188,19 +194,19 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                     if (maps[this->currentMap][j][i] == HARD_WALL)
                     {
                         // std::cout << this->pos_x << " " << this->pos_y << " ";
-                        std::cout << maps[this->currentMap][j][i] << " ";
+                        // std::cout << maps[this->currentMap][j][i] << " ";
                         model_object.hard_wall_func(this->ourShader, this->pos_x, this->pos_y);
                     }
                     if (maps[this->currentMap][j][i] == SOFT_WALL)
                     {
                         // std::cout << this->pos_x << " " << this->pos_y << " ";
-                        std::cout << maps[this->currentMap][j][i] << " ";
+                        // std::cout << maps[this->currentMap][j][i] << " ";
                         model_object.soft_wall_func(this->ourShader, this->pos_x, this->pos_y);
                     }
                     if (maps[this->currentMap][j][i] == DOOR)
                     {
                         // std::cout << this->pos_x << " " << this->pos_y << " ";
-                        std::cout << maps[this->currentMap][j][i] << " ";
+                        // std::cout << maps[this->currentMap][j][i] << " ";
                         if (this->isDoor)
                         {
                             model_object.PortalDoor(this->ourShader, this->pos_x, this->pos_y);
@@ -211,19 +217,19 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                     if (maps[this->currentMap][j][i] == FLOOR)
                     {
                         // std::cout << this->pos_x << " " << this->pos_y << " ";
-                        std::cout << maps[this->currentMap][j][i] << " ";
+                        // std::cout << maps[this->currentMap][j][i] << " ";
                         //TODO
                     }
                     if (maps[this->currentMap][j][i] == PLAYER_OBJ)
                     {
                         // std::cout << this->pos_x << " " << this->pos_y << " ";
-                        std::cout << maps[this->currentMap][j][i] << " ";
+                        // std::cout << maps[this->currentMap][j][i] << " ";
                         //TODO
                     }
                     if (maps[this->currentMap][j][i] == 8)
                     {
                         // std::cout << this->pos_x << " " << this->pos_y << " ";
-                        std::cout << maps[this->currentMap][j][i] << " ";
+                        // std::cout << maps[this->currentMap][j][i] << " ";
                         model_object.player_life_func(this->ourShader, this->pos_x, this->pos_y);
                         model_object.headModel(this->ourShader, this->pos_x, this->pos_y);
                         //TODO
@@ -231,7 +237,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                     if (maps[this->currentMap][j][i] == BOMB)
                     {
                         // std::cout << this->pos_x << " " << this->pos_y << " ";
-                        std::cout << maps[this->currentMap][j][i] << " ";
+                        // std::cout << maps[this->currentMap][j][i] << " ";
                         //FIX BOMB CLASS!!!
                         //CALL ARRAY CHECK BEFORE PLACING BOMB
                         bomb.putBomb(ourShader, this->pos_x, this->pos_y, 1);
@@ -283,7 +289,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                     }
                     player.bodyModel(this->ourShader);
                     player.headModel(this->ourShader);
-                    player.setNextStage(this->enemies.size(), this->changeStage , maps[this->currentMap]);
+                    player.setNextStage(this->enemies.size(), this->changeStage , maps[this->currentMap], this->isDoor);
 
                     if ((this->pos_x + 1.4f) <  std::numeric_limits<float>::max() && 
                         (this->pos_x + 1.4f) < std::numeric_limits<float>::infinity())
@@ -314,7 +320,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
 
                 // std::cout << "Player X: " << player.getXcoord() << std::endl;
                 // std::cout << "Player Y: " << player.getYcoord() << std::endl;
-                std::cout << std::endl;
+                // std::cout << std::endl;
                 if ((this->pos_y + 1.3f) < std::numeric_limits<float>::max() &&
                     (this->pos_y + 1.3f) < std::numeric_limits<float>::infinity())
                     this->pos_y += 1.3f;
@@ -327,9 +333,6 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                 bomb_counter++;
             if (this->deletePlayer)
             {
-                std::cout << std::endl;
-                std::cout << "GAME OVER MOTHERFUCKER" << std::endl;
-
                 //Render Dead Screen
                 for (int x = 0; x < 500; x++)
                 {
@@ -363,8 +366,9 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                 prevYpos = -2.6f;
                 this->currentMap = 0;
 
-                displayStart(sound, keys, this->window);
+                counter = 0;
                 glfwSetTime(0.1f); 
+                displayStart(sound, keys, this->window);
             }
             if (bomb_counter == 75)
             {
@@ -382,18 +386,28 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                     start_counter = false;
                     this->remove_bomb(maps[this->currentMap]);
                     
-                    //GAME OVER
-                    std::cout << std::endl;
-                    std::cout << "GAME OVER MOTHERFUCKER" << std::endl;
-
                     //DESTROY
                     nextXPos = 2.6f;
                     nextYPos = 2.6f;
                     prevXpos = -2.6f;
                     prevYpos = -2.6f;
 
-                    displayStart(sound, keys, this->window);
+                    for (int x = 0; x < 200; x++)
+                    {
+                        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+                        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                        model_object.universe_func(ourShader);
+                        model_object.gameOverScreen(ourShader, 2);
+
+                        //Clearing Buffer
+                        glfwSwapBuffers(this->window);
+                        glfwPollEvents();
+                    }
+
+                    counter = 0;
                     glfwSetTime(0.1f);
+                    displayStart(sound, keys, this->window);
                 }
             }
             if (bomb_counter >= 100)
@@ -445,11 +459,11 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
             else
                 this->skipMapUpdate = false;
 
-            if (this->changeStage)
-            {
-                std::cout << "Change stage: " << this->changeStage << std::endl;
-            }
-            std::cout << "Current running code... 1" << std::endl;
+            // if (this->changeStage)
+            // {
+            //     std::cout << "Change stage: " << this->changeStage << std::endl;
+            // }
+            // std::cout << "Current running code... 1" << std::endl;
         } //CHANGE STAGE IF STATEMENT ENDS HERE
         else
         {
@@ -477,14 +491,41 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                 glfwSwapBuffers(this->window);
                 glfwPollEvents();
             }
+            counter = 0;
             model_object.~Model_Objects();
             glfwSetTime(0.1f);
             nextStageInit.LoadGame(this->window, sound, keys, this->currentMap);
-            std::cout << "Current running code... 2" << std::endl;
         }
         //Clearing Buffer
         glfwSwapBuffers(this->window);
         glfwPollEvents();
+        counter++;
+        std::cout << "Counter: " << counter << std::endl;
+        if (counter == 3550)
+        {
+            for (int x = 0; x < 200; x++)
+            {
+                glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                model_object.universe_func(ourShader);
+                model_object.gameOverScreen(ourShader, 2);
+
+                //Clearing Buffer
+                glfwSwapBuffers(this->window);
+                glfwPollEvents();
+            }
+            //NEXT POSITION RESET
+            nextXPos = 2.6f;
+            nextYPos = 2.6f;
+            prevXpos = -2.6f;
+            prevYpos = -2.6f;
+            this->currentMap = 0;
+
+            glfwSetTime(0.1f);
+            counter = 0;
+            displayStart(sound, keys, this->window);   
+        }
     }
     nextXPos = 2.6f;
     nextYPos = 2.6f;

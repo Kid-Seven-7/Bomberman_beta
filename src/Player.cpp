@@ -202,7 +202,7 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
 {
   int x_player_pos = 0;
   int y_player_pos = 0;
- 
+
   if (direction == MOVE_UP)
   {
     this->getPlayerPos(mapOfObjects);
@@ -217,6 +217,14 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
     {
       // std::cout << "Next Pos: " << mapOfObjects[y_player_pos - 1][x_player_pos] << std::endl;
       //Storing new player position
+      if (this->n_enemies > 0 && mapOfObjects[y_player_pos - 1][x_player_pos] == 6)
+      {
+        return (-1);
+      }
+      else if (!this->portal && mapOfObjects[y_player_pos - 1][x_player_pos] == 6)
+      {
+        return (-1);
+      }
       this->NewPlayerPos.clear();
       this->NewPlayerPos.push_back(x_player_pos);
       this->NewPlayerPos.push_back(y_player_pos - 1);
@@ -238,6 +246,14 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
     {
       // std::cout << "Next Pos: " << mapOfObjects[y_player_pos - 1][x_player_pos] << std::endl;
       //Storing new player position
+      if (this->n_enemies > 0 && mapOfObjects[y_player_pos + 1][x_player_pos] == 6)
+      {
+        return (-1);
+      }
+      else if (!this->portal && mapOfObjects[y_player_pos + 1][x_player_pos] == 6)
+      {
+        return (-1);
+      }
       this->NewPlayerPos.clear();
       this->NewPlayerPos.push_back(x_player_pos);
       this->NewPlayerPos.push_back(y_player_pos + 1);
@@ -258,6 +274,14 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
       (mapOfObjects[y_player_pos][x_player_pos - 1] < 50))
     {
       //Storing new player position
+      if (this->n_enemies > 0 && mapOfObjects[y_player_pos][x_player_pos - 1] == 6)
+      {
+        return (-1);
+      }
+      else if (!this->portal && mapOfObjects[y_player_pos][x_player_pos - 1] == 6)
+      {
+        return (-1);
+      }
       this->NewPlayerPos.clear();
       this->NewPlayerPos.push_back(x_player_pos - 1);
       this->NewPlayerPos.push_back(y_player_pos);
@@ -276,6 +300,14 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
       (mapOfObjects[y_player_pos][x_player_pos + 1] != 4) &&
       (mapOfObjects[y_player_pos][x_player_pos + 1] < 50))
     {
+      if (this->n_enemies > 0 && mapOfObjects[y_player_pos][x_player_pos + 1] == 6)
+      {
+        return (-1);
+      }
+      else if (!this->portal && mapOfObjects[y_player_pos][x_player_pos + 1] == 6)
+      {
+        return (-1);
+      }
       //Storing new player position
       this->NewPlayerPos.clear();
       this->NewPlayerPos.push_back(x_player_pos + 1);
@@ -313,10 +345,11 @@ std::vector<int>  Player::getPrevPlayer()
   return (this->playerPos);
 }
 
-void  Player::setNextStage(int n_enemies, bool & changeStage, std::vector<std::vector<int> > map)
+void  Player::setNextStage(int n_enemies, bool & changeStage, std::vector<std::vector<int> > map, bool portal)
 {
   bool  portal_found = false;
   this->n_enemies = n_enemies;
+  this->portal = portal;
 
   if (n_enemies < 1)
   {

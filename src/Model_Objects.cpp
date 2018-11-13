@@ -27,6 +27,7 @@ Model_Objects::Model_Objects()
     this->clock_hand_model = Model("bomberman_assets/clock/clock-arm.obj");
     this->you_win_model = Model("bomberman_assets/misc/youWinCube.obj");
     this->you_lose_model = Model("bomberman_assets/misc/youLoseCube.obj");
+    this->score_model = Model("bomberman_assets/clock/holder.obj");
 }
 
 Model_Objects::~Model_Objects() {}
@@ -167,11 +168,13 @@ void    Model_Objects::ClockModel(Shader shader)
     glm::mat4   clock_ = glm::mat4(1.0f);
 
     //Clock positions
-    clock_ = glm::translate(clock_, glm::vec3(1.0f, 3.5f, -1.9f));
+    clock_ = glm::translate(clock_, glm::vec3(-8.0f, 3.5f, -1.9f));
 
     //Resising the clock model
     clock_ = glm::scale(clock_, glm::vec3(0.5f, 0.5f, 0.5f));
 
+    clock_ = glm::rotate(clock_ , -0.4f ,glm::vec3(1.0f, 0.0f, 0.0f));
+    clock_ = glm::rotate(clock_ , 0.4f ,glm::vec3(0.0f, 1.0f, 0.0f));
     clock_ = glm::rotate(clock_, 0.05f,glm::vec3(0.0f, 0.0f, 1.0f));
 
     //Drawing the soft wall model
@@ -184,16 +187,36 @@ void    Model_Objects::ClockHand(Shader shader)
     glm::mat4   clock_hand_ = glm::mat4(1.0f);
 
     //Clock positions
-    clock_hand_ = glm::translate(clock_hand_, glm::vec3(1.0f, 3.5f, -1.9f));
+    clock_hand_ = glm::translate(clock_hand_, glm::vec3(-8.0f, 3.5f, -1.9f));
 
     //Resising the clock model
     clock_hand_ = glm::scale(clock_hand_, glm::vec3(0.5f, 0.5f, 0.5f));
 
+    clock_hand_ = glm::rotate(clock_hand_ , -0.4f ,glm::vec3(1.0f, 0.0f, 0.0f));
+    clock_hand_ = glm::rotate(clock_hand_ , 0.4f ,glm::vec3(0.0f, 1.0f, 0.0f));
     clock_hand_ = glm::rotate(clock_hand_, -(float)glfwGetTime() / 10.0f,glm::vec3(0.0f, 0.0f, 1.0f));
 
     //Drawing the soft wall model
     shader.setMat4("model", clock_hand_);
     this->clock_hand_model.Draw(shader);
+}
+
+void    Model_Objects::Score(Shader shader)
+{
+    glm::mat4   score_ = glm::mat4(1.0f);
+
+    //Clock positions
+    score_ = glm::translate(score_, glm::vec3(8.0f, 3.5f, -1.9f));
+
+    score_ = glm::rotate(score_ , -0.4f ,glm::vec3(1.0f, 0.0f, 0.0f));
+    score_ = glm::rotate(score_ , -0.4f ,glm::vec3(0.0f, 1.0f, 0.0f));
+
+    //Resising the clock model
+    score_ = glm::scale(score_, glm::vec3(1.5f, 1.5f, 1.5f));
+
+    //Drawing the soft wall model
+    shader.setMat4("model", score_);
+    this->score_model.Draw(shader);
 }
 
 void    Model_Objects::gameOverScreen(Shader shader, int model)

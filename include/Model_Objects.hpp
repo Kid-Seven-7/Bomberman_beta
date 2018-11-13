@@ -31,6 +31,7 @@ class Model_Objects
         void    PortalDoor(Shader shader, float pos_x, float pos_y);
         void    ClockModel(Shader shader);
         void    ClockHand(Shader shader);
+        void    Score(Shader shader);
         void    setPortalScale(bool state);
         void    gameOverScreen(Shader shader, int model);
 
@@ -48,6 +49,7 @@ class Model_Objects
         Model   clock_hand_model;
         Model   you_win_model;
         Model   you_lose_model;
+        Model   score_model;
 };
 
 # endif
