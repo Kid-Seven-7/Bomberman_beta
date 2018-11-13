@@ -37,6 +37,11 @@
 # define 			DEATH 13
 # define 			ONEUP 14
 # define 			GHOST 15
+# define 			BASS 16
+# define 			BB8_DEATH 17
+# define 			BB8_MISC 18
+# define 			FUCKED 19
+# define 			PRECIPICE 99
 
 //menus
 # define 			MAIN 20
