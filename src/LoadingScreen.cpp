@@ -16,9 +16,9 @@ LoadingScreen::LoadingScreen() {}
 
 LoadingScreen::~LoadingScreen() {}
 
-void    LoadingScreen::LoadGame(GLFWwindow  *window, Sound &sound, Keys &keys)
+void    LoadingScreen::LoadGame(GLFWwindow  *window, Sound &sound, Keys &keys, int level)
 {
     GraphicsEngine e_engine = GraphicsEngine(window);
 
-    e_engine.MainControl(sound, keys);
+    e_engine.MainControl(sound, keys, level);
 }

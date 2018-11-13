@@ -103,8 +103,9 @@ void    GraphicsEngine::gladConfg()
     }
 }
 
-void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
+void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
 {
+    this->currentMap = level;
     Player          player;
     Model_Objects   model_object;
     BombClass       bomb;
@@ -116,6 +117,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
     unsigned int    enemies_updated = 0;
     bool            resetAllObjs = false;
     int             resetAllCounter = 60;
+    LoadingScreen   nextStageInit;
 
     //Physics Engine
     // PhysicsEngine p_engine; // remove this ENGINE BEFORE SUBMISSION
@@ -342,7 +344,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     glfwPollEvents();
                 }
 
-                for (int x = 0; x < 500; x++)
+                for (int x = 0; x < 10; x++)
                 {
                     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
                     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -354,7 +356,6 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     glfwSwapBuffers(this->window);
                     glfwPollEvents();
                 }
-
                 //NEXT POSITION RESET
                 nextXPos = 2.6f;
                 nextYPos = 2.6f;
@@ -363,6 +364,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                 this->currentMap = 0;
 
                 displayStart(sound, keys, this->window);
+                glfwSetTime(0.1f); 
             }
             if (bomb_counter == 75)
             {
@@ -391,6 +393,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
                     prevYpos = -2.6f;
 
                     displayStart(sound, keys, this->window);
+                    glfwSetTime(0.1f);
                 }
             }
             if (bomb_counter >= 100)
@@ -459,34 +462,24 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys)
             nextYPos = 2.6f;
             prevXpos = -2.6f;
             prevYpos = -2.6f;
-
-            //CREATING ENEMIES FOR NEXT LEVEL
-            if (this->createEnemyArray(maps[this->currentMap], 4))
-            {
-                //CHECKING IF THERE ARE ENEMIES ON THE MAP OF OBJS
-                if (this->enemyNumbers.size() == 0)
-                {
-                    std::cout << RED << "Error: " << NC << "Couldn't find any enemies on the map." << std::endl;
-                    std::cout << GREEN << "Info: " << NC << "Terminating application..." << std::endl;
-                    exit(1);
-                }
-
-                //create enemies
-                for (unsigned int x = 0; x < this->enemyNumbers.size(); x++)
-                {
-                    Enemy enemy = Enemy(this->enemyNumbers[x][0], ourShader, 1);
-                    enemy.setObjCoords(this->enemyNumbers[x][1], this->enemyNumbers[x][2]); //SETTING ENEMY OBJ COORDS
-                    this->enemies.push_back(enemy);
-                    std::cout << "The enemies" << std::endl;
-                    exit(0);
-                }
-            }
-
             //Reset Player
             player.setPcoords(0.0f, 0.0f);
-            
 
-            model_object.universe_func(ourShader);
+            for (int x = 0; x < 60; x++)
+            {
+                glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+                model_object.universe_func(ourShader);
+                model_object.gameOverScreen(ourShader, 1);
+
+                //Clearing Buffer
+                glfwSwapBuffers(this->window);
+                glfwPollEvents();
+            }
+            model_object.~Model_Objects();
+            glfwSetTime(0.1f);
+            nextStageInit.LoadGame(this->window, sound, keys, this->currentMap);
             std::cout << "Current running code... 2" << std::endl;
         }
         //Clearing Buffer

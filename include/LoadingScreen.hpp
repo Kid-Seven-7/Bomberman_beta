@@ -22,7 +22,7 @@ class LoadingScreen
         LoadingScreen();
         ~LoadingScreen();
 
-        void    LoadGame(GLFWwindow  *window, Sound &sound, Keys &keys);
+        void    LoadGame(GLFWwindow  *window, Sound &sound, Keys &keys, int level);
 };
 
 # endif

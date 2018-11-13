@@ -23,10 +23,10 @@ Model_Objects::Model_Objects()
     // this->player_life = Model("bomberman_assets/player/bb8/bb8-body-to_scale1.obj");
     // this->player_head = Model("bomberman_assets/player/bb8/bb8-head-to_scale.obj");
     this->portal_door = Model("bomberman_assets/misc/portal1.obj");
-    this->clock_model = Model("bomberman_assets/clock/clock.obj");
+    this->clock_model = Model("bomberman_assets/clock/clockInvert.obj");
     this->clock_hand_model = Model("bomberman_assets/clock/clock-arm.obj");
-    // this->you_win_model = Model("bomberman_assets/misc/YouWin.obj");
-    // this->you_lose_model = Model("Project Name.glb");
+    this->you_win_model = Model("bomberman_assets/misc/youWinCube.obj");
+    this->you_lose_model = Model("bomberman_assets/misc/youLoseCube.obj");
 }
 
 Model_Objects::~Model_Objects() {}
@@ -189,7 +189,7 @@ void    Model_Objects::ClockHand(Shader shader)
     //Resising the clock model
     clock_hand_ = glm::scale(clock_hand_, glm::vec3(0.5f, 0.5f, 0.5f));
 
-    clock_hand_ = glm::rotate(clock_hand_, -(float)glfwGetTime() ,glm::vec3(0.0f, 0.0f, 1.0f));
+    clock_hand_ = glm::rotate(clock_hand_, -(float)glfwGetTime() / 10.0f,glm::vec3(0.0f, 0.0f, 1.0f));
 
     //Drawing the soft wall model
     shader.setMat4("model", clock_hand_);
@@ -201,12 +201,14 @@ void    Model_Objects::gameOverScreen(Shader shader, int model)
      glm::mat4   state_model = glm::mat4(1.0f);
 
     //Softwalls positions
-    state_model = glm::translate(state_model, glm::vec3(1.0f, -2.5f, -1.9f));
+    state_model = glm::translate(state_model, glm::vec3(4.5f, -2.5f, -1.9f));
 
     //Resising the soft wall model
-    state_model = glm::scale(state_model, glm::vec3(0.7f, 0.7f, 0.7f));
+    state_model = glm::scale(state_model, glm::vec3(5.0f, 5.0f, 5.0f));
 
-    state_model = glm::rotate(state_model , (float)glfwGetTime() / 15.0f ,glm::vec3(0.0f, 1.0f, 0.0f));
+    state_model = glm::rotate(state_model , 2.5f ,glm::vec3(1.0f, 0.0f, 0.0f));
+
+    state_model = glm::rotate(state_model , (float)glfwGetTime() ,glm::vec3(0.0f, 1.0f, 0.0f));
 
     //Drawing the soft wall model
     shader.setMat4("model", state_model);
