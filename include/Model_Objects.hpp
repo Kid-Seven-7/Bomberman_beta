@@ -30,6 +30,7 @@ class Model_Objects
         void    headModel(Shader shader, float pos_x, float pos_y);
         void    PortalDoor(Shader shader, float pos_x, float pos_y);
         void    ClockModel(Shader shader);
+        void    decaGonFunc(Shader shader);
         void    ClockHand(Shader shader);
         void    Score(Shader shader);
         void    setPortalScale(bool state);
@@ -50,6 +51,7 @@ class Model_Objects
         Model   you_win_model;
         Model   you_lose_model;
         Model   score_model;
+        Model   decagon_model;
 };
 
 # endif

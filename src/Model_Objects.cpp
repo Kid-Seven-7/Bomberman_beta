@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 14:49:07 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/19 13:37:51 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/14 16:18:33 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ Model_Objects::Model_Objects()
     this->you_win_model = Model("bomberman_assets/misc/youWinCube.obj");
     this->you_lose_model = Model("bomberman_assets/misc/youLoseCube1.obj");
     this->score_model = Model("bomberman_assets/clock/holder.obj");
+    this->decagon_model = Model("bomberman_assets/clock/dial.obj");
 }
 
 Model_Objects::~Model_Objects() {}
@@ -206,7 +207,7 @@ void    Model_Objects::Score(Shader shader)
     glm::mat4   score_ = glm::mat4(1.0f);
 
     //Clock positions
-    score_ = glm::translate(score_, glm::vec3(8.0f, 3.5f, -1.9f));
+    score_ = glm::translate(score_, glm::vec3(8.0f, 3.5f, -2.0f));
 
     score_ = glm::rotate(score_ , -0.4f ,glm::vec3(1.0f, 0.0f, 0.0f));
     score_ = glm::rotate(score_ , -0.4f ,glm::vec3(0.0f, 1.0f, 0.0f));
@@ -239,4 +240,23 @@ void    Model_Objects::gameOverScreen(Shader shader, int model)
         this->you_win_model.Draw(shader);
     else if (model == 2)
         this->you_lose_model.Draw(shader);
+}
+
+void    Model_Objects::decaGonFunc(Shader shader)
+{
+    glm::mat4   decagon_ = glm::mat4(1.0f);
+
+    //Clock positions
+    decagon_ = glm::translate(decagon_, glm::vec3(8.0f, 3.5f, -1.9f));
+
+    decagon_ = glm::rotate(decagon_ , 1.0f ,glm::vec3(0.0f, 1.0f, 0.0f));
+    decagon_ = glm::rotate(decagon_ , -0.4f ,glm::vec3(1.0f, 0.0f, 0.0f));
+    decagon_ = glm::rotate(decagon_ , -0.4f ,glm::vec3(0.0f, 1.0f, 0.0f));
+
+    //Resising the clock model
+    decagon_ = glm::scale(decagon_, glm::vec3(1.5f, 1.5f, 1.5f));
+
+    //Drawing the soft wall model
+    shader.setMat4("model", decagon_);
+    this->decagon_model.Draw(shader);
 }

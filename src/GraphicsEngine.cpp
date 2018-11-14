@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/11/03 03:09:45 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/14 18:06:07 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ GraphicsEngine::GraphicsEngine()
      this->restart_game = false;
      this->isDoor = false;
      this->changeStage = false;
+     this->score = 0;
 }
 
 GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
@@ -65,6 +66,7 @@ GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
      this->restart_game = false;
      this->isDoor = false;
      this->changeStage = false;
+     this->score = 0;
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -124,6 +126,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
     LoadingScreen   nextStageInit;
     int             counter = 0;
 
+
     //Physics Engine
     // PhysicsEngine p_engine; // remove this ENGINE BEFORE SUBMISSION
 
@@ -158,6 +161,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
     // usleep(100000);
     while (!glfwWindowShouldClose(this->window))
     {
+        glfwPollEvents();
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -180,6 +184,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
             model_object.universe_func(ourShader);
             model_object.ClockModel(ourShader);
             model_object.Score(ourShader);
+            model_object.decaGonFunc(ourShader);
             model_object.ClockHand(ourShader);
             model_object.Engine(ourShader, 3.95f, -28.5f);
             model_object.Engine(ourShader, 4.15f, 35.5f);
@@ -309,8 +314,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                                 if (this->enemies.size() == 0)
                                     break;
                                 this->enemies.erase(this->enemies.begin() + i);
-                                // if (this->enemyNumbers.size())
-                                //     this->enemyNumbers.erase(this->enemyNumbers.begin() + 1);
+                                this->score++;
                                 enemies_updated--;
                             }
                         }
@@ -369,6 +373,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                 counter = 0;
                 glfwSetTime(0.1f);
                 this->isDoor = false;
+                this->score = 0;
                 displayStart(sound, keys, this->window);
             }
             if (bomb_counter == 75)
@@ -409,6 +414,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                     counter = 0;
                     glfwSetTime(0.1f);
                     this->isDoor = false;
+                    this->score = 0;
                     displayStart(sound, keys, this->window);
                 }
             }
@@ -525,13 +531,14 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
             model_object.~Model_Objects();
             glfwSetTime(0.1f);
             this->isDoor = false;
+            this->score = 0;
             nextStageInit.LoadGame(this->window, sound, keys, this->currentMap);
         }
         //Clearing Buffer
         glfwSwapBuffers(this->window);
         glfwPollEvents();
         counter++;
-        std::cout << "Counter: " << counter << std::endl;
+        // std::cout << "Score: " << this->score << std::endl;
         if (counter == 3550)
         {
             for (int x = 0; x < 200; x++)
@@ -556,6 +563,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
             glfwSetTime(0.1f);
             counter = 0;
             this->isDoor = false;
+            this->score = 0;
             displayStart(sound, keys, this->window);   
         }
     }

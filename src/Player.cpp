@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 13:30:40 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/11/03 00:39:21 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/14 18:24:25 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ Player::Player()
     // this->player_head = Model("bomberman_assets/player/bb8/bb8-head-to_scale.obj");
     //Player body init
     this->player_body = Model("bomberman_assets/player/bb8/bb8-body-to_scale1.obj");
-    this->bounce = false;
     this->currentDirection = 0;
 }
 
@@ -316,7 +315,6 @@ int     Player::checkNexPos(int direction, std::vector<std::vector<int> >  mapOf
       return (1);
     }
   }
-  this->bounce = true;
   return (-1);
 }
 
@@ -351,42 +349,45 @@ void  Player::setNextStage(int n_enemies, bool & changeStage, std::vector<std::v
   this->n_enemies = n_enemies;
   this->portal = portal;
 
-  if (n_enemies < 1)
+  if (this->portal)
   {
-    for (unsigned int i = 0; i < map.size(); i++)
+    if (n_enemies < 1)
     {
-      for (unsigned int j = 0; j < map[i].size(); j++)
+      for (unsigned int i = 0; i < map.size(); i++)
       {
-        if (map[i][j] == 3)
+        for (unsigned int j = 0; j < map[i].size(); j++)
         {
-          if (this->currentDirection == MOVE_UP && map[i - 1][j] == 6)
+          if (map[i][j] == 3)
           {
-            changeStage = true;
-            portal_found = true;
-            break;
-          }
-          if (this->currentDirection == MOVE_DOWN && map[i + 1][j] == 6)
-          {
-            changeStage = true;
-            portal_found = true;
-            break;
-          }
-          if (this->currentDirection == MOVE_LEFT && map[i][j - 1] == 6)
-          {
-            changeStage = true;
-            portal_found = true;
-            break;
-          }
-          if (this->currentDirection == MOVE_RIGHT && map[i][j + 1] == 6)
-          {
-            changeStage = true;
-            portal_found = true;
-            break;
+            if (this->currentDirection == MOVE_UP && map[i - 1][j] == 6)
+            {
+              changeStage = true;
+              portal_found = true;
+              break;
+            }
+            if (this->currentDirection == MOVE_DOWN && map[i + 1][j] == 6)
+            {
+              changeStage = true;
+              portal_found = true;
+              break;
+            }
+            if (this->currentDirection == MOVE_LEFT && map[i][j - 1] == 6)
+            {
+              changeStage = true;
+              portal_found = true;
+              break;
+            }
+            if (this->currentDirection == MOVE_RIGHT && map[i][j + 1] == 6)
+            {
+              changeStage = true;
+              portal_found = true;
+              break;
+            }
           }
         }
+        if (portal_found)
+          break;
       }
-      if (portal_found)
-        break;
     }
   }
 }

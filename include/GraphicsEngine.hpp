@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:28:24 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/11/02 23:24:00 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/14 18:12:37 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <cmath>
 # include <unistd.h>
 # include <limits>
+
 
 //Global Variables
 #define WIDTH 1200
@@ -59,7 +60,7 @@ class GraphicsEngine
 
         void    glfwConfig();
         void    gladConfg();
-        void    MainControl(Sound &sound, Keys &keys, int level = 8);
+        void    MainControl(Sound &sound, Keys &keys, int level = 0);
         void    callMovementFunctions(Player &player, Sound &sound, Keys &keys, std::vector<std::vector<int> > mapOfObjects);
         void    shaderConfig();
         void    modelProjectionConfig();
@@ -117,6 +118,7 @@ class GraphicsEngine
         bool                isDoor;
         std::vector<std::vector<float> > enemyCoords;
         bool    changeStage;
+        int     score;
 };
 
 # endif
