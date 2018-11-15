@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 14:49:07 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/11/15 13:24:36 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/15 16:18:46 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ Model_Objects::Model_Objects()
     this->suicide_model = Model("bomberman_assets/misc/wasted_Suicide.obj");
 
     //NUMBERS
-    this->number_0_model = Model("bomberman_assets/Numbers/Number_0/20820_Number_0_v1.obj");
-    this->number_1_model = Model("bomberman_assets/Numbers/Number_1/20811_Number_1_v1.obj");
-    this->number_2_model = Model("bomberman_assets/Numbers/Number_2/20812_Number_2_v1.obj");
+    this->number_0_model = Model("bomberman_assets/Numbers/Textured-No-0.obj");
+    this->number_1_model = Model("bomberman_assets/Numbers/Textured-No-1.obj");
+    this->number_2_model = Model("bomberman_assets/Numbers/Textured-No-2.obj");
 
 }
 
@@ -281,12 +281,12 @@ void    Model_Objects::renderNumber(Shader shader, int number)
      glm::mat4   number_ = glm::mat4(1.0f);
 
     //Softwalls positions
-    number_ = glm::translate(number_, glm::vec3(2.3f, -2.0f, -3.5f));     
+    number_ = glm::translate(number_, glm::vec3(2.3f, -1.5f, -3.5f));     
 
     //Resising the soft wall model
     number_ = glm::scale(number_, glm::vec3(0.2f, 0.2f, 0.2f));
 
-    number_ = glm::rotate(number_ , -1.5f ,glm::vec3(1.0f, 0.0f, 0.0f));
+    // number_ = glm::rotate(number_ , -1.5f ,glm::vec3(1.0f, 0.0f, 0.0f));
 
     // number_ = glm::rotate(number_ , (float)glfwGetTime() ,glm::vec3(0.0f, 1.0f, 0.0f));
 
