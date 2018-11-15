@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/11/15 13:08:38 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/15 16:31:20 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -382,9 +382,10 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level, int liv
                     displayStart(sound, keys, this->window);
                 }
             }
+            if (bomb_counter == 73)
+                sound.playFX(BASS);
             if (bomb_counter == 75)
             {
-                sound.playFX(BASS);
                 if (this->update_bomb_range(maps[this->currentMap]) == 3)
                 {
                     this->lives -= 1;
