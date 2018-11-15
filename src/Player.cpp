@@ -75,12 +75,11 @@ void    Player::bodyModel(Shader shader)
 int    Player::playerMovements(GLFWwindow *window, Sound &sound, Keys &keys, std::vector<std::vector<int> >  mapOfObjects, int& player_direction)
 {
 	(void)window;
-  (void)sound;
   (void)mapOfObjects;
     //PLAYER MOVEMENTS
     if (keys.input() == UP)
     {
-			// sound.playFX(BB8_MISC);
+			sound.playFX(BB8_MISC);
       if (this->checkNexPos(MOVE_UP, mapOfObjects) == 1)
       {
         this->move_y -= 0.2f;

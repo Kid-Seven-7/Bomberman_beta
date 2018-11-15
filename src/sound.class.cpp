@@ -121,15 +121,15 @@ void Sound::playOST(int sound){
 		case PRECIPICE:
 			playSFX(this->_ost1);
 			break;
-		// case SWIPE:
-		// 	playSFX(this->_swipe);
-		// 	break;
-		// case BLAST:
-		// 	playSFX(this->_bomb);
-		// 	break;
-		// case BASS:
-		// 	playSFX(this->_bassdrop);
-		// 	break;
+		case SWIPE:
+			playSFX(this->_swipe);
+			break;
+		case BLAST:
+			playSFX(this->_bomb);
+			break;
+		case BASS:
+			playSFX(this->_bassdrop);
+			break;
 	}
 }
 

@@ -169,6 +169,11 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level, int liv
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        if (keys.input() == NEXT)
+            sound.nextLoop();
+        if (keys.input() == PREV)
+            sound.prevLoop();
+
         if (!this->changeStage)
         {
             //input process
