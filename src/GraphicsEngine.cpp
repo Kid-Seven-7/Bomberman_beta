@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/11/15 09:35:54 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/15 13:08:38 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -341,6 +341,8 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level, int liv
                 this->pos_x = 0.0f;
             }
 
+
+
             this->pos_y = 0.0f;
 
             if (start_counter)
@@ -375,12 +377,14 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level, int liv
                     nextStageInit.LoadGame(this->window, sound, keys, this->currentMap, this->lives);
                 else
                 {
+                    this->lives = 2;
                     this->currentMap = 0;
                     displayStart(sound, keys, this->window);
                 }
             }
             if (bomb_counter == 75)
             {
+                sound.playFX(BASS);
                 if (this->update_bomb_range(maps[this->currentMap]) == 3)
                 {
                     this->lives -= 1;
@@ -423,7 +427,10 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level, int liv
                     if (this->lives >= 0)
                         nextStageInit.LoadGame(this->window, sound, keys, this->currentMap, this->lives);
                     else
+                    {
+                        this->lives = 2;
                         displayStart(sound, keys, this->window);
+                    }
                 }
             }
             if (bomb_counter >= 100)
@@ -576,6 +583,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level, int liv
                 nextStageInit.LoadGame(this->window, sound, keys, this->currentMap, this->lives);
             else
             {
+                this->lives = 2;
                 this->currentMap = 0;
                 displayStart(sound, keys, this->window);
             }

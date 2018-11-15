@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 14:49:07 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/11/15 09:18:23 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/15 13:24:36 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ Model_Objects::Model_Objects()
     this->clock_hand_model = Model("bomberman_assets/clock/clock-arm.obj");
     this->you_win_model = Model("bomberman_assets/misc/youWinCube.obj");
     this->you_lose_model = Model("bomberman_assets/misc/youLoseSphere.obj");
-    this->score_model = Model("bomberman_assets/clock/holder.obj");
-    this->decagon_model = Model("bomberman_assets/clock/dial.obj");
+    // this->score_model = Model("bomberman_assets/clock/holder.obj");
+    // this->decagon_model = Model("bomberman_assets/clock/dial.obj");
     this->time_out_model = Model("bomberman_assets/misc/timeOutSphere.obj");
     this->suicide_model = Model("bomberman_assets/misc/wasted_Suicide.obj");
 
