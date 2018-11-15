@@ -38,7 +38,7 @@ Sound::Sound()
 {
 	//Initiates all sounds used in the game
 	LoadSound(this->_ost1, "bomberman_assets/sounds/On the Precipice of Defeat.wav");
-	LoadSound(this->_loop1, "bomberman_assets/sounds/loop1.wav");
+	LoadSound(this->_loop1, "bomberman_assets/sounds/Devil Eyes.wav");
 	LoadSound(this->_loop2, "bomberman_assets/sounds/loop2.wav");
 	LoadSound(this->_loop3, "bomberman_assets/sounds/loop3.wav");
 	LoadSound(this->_loop4, "bomberman_assets/sounds/loop4.wav");
