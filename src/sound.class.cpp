@@ -49,7 +49,7 @@ Sound::Sound()
 	LoadSound(this->_loop9, "bomberman_assets/sounds/loop9.wav");
 	LoadSound(this->_ghost, "bomberman_assets/sounds/ghost.wav");
 	LoadSound(this->_swipe, "bomberman_assets/sounds/swipe.wav");
-	LoadSound(this->_bomb, "bomberman_assets/sounds/blast.wav");
+	LoadSound(this->_bomb, "bomberman_assets/sounds/BombBlast.wav");
 	LoadSound(this->_fucked, "bomberman_assets/sounds/fucked.wav");
 	LoadSound(this->_bassdrop, "bomberman_assets/sounds/drop.wav");
 	LoadSound(this->_bb8_death, "bomberman_assets/sounds/bb8_death.wav");
