@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:29:25 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/11/14 18:06:07 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/15 09:35:54 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ GraphicsEngine::GraphicsEngine()
      this->isDoor = false;
      this->changeStage = false;
      this->score = 0;
+     this->lives = 2;
 }
 
 GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
@@ -67,6 +68,7 @@ GraphicsEngine::GraphicsEngine(GLFWwindow  *window)
      this->isDoor = false;
      this->changeStage = false;
      this->score = 0;
+     this->lives = 2;
 }
 
 GraphicsEngine::~GraphicsEngine()
@@ -105,11 +107,13 @@ void    GraphicsEngine::gladConfg()
     }
 }
 
-void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
+void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level, int lives)
 {
     //Game Settings Sway
     glfwSetTime(0.1f); 
     this->currentMap = level;
+    if (lives > -1)
+        this->lives = lives;
 
     //Init things 
     Player          player;
@@ -295,6 +299,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                     player.bodyModel(this->ourShader);
                     player.headModel(this->ourShader);
                     player.setNextStage(this->enemies.size(), this->changeStage , maps[this->currentMap], this->isDoor);
+                    model_object.renderNumber(ourShader, this->lives);
 
                     if ((this->pos_x + 1.4f) <  std::numeric_limits<float>::max() && 
                         (this->pos_x + 1.4f) < std::numeric_limits<float>::infinity())
@@ -337,21 +342,9 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                 bomb_counter++;
             if (this->deletePlayer)
             {
+                this->lives -= 1;
                 //Render Dead Screen
                 for (int x = 0; x < 500; x++)
-                {
-                    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-                    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-                    model_object.universe_func(ourShader);
-                    model_object.gameOverScreen(ourShader, 2);
-
-                    //Clearing Buffer
-                    glfwSwapBuffers(this->window);
-                    glfwPollEvents();
-                }
-
-                for (int x = 0; x < 10; x++)
                 {
                     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
                     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -368,18 +361,24 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                 nextYPos = 2.6f;
                 prevXpos = -2.6f;
                 prevYpos = -2.6f;
-                this->currentMap = 0;
 
                 counter = 0;
                 glfwSetTime(0.1f);
                 this->isDoor = false;
                 this->score = 0;
-                displayStart(sound, keys, this->window);
+                if (this->lives >= 0)
+                    nextStageInit.LoadGame(this->window, sound, keys, this->currentMap, this->lives);
+                else
+                {
+                    this->currentMap = 0;
+                    displayStart(sound, keys, this->window);
+                }
             }
             if (bomb_counter == 75)
             {
                 if (this->update_bomb_range(maps[this->currentMap]) == 3)
                 {
+                    this->lives -= 1;
                     this->remove_life(maps[this->currentMap]);
                     player.setPcoords(0.0f, 0.0f);
                     this->reset_player_location(maps[this->currentMap]);
@@ -404,7 +403,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
                         model_object.universe_func(ourShader);
-                        model_object.gameOverScreen(ourShader, 2);
+                        model_object.gameOverScreen(ourShader, 4);
 
                         //Clearing Buffer
                         glfwSwapBuffers(this->window);
@@ -415,7 +414,11 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
                     glfwSetTime(0.1f);
                     this->isDoor = false;
                     this->score = 0;
-                    displayStart(sound, keys, this->window);
+
+                    if (this->lives >= 0)
+                        nextStageInit.LoadGame(this->window, sound, keys, this->currentMap, this->lives);
+                    else
+                        displayStart(sound, keys, this->window);
                 }
             }
             if (bomb_counter >= 100)
@@ -532,7 +535,7 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
             glfwSetTime(0.1f);
             this->isDoor = false;
             this->score = 0;
-            nextStageInit.LoadGame(this->window, sound, keys, this->currentMap);
+            nextStageInit.LoadGame(this->window, sound, keys, this->currentMap, this->lives);
         }
         //Clearing Buffer
         glfwSwapBuffers(this->window);
@@ -541,13 +544,14 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
         // std::cout << "Score: " << this->score << std::endl;
         if (counter == 3550)
         {
+            this->lives -= 1;
             for (int x = 0; x < 200; x++)
             {
                 glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
                 model_object.universe_func(ourShader);
-                model_object.gameOverScreen(ourShader, 2);
+                model_object.gameOverScreen(ourShader, 3);
 
                 //Clearing Buffer
                 glfwSwapBuffers(this->window);
@@ -558,13 +562,18 @@ void    GraphicsEngine::MainControl(Sound &sound, Keys &keys, int level)
             nextYPos = 2.6f;
             prevXpos = -2.6f;
             prevYpos = -2.6f;
-            this->currentMap = 0;
 
             glfwSetTime(0.1f);
             counter = 0;
             this->isDoor = false;
             this->score = 0;
-            displayStart(sound, keys, this->window);   
+            if (this->lives >= 0)
+                nextStageInit.LoadGame(this->window, sound, keys, this->currentMap, this->lives);
+            else
+            {
+                this->currentMap = 0;
+                displayStart(sound, keys, this->window);
+            }
         }
     }
     nextXPos = 2.6f;

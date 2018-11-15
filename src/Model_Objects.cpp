@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 14:49:07 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/11/14 16:18:33 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/15 09:18:23 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,17 @@ Model_Objects::Model_Objects()
     this->clock_model = Model("bomberman_assets/clock/clockInvert.obj");
     this->clock_hand_model = Model("bomberman_assets/clock/clock-arm.obj");
     this->you_win_model = Model("bomberman_assets/misc/youWinCube.obj");
-    this->you_lose_model = Model("bomberman_assets/misc/youLoseCube1.obj");
+    this->you_lose_model = Model("bomberman_assets/misc/youLoseSphere.obj");
     this->score_model = Model("bomberman_assets/clock/holder.obj");
     this->decagon_model = Model("bomberman_assets/clock/dial.obj");
+    this->time_out_model = Model("bomberman_assets/misc/timeOutSphere.obj");
+    this->suicide_model = Model("bomberman_assets/misc/wasted_Suicide.obj");
+
+    //NUMBERS
+    this->number_0_model = Model("bomberman_assets/Numbers/Number_0/20820_Number_0_v1.obj");
+    this->number_1_model = Model("bomberman_assets/Numbers/Number_1/20811_Number_1_v1.obj");
+    this->number_2_model = Model("bomberman_assets/Numbers/Number_2/20812_Number_2_v1.obj");
+
 }
 
 Model_Objects::~Model_Objects() {}
@@ -225,7 +233,10 @@ void    Model_Objects::gameOverScreen(Shader shader, int model)
      glm::mat4   state_model = glm::mat4(1.0f);
 
     //Softwalls positions
-    state_model = glm::translate(state_model, glm::vec3(4.5f, -2.5f, -1.9f));
+    if (model == 2)
+        state_model = glm::translate(state_model, glm::vec3(4.5f, 7.5f, -1.9f));     
+    else
+        state_model = glm::translate(state_model, glm::vec3(4.5f, -2.5f, -1.9f));
 
     //Resising the soft wall model
     state_model = glm::scale(state_model, glm::vec3(5.0f, 5.0f, 5.0f));
@@ -240,6 +251,10 @@ void    Model_Objects::gameOverScreen(Shader shader, int model)
         this->you_win_model.Draw(shader);
     else if (model == 2)
         this->you_lose_model.Draw(shader);
+    else if (model == 3)
+        this->time_out_model.Draw(shader);
+    else if (model == 4)
+        this->suicide_model.Draw(shader);
 }
 
 void    Model_Objects::decaGonFunc(Shader shader)
@@ -259,4 +274,28 @@ void    Model_Objects::decaGonFunc(Shader shader)
     //Drawing the soft wall model
     shader.setMat4("model", decagon_);
     this->decagon_model.Draw(shader);
+}
+
+void    Model_Objects::renderNumber(Shader shader, int number)
+{
+     glm::mat4   number_ = glm::mat4(1.0f);
+
+    //Softwalls positions
+    number_ = glm::translate(number_, glm::vec3(2.3f, -2.0f, -3.5f));     
+
+    //Resising the soft wall model
+    number_ = glm::scale(number_, glm::vec3(0.2f, 0.2f, 0.2f));
+
+    number_ = glm::rotate(number_ , -1.5f ,glm::vec3(1.0f, 0.0f, 0.0f));
+
+    // number_ = glm::rotate(number_ , (float)glfwGetTime() ,glm::vec3(0.0f, 1.0f, 0.0f));
+
+    //Drawing the soft wall model
+    shader.setMat4("model", number_);
+    if (number == 0)
+        this->number_0_model.Draw(shader);
+    if (number == 1)
+        this->number_1_model.Draw(shader);
+    if (number == 2)
+        this->number_2_model.Draw(shader);
 }

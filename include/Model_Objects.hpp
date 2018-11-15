@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 14:49:16 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/10/17 11:34:15 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/15 09:16:37 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ class Model_Objects
         void    Score(Shader shader);
         void    setPortalScale(bool state);
         void    gameOverScreen(Shader shader, int model);
+        void    renderNumber(Shader shader, int number);
 
     private:
         //Model variables
@@ -50,8 +51,14 @@ class Model_Objects
         Model   clock_hand_model;
         Model   you_win_model;
         Model   you_lose_model;
+        Model   time_out_model;
+        Model   suicide_model;
         Model   score_model;
         Model   decagon_model;
+
+        Model   number_0_model;
+        Model   number_1_model;
+        Model   number_2_model;
 };
 
 # endif

@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/02 21:43:58 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/11/02 22:12:09 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/15 09:24:10 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ class LoadingScreen
         LoadingScreen();
         ~LoadingScreen();
 
-        void    LoadGame(GLFWwindow  *window, Sound &sound, Keys &keys, int level);
+        void    LoadGame(GLFWwindow  *window, Sound &sound, Keys &keys, int level, int lives);
 };
 
 # endif

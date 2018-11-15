@@ -6,7 +6,7 @@
 /*   By: amatshiy <amatshiy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/24 14:28:24 by amatshiy          #+#    #+#             */
-/*   Updated: 2018/11/14 18:12:37 by amatshiy         ###   ########.fr       */
+/*   Updated: 2018/11/15 09:22:59 by amatshiy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ class GraphicsEngine
 
         void    glfwConfig();
         void    gladConfg();
-        void    MainControl(Sound &sound, Keys &keys, int level = 0);
+        void    MainControl(Sound &sound, Keys &keys, int level = 0, int lives = 2);
         void    callMovementFunctions(Player &player, Sound &sound, Keys &keys, std::vector<std::vector<int> > mapOfObjects);
         void    shaderConfig();
         void    modelProjectionConfig();
